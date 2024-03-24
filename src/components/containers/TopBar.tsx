@@ -1,4 +1,4 @@
-import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
