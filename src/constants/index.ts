@@ -6,7 +6,10 @@ import {
   DevicesIcon,
   DocumentCentreIcon,
   InboxIcon,
+  JPGIcon,
   LogoutIcon,
+  PDFIcon,
+  PNGIcon,
   ProfileIcon,
 } from "@/assets/icons";
 
@@ -65,3 +68,9 @@ export const homeOwnerSideBarItems = [
     href: "/..",
   },
 ];
+
+export const imageExtension = {
+  pdf: PDFIcon,
+  png: PNGIcon,
+  jpg: JPGIcon,
+};

@@ -6,9 +6,12 @@ export type DropdownProps = {
   placeholder?: string;
   label?: string;
   isLoading?: boolean;
+  prefixIcon?: string | ReactNode;
+  suffixIcon?: string | ReactNode;
   loadingText?: string;
   name: string;
   options: { label: string; value: string; id?: string | number }[];
+  searchable?: boolean;
   disabled?: boolean;
 };
 
@@ -43,6 +46,10 @@ export type AccountSetupProps = {
 
 export type SideBarProps = {
   accountType: string;
+};
+
+export type DropBoxProps = {
+  children?: ReactNode;
 };
 
 export type SideBarItem = {

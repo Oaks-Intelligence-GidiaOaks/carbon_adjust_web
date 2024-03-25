@@ -15,6 +15,9 @@ import DocumentCentreIcon from "./document-center.svg?react";
 import ContactIcon from "./contact.svg?react";
 import ProfileIcon from "./profile.svg?react";
 import LogoutIcon from "./logout.svg?react";
+import PDFIcon from "./pdf.svg?react";
+import JPGIcon from "./jpg.svg?react";
+import PNGIcon from "./png.svg?react";
 
 export {
   Logo,
@@ -34,4 +37,7 @@ export {
   ContactIcon,
   ProfileIcon,
   LogoutIcon,
+  PDFIcon,
+  PNGIcon,
+  JPGIcon,
 };

@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountSetUpForm from "./AccountSetUpForm";
 import { Button } from "@/components/ui";
+import ScrollToTop from "@/components/reusables/ScrollToTop";
 
 type Props = {};
 
-const HiaAccountSetup = (_: Props) => {
+const HomeOwnerAccountSetup = (_: Props) => {
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -23,7 +24,7 @@ const HiaAccountSetup = (_: Props) => {
   };
 
   return (
-    <>
+    <ScrollToTop dependentValue={currentStep}>
       <AccountActionHeader
         actionTitle="Log out"
         action={logOut}
@@ -44,8 +45,8 @@ const HiaAccountSetup = (_: Props) => {
           </Button>
         </div>
       </div>
-    </>
+    </ScrollToTop>
   );
 };
 
-export default HiaAccountSetup;
+export default HomeOwnerAccountSetup;

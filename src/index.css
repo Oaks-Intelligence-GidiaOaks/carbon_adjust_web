@@ -6,3 +6,42 @@
 * {
   @apply box-border p-0 m-0 text-[hsl(210,9%,31%)];
 }
+
+.react-date-picker__wrapper {
+  border: none !important;
+}
+.react-calendar {
+  border: none !important;
+}
+.react-calendar__navigation__label__labelText,
+react-calendar__navigation__label__labelText--from,
+react-calendar__month-view__weekdays__weekday,
+react-calendar__tile react-calendar__month-view__days__day {
+  @apply font-sans;
+}
+
+.react-calendar__month-view__weekdays__weekday > abbr {
+  @apply font-poppins;
+}
+.react-calendar__tile > abbr {
+  @apply font-sans;
+}
+.react-calendar__tile--active > abbr {
+  color: white !important;
+}
+.selected-flag:hover {
+  @apply rounded-[10px_!important];
+}
+
+.selected-flag:focus {
+  @apply rounded-l !important;
+}
+
+.flag-dropdown.open,
+.selected-flag.open {
+  @apply rounded-l !important;
+}
+
+.react-tel-input .country-list {
+  @apply shadow-xl !important;
+}

@@ -1,9 +1,13 @@
-import HiaAccountSetup from "./accounts/HiaAccountSetup";
+import HomeOwnerAccountSetup from "./accounts/HomeOwnerAccountSetup";
 
 type Props = {};
 
 const AccountSetup = (_: Props) => {
-  return <HiaAccountSetup />;
+  return (
+    <>
+      <HomeOwnerAccountSetup />
+    </>
+  );
 };
 
 export default AccountSetup;

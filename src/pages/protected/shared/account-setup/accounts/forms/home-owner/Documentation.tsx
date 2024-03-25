@@ -1,5 +1,5 @@
 import { UploadDoc } from "@/assets/icons";
-import { Button, Dropdown } from "@/components/ui";
+import { Button, DropBox, Dropdown } from "@/components/ui";
 import { CameraIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
@@ -26,7 +26,7 @@ const Documentation = (_: Props) => {
             <p className="text-black">
               Upload Valid ID card (Upload the front page of your Password)
             </p>
-            <div className="border border-dashed border-grey-swatch-500 mt-3 flex justify-center rounded-lg p-6">
+            <DropBox>
               <div className="flex flex-col items-center">
                 <UploadDoc className="mb-2" />
                 <p className="text-sm font-poppins text-grey-swatch-600">
@@ -46,7 +46,7 @@ const Documentation = (_: Props) => {
                   <CameraIcon width={24} />
                 </div>
               </div>
-            </div>
+            </DropBox>
           </div>
         </div>
       </div>

@@ -1,4 +1,7 @@
 import { Input } from "@/components/ui";
+import Datepicker from "@/components/ui/DatePicker";
+import Phoneinput from "@/components/ui/PhoneInput";
+// import DatePicker from "@/components/ui/DatePicker";
 
 type Props = {};
 
@@ -20,18 +23,25 @@ const BioData = (_: Props) => {
           inputClassName="bg-gray-100"
           placeholder="jefferycooper@gmail.com"
         />
-        <Input
+        {/* <Input
+          name="phoneNumber"
+          label="Phone Number"
+          labelClassName="mb-4"
+          inputClassName="bg-gray-100"
+          placeholder="+234"
+        /> */}
+        <Phoneinput
           name="phoneNumber"
           label="Phone Number"
           labelClassName="mb-4"
           inputClassName="bg-gray-100"
           placeholder="+234"
         />
-        <Input
+        <Datepicker
           name="dateOfBirth"
           label="Date of birth"
           labelClassName="mb-4"
-          inputClassName="bg-gray-100"
+          inputClassName="bg-gray-100 text-sm"
           placeholder="4th April 1956"
         />
       </div>
