@@ -6,15 +6,15 @@ import { Button } from "./Button";
 import { CameraIcon } from "@heroicons/react/20/solid";
 import { formatBytes } from "@/utils";
 
-const DropBox = ({ children }: DropBoxProps) => {
-  interface HTMLInputEvent extends Event {
-    target: HTMLInputElement & EventTarget;
-  }
+const DropBox = (_: DropBoxProps) => {
+  // interface HTMLInputEvent extends Event {
+  //   target: HTMLInputElement & EventTarget;
+  // }
 
   const wrapperRef = useRef<HTMLElement>();
 
   const [fileList, setFileList] = useState<File[]>([]);
-  const [file, setFile] = useState<null | File>(null);
+  const [, setFile] = useState<null | File>(null);
   const [fileSizeError, setFileSizeError] = useState(false);
 
   const generateFileTypeIcon = (mimeType: string) => {
@@ -39,7 +39,7 @@ const DropBox = ({ children }: DropBoxProps) => {
     }
   };
 
-  const onFileChange = () => {};
+  // const onFileChange = () => {};
 
   const onFileDrop = (e: ChangeEvent<HTMLInputElement>) => {
     const newFile = e?.target?.files?.length ? e?.target?.files[0] : null;

@@ -94,7 +94,7 @@ InputProps) => {
             borderRadius: "10px",
             boxShadow: "none",
           }}
-          onChange={(data) => {
+          onChange={() => {
             // dispatch(
             //   setOnboardingData({
             //     section: "bioData",
@@ -103,7 +103,7 @@ InputProps) => {
             //   })
             // );
           }}
-          onFocus={(e) => {
+          onFocus={() => {
             // e.target.style.outlineColor = "#2196F3";
             // e.target.style.outlineWidth = "1px";
             // e.target.style.outlineStyle = "solid";
