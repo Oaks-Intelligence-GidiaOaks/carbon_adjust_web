@@ -61,3 +61,11 @@ export type SideBarItem = {
   title: string;
   href: string;
 };
+
+export type ProfileProps = { accountType: string };
+
+export type ProfileTabProps = {
+  accountType: string;
+  currentTab: number;
+  setCurrentTab: (index: number) => void;
+};

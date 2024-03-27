@@ -6,7 +6,7 @@ const AccountSetupProgressIndicator = ({
   currentStep = 1,
 }: AccountSetupProgressIndicatorProps) => {
   switch (accountType) {
-    case "home-owner":
+    case "home-occupant":
       return (
         <div className="h-[6px] w-full bg-gray-400 rounded-full relative flex justify-between">
           <div

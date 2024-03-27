@@ -18,6 +18,8 @@ import LogoutIcon from "./logout.svg?react";
 import PDFIcon from "./pdf.svg?react";
 import JPGIcon from "./jpg.svg?react";
 import PNGIcon from "./png.svg?react";
+import ContactMailIcon from "./contact-email.svg?react";
+import ContactLocationIcon from "./contact-location.svg?react";
 
 export {
   Logo,
@@ -40,4 +42,6 @@ export {
   PDFIcon,
   PNGIcon,
   JPGIcon,
+  ContactMailIcon,
+  ContactLocationIcon,
 };
