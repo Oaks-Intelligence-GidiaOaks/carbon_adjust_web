@@ -30,11 +30,11 @@ const HomeOwnerAccountSetup = (_: Props) => {
         action={logOut}
         className={"bg-white"}
       />
-      <AccountSetupInfo accountType="home-owner" currentStep={currentStep} />
+      <AccountSetupInfo accountType="home-occupant" currentStep={currentStep} />
       <div className="flex bg-gray-100 justify-center min-h-screen pb-20 bg-account-setup-image bg-cover bg-fixed">
         <div className="max-w-[760px] w-full">
           <AccountSetUpForm
-            accountType={"home-owner"}
+            accountType={"home-occupant"}
             currentStep={currentStep}
           />
           <Button

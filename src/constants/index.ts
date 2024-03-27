@@ -14,7 +14,7 @@ import {
 } from "@/assets/icons";
 
 export const accountTypes = [
-  { id: 1, label: "Home owner", value: "home-owner" },
+  { id: 1, label: "Home occupant", value: "home-occupant" },
   { id: 2, label: "Aggregator", value: "aggregator" },
   { id: 3, label: "Home Improvement Agency", value: "hia" },
   { id: 4, label: "Financial Institution", value: "financial-institution" },
@@ -74,3 +74,22 @@ export const imageExtension = {
   png: PNGIcon,
   jpg: JPGIcon,
 };
+
+export const homeOccupantProfileTabs = [
+  {
+    name: "Bio Data",
+    tabIndex: 1,
+  },
+  {
+    name: "Address",
+    tabIndex: 2,
+  },
+  {
+    name: "Home Information",
+    tabIndex: 3,
+  },
+  {
+    name: "Documentation",
+    tabIndex: 4,
+  },
+];

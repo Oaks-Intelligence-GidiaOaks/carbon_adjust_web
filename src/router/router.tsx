@@ -10,8 +10,8 @@ import {
   DocumentCentre,
   Inbox,
   Profile,
-} from "@/pages/protected/home-owner";
-import Contact from "@/pages/protected/home-owner/Contact";
+} from "@/pages/protected/home-occupant";
+import Contact from "@/pages/protected/home-occupant/Contact";
 
 const Router = createBrowserRouter([
   {
@@ -64,7 +64,7 @@ const Router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: <Profile accountType="home-occupant" />,
       },
     ],
   },

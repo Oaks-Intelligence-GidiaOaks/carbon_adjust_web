@@ -4,7 +4,7 @@ import {
   BioData,
   Documentation,
   HomeInformation,
-} from "./forms/home-owner";
+} from "./forms/home-occupant";
 
 const AccountSetUpForm = ({ currentStep }: AccountSetupProps) => {
   switch (currentStep) {

@@ -10,14 +10,14 @@ const Sidebar = ({ accountType }: SideBarProps) => {
 
   const identifyUserSideBar = (accountType: string): SideBarItem[] => {
     switch (accountType) {
-      case "home-owner":
+      case "home-occupant":
         return homeOwnerSideBarItems;
       default:
         return homeOwnerSideBarItems;
     }
   };
   return (
-    <div className="w-[20%] h-full min-w-[260px] max-w-[302px] px-4 pt-10 sticky top-0 border-r border-[hsla(110,49%,88%,1)]">
+    <div className="w-[20%] min-w-[260px] max-w-[302px] h-screen px-4 pt-10 sticky top-0 border-r border-[hsla(110,49%,88%,1)]">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-x-2">
           <Logo />
