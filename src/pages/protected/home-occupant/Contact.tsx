@@ -14,12 +14,12 @@ import { useMemo } from "react";
 import { Input } from "@/components/ui";
 import useContactMap from "@/hooks/useContactMap";
 import { ContactLocationIcon, ContactMailIcon } from "@/assets/icons";
+import TextArea from "@/components/ui/TextArea";
 
 const Contact = () => {
   const [fullName] = useState("");
   const [email] = useState("");
   const [message] = useState("");
-
   const mapRef = useRef(null);
 
   useContactMap(mapRef.current);
@@ -98,14 +98,16 @@ const Contact = () => {
             inputClassName="bg-gray-100 rounded-lg"
             placeholder="jamesmoore@example.com"
           />
-          {/* Email */}
-          <Input
+          {/* Meseage */}
+          <TextArea
             name="message"
             label="Message"
             labelClassName="mb-4 text-black/50 text-sm"
             wrapperClassName="mt-6"
             inputClassName="bg-gray-100 rounded-lg"
             placeholder="Type here..."
+            className="resize-none"
+            rows={5}
           />
 
           {/* <ResponseMessage

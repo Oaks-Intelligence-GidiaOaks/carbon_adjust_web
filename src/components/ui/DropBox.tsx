@@ -72,7 +72,7 @@ const DropBox = (_: DropBoxProps) => {
         onDragEnter={onDragEnter}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        className="border relative border-dashed border-grey-swatch-500 mt-3 flex justify-center rounded-lg p-6"
+        className="border relative border-dashed border-grey-swatch-500 mt-3 flex justify-center rounded-lg p-6 bg-white"
       >
         <div className="flex flex-col items-center">
           <UploadDoc className="mb-2" />

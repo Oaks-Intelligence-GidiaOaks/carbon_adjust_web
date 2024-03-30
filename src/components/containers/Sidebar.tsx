@@ -45,7 +45,7 @@ const Sidebar = ({ accountType }: SideBarProps) => {
                 "flex gap-4 py-3 px-2 pl-4 items-center font-manrope rounded-full",
                 pathname === `/dashboard${item.href}`
                   ? "bg-gradient-to-r from-blue-secondary to-blue-main"
-                  : ""
+                  : "hover:bg-[#D6F2DE]"
               )}
             >
               <Icon
