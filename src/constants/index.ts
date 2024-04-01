@@ -93,3 +93,134 @@ export const homeOccupantProfileTabs = [
     tabIndex: 4,
   },
 ];
+
+export const messageData = [
+  {
+    name: "Jeffery Moore",
+    image: "image1.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image2.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#8AC926",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+  {
+    name: "John Doe",
+    image: "image3.jpg",
+    industry: "JSK Financial services",
+    message:
+      "We will like you to confirm that the documents you sent are in line with b...",
+    color: "#139EEC",
+  },
+];
