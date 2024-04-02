@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import * as _ from "lodash";
 // import FormInput from "../../components/form/FormInput";
 // import TextArea from "../../components/form/TextArea";
@@ -16,7 +16,7 @@ import useContactMap from "@/hooks/useContactMap";
 import { ContactLocationIcon, ContactMailIcon } from "@/assets/icons";
 import TextArea from "@/components/ui/TextArea";
 
-const Contact = () => {
+const Contact: FC = () => {
   const [fullName] = useState("");
   const [email] = useState("");
   const [message] = useState("");

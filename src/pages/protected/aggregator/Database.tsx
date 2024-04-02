@@ -1,6 +1,6 @@
-type Props = {};
+import { FC } from "react";
 
-const Database = (props: Props) => {
+const Database: FC = () => {
   return <div>Database</div>;
 };
 

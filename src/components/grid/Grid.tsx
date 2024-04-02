@@ -3,9 +3,9 @@ import {
   createColumnHelper,
   flexRender,
   useReactTable,
-  getFilteredRowModel,
+  // getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
+  // getSortedRowModel,
   // Column,
   // ColumnDef,
   PaginationState,
@@ -15,8 +15,6 @@ import { IGrid } from "@/types/grid";
 import { findObjectWithMostKeys } from "@/utils";
 import { useState } from "react";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
-
-type DataRow<T extends {}> = T;
 
 const columnHelper = createColumnHelper<any>();
 

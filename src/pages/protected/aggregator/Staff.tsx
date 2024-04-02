@@ -1,6 +1,6 @@
-type Props = {};
+import { FC } from "react";
 
-const Staff = (props: Props) => {
+const Staff: FC = () => {
   return <div>Staff</div>;
 };
 

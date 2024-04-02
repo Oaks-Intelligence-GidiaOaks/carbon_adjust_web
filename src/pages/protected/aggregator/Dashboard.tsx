@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { BarChart } from "@/components/charts";
 import { Grid } from "@/components/grid";
-import { DoughnutCard, YearDropdown } from "@/components/ui";
+import { DoughnutCard } from "@/components/ui";
 import { barChartOptions } from "@/constants";
 import dummy from "@/dummy/aggregator.json";
 
