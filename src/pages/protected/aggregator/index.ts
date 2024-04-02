@@ -1,0 +1,10 @@
+export { default as AggregatorDashboard } from "./Dashboard";
+export { default as AggregatorDatabase } from "./Database";
+export { default as AggregatorProjects } from "./Projects";
+export { default as AggregatorDevices } from "./Devices";
+export { default as AggregatorStaff } from "./Staff";
+export { default as AggregatorWallet } from "./Wallet";
+export { default as AggregatorInbox } from "./Inbox";
+export { default as AggregatorDocumentCenter } from "./DocumentCentre";
+export { default as AggregatorContact } from "./Contact";
+export { default as AggregatorProfile } from "./Profile";

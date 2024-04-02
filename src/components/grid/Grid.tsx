@@ -72,7 +72,7 @@ const Grid = (props: IGrid) => {
       <div
         className={`w-full overflow-x-scroll text-center font-poppins relative max-h-[450px] text-xs ${props.tableStyles}`}
       >
-        <table className={`min-w-[400px]`}>
+        <table className={`min-w-[400px] w-full`}>
           <thead className="w-full text-xs font-[600] font-poppins sticky top-0">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
