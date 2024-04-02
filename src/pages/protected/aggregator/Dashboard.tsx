@@ -79,7 +79,7 @@ const Dashboard: FC = () => {
 
       {/* table section */}
       <div className="w-full mt-[31px]">
-        <Grid data={dummy} pageSize={30} tableStyles={` h-[200px] w-full`} />
+        <Grid data={dummy} pageSize={30} tableStyles={` h-[300px] w-full`} />
       </div>
     </div>
   );
