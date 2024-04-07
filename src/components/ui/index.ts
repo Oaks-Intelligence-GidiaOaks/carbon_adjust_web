@@ -7,3 +7,5 @@ export { default as CountryRegionDropdown } from "./CountryRegionDropDown";
 export { default as DatePicker } from "./DatePicker";
 export { default as DropBox } from "./DropBox";
 export { default as ProgressBar } from "./Progress";
+export { default as YearDropdown } from "./YearDropdown";
+export { default as DoughnutCard } from "./DoughnutCard";

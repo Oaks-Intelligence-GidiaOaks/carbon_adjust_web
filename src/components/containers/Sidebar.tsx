@@ -1,5 +1,5 @@
 import { Logo } from "@/assets/icons";
-import { homeOwnerSideBarItems } from "@/constants";
+import { aggregatorSideBarItems, homeOwnerSideBarItems } from "@/constants";
 import { SideBarItem, SideBarProps } from "@/types/general";
 import { cn } from "@/utils";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
@@ -12,6 +12,8 @@ const Sidebar = ({ accountType }: SideBarProps) => {
     switch (accountType) {
       case "home-occupant":
         return homeOwnerSideBarItems;
+      case "aggregator":
+        return aggregatorSideBarItems;
       default:
         return homeOwnerSideBarItems;
     }
@@ -40,25 +42,23 @@ const Sidebar = ({ accountType }: SideBarProps) => {
           return (
             <Link
               key={i}
-              to={`/dashboard${item.href}`}
+              to={`${item.href}`}
               className={cn(
                 "flex gap-4 py-3 px-2 pl-4 items-center font-manrope rounded-full",
-                pathname === `/dashboard${item.href}`
+                pathname === `${item.href}`
                   ? "bg-gradient-to-r from-blue-secondary to-blue-main"
                   : "hover:bg-[#D6F2DE]"
               )}
             >
               <Icon
                 className={cn(
-                  pathname === `/dashboard${item.href}`
-                    ? "invert brightness-0"
-                    : ""
+                  pathname === `${item.href}` ? "invert brightness-0" : ""
                 )}
               />
               <span
                 className={cn(
                   "text-sm",
-                  pathname === `/dashboard${item.href}` ? "text-white" : ""
+                  pathname === `${item.href}` ? "text-white" : ""
                 )}
               >
                 {item.title}

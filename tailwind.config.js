@@ -29,6 +29,7 @@ export default {
           main: "#139EEC",
           secondary: "#3465AF",
           dark: "hsla(224, 76%, 18%, 1)",
+          light: "#E8F3FC",
         },
         "hover-color": "hsla(202,85%,50%,0.2)",
         glass: "#F1F5F8",

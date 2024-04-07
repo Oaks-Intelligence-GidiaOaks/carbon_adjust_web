@@ -25,42 +25,100 @@ export const homeOwnerSideBarItems = [
   {
     icon: DashboardIcon,
     title: "Dashboard",
-    href: "",
+    href: "/dashboard",
   },
   {
     icon: ApplicationsIcon,
     title: "Applications",
-    href: "/applications",
+    href: "/dashboard/applications",
   },
   {
     icon: DevicesIcon,
     title: "Devices",
-    href: "/devices",
+    href: "/dashboard/devices",
   },
   {
     icon: CarbonCreditIcon,
     title: "Carbon Credit Account",
-    href: "/carbon-credit",
+    href: "/dashboard/carbon-credit",
   },
   {
     icon: InboxIcon,
     title: "Inbox",
-    href: "/inbox",
+    href: "/dashboard/inbox",
   },
   {
     icon: DocumentCentreIcon,
     title: "Document Centre",
-    href: "/document-centre",
+    href: "/dashboard/document-centre",
   },
   {
     icon: ContactIcon,
     title: "Contact Us",
-    href: "/contact",
+    href: "/dashboard/contact",
   },
   {
     icon: ProfileIcon,
     title: "Profile",
-    href: "/profile",
+    href: "/dashboard/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+export const aggregatorSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/aggregator",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Database",
+    href: "/aggregator/database",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Projects",
+    href: "/aggregator/projects",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Devices",
+    href: "/aggregator/devices",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/aggregator/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/aggregator/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/aggregator/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/aggregator/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/aggregator/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/aggregator/profile",
   },
   {
     icon: LogoutIcon,
@@ -224,3 +282,42 @@ export const messageData = [
     color: "#139EEC",
   },
 ];
+
+export const barChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      barThickness: 20,
+      grid: {
+        display: false,
+      },
+    },
+
+    y: {
+      barThickness: 10,
+      grid: {
+        display: false,
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+      position: "top",
+    },
+    title: {
+      display: false,
+      text: "Chart.js Bar Chart",
+    },
+  },
+};
+
+export const doughnutChartOptions = {
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+  radius: "90%",
+};

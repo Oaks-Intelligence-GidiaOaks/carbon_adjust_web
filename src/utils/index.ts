@@ -1,3 +1,4 @@
+import { DataRow } from "@/types/generics";
 import { clsx, ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -16,3 +17,19 @@ export function formatBytes(bytes: number, decimals = 2) {
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
+
+export const getLongestKeyLength = (data: any[]) => {
+  return Math.max(...data.map((obj) => Object.keys(obj).length));
+};
+
+// Function to find object with the most keys
+export const findObjectWithMostKeys = (
+  data: DataRow<any>[]
+): DataRow<any> | undefined => {
+  if (!data.length) return undefined; // Handle empty data array
+  return data.reduce((maxObject, currentObject) =>
+    Object.keys(currentObject).length > Object.keys(maxObject).length
+      ? currentObject
+      : maxObject
+  );
+};

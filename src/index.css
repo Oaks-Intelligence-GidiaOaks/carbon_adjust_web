@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* reusable styles  */
+.page-header {
+  @apply font-[600] text-[22px] leading-[42px] font-poppins text-[#333333];
+}
+
+.flex-center {
+  @apply flex items-center;
+}
+
 /* CSS reset */
 * {
   @apply box-border p-0 m-0 text-[hsl(210,9%,31%)];
