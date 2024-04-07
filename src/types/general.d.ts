@@ -69,3 +69,7 @@ export type ProfileTabProps = {
   currentTab: number;
   setCurrentTab: (index: number) => void;
 };
+
+export type IComponentMap = {
+  [key: string]: JSX.Element;
+};

@@ -13,6 +13,7 @@ import {
 } from "@/pages/protected/home-occupant";
 import Contact from "@/pages/protected/home-occupant/Contact";
 import {
+  AggregatorAddStaff,
   AggregatorContact,
   AggregatorDashboard,
   AggregatorDatabase,
@@ -102,7 +103,16 @@ const Router = createBrowserRouter([
       },
       {
         path: "staff",
-        element: <AggregatorStaff />,
+        children: [
+          {
+            path: "",
+            element: <AggregatorStaff />,
+          },
+          {
+            path: "add",
+            element: <AggregatorAddStaff />,
+          },
+        ],
       },
       {
         path: "carbon-credit",
@@ -122,7 +132,7 @@ const Router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <AggregatorProfile accountType="aggregator" />,
+        element: <AggregatorProfile />,
       },
     ],
   },
