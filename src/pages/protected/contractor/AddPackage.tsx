@@ -1,6 +1,6 @@
-type Props = {};
+import { FC } from "react";
 
-const AddPackage = (props: Props) => {
+const AddPackage: FC = () => {
   return <div>AddPackage</div>;
 };
 

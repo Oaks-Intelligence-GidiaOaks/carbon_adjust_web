@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const AddPackage = (props: Props) => {
+const AddPackage = () => {
   return <div>AddPackage</div>;
 };
 

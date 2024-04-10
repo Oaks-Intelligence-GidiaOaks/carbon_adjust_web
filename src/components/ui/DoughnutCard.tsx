@@ -36,7 +36,7 @@ const DoughnutCard = (props: Props) => {
       </p>
 
       <div className="">
-        <div className=" relative grid place-items-center h-[177px] w-[177px]">
+        <div className=" relative grid place-items-center h-[130px] w-[130px]">
           <DoughnutChart data={chartData} options={doughnutChartOptions} />
           <div className=" absolute drop-shadow-lg h-[70px] ab w-[70px] rounded-full bg-white text-black text-center  grid place-items-center">
             <span className="">305</span>

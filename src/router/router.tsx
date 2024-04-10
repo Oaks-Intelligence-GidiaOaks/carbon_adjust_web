@@ -53,7 +53,6 @@ import {
 } from "@/pages/protected/finance";
 import {
   InsuranceAddPackage,
-  InsuranceAddStaff,
   InsuranceApplications,
   InsuranceContact,
   InsuranceDashboard,
@@ -61,7 +60,6 @@ import {
   InsuranceInbox,
   InsurancePackages,
   InsuranceProfile,
-  InsuranceStaff,
   InsuranceWallet,
 } from "@/pages/protected/insurance";
 

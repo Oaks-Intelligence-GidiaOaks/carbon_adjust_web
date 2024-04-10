@@ -1,6 +1,6 @@
-type Props = {};
+// type Props = {};
 
-const AddPackage = (props: Props) => {
+const AddPackage = () => {
   return <div>AddPackage</div>;
 };
 

@@ -1,13 +1,13 @@
-import { LineChart, VixLineChart } from "@/components/charts";
+// import { LineChart, VixLineChart } from "@/components/charts";
 import TabToggler from "@/components/containers/TabToggler";
 import { Grid } from "@/components/grid";
 import { Button, YearDropdown } from "@/components/ui";
 import { IComponentMap } from "@/types/general";
 import { FC, useState } from "react";
-import faker from "faker";
 
 import devices from "../../../dummy/devices.json";
 import { lineChartOptions, yearLabels } from "@/constants";
+import { LineChart } from "@/components/charts";
 
 const Devices: FC = () => {
   const deviceTabs = [

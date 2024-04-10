@@ -12,7 +12,7 @@ import {
   PNGIcon,
   ProfileIcon,
 } from "@/assets/icons";
-import { elements } from "chart.js";
+// import { elements } from "chart.js";
 
 export const accountTypes = [
   { id: 1, label: "Home occupant", value: "home-occupant" },
