@@ -1,5 +1,11 @@
 import { Logo } from "@/assets/icons";
-import { aggregatorSideBarItems, homeOwnerSideBarItems } from "@/constants";
+import {
+  aggregatorSideBarItems,
+  financeSideBarItems,
+  hiaSideBarItems,
+  homeOwnerSideBarItems,
+  insuranceSideBarItems,
+} from "@/constants";
 import { SideBarItem, SideBarProps } from "@/types/general";
 import { cn } from "@/utils";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
@@ -14,6 +20,12 @@ const Sidebar = ({ accountType }: SideBarProps) => {
         return homeOwnerSideBarItems;
       case "aggregator":
         return aggregatorSideBarItems;
+      case "hia":
+        return hiaSideBarItems;
+      case "finance":
+        return financeSideBarItems;
+      case "insurance":
+        return insuranceSideBarItems;
       default:
         return homeOwnerSideBarItems;
     }

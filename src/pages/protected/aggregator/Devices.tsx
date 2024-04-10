@@ -1,8 +1,13 @@
-import { VixLineChart } from "@/components/charts";
+import { LineChart, VixLineChart } from "@/components/charts";
 import TabToggler from "@/components/containers/TabToggler";
 import { Grid } from "@/components/grid";
 import { Button, YearDropdown } from "@/components/ui";
+import { IComponentMap } from "@/types/general";
 import { FC, useState } from "react";
+import faker from "faker";
+
+import devices from "../../../dummy/devices.json";
+import { lineChartOptions, yearLabels } from "@/constants";
 
 const Devices: FC = () => {
   const deviceTabs = [
@@ -10,8 +15,35 @@ const Devices: FC = () => {
     "Project in review",
     "Project Completed",
   ];
-
   const [activeTab, setActiveTab] = useState<string>(deviceTabs[0]);
+
+  // component varaibles
+  const chartData = {
+    labels: yearLabels,
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: yearLabels.map(() => Math.random()),
+        lineTension: 0.3,
+        borderColor: "rgba(52, 122, 226, 1)",
+        backgroundColor: "rgba(52, 122, 226, 1)",
+        pointRadius: 0,
+      },
+      // {
+      //   label: "Dataset 2",
+      //   data: yearLabels.map(() => Math.random()),
+      //   lineTension: 0.4,
+      //   borderColor: "rgb(53, 162, 235)",
+      //   backgroundColor: "rgba(53, 162, 235, 0.5)",
+      // },
+    ],
+  };
+
+  const getCurrentTData: IComponentMap = {
+    "Create project": <Grid data={devices} pageSize={40} tableStyles={` `} />,
+    "Project in review": <Grid data={[]} pageSize={40} tableStyles={` `} />,
+    "Project Completed": <Grid data={[]} pageSize={40} tableStyles={` `} />,
+  };
 
   return (
     <div>
@@ -56,14 +88,13 @@ const Devices: FC = () => {
           </div>
         </div>
 
-        <div className="border mt-[26.3px]">
-          <VixLineChart />
+        <div className="mt-[26.3px] relative h-[250px]">
+          {/* <VixLineChart /> */}
+          <LineChart data={chartData} options={lineChartOptions} />
         </div>
       </div>
 
-      <div className="mt-4 border">
-        <Grid data={[]} pageSize={50} tableStyles={` `} />
-      </div>
+      <div className="mt-4">{getCurrentTData[activeTab]}</div>
     </div>
   );
 };
