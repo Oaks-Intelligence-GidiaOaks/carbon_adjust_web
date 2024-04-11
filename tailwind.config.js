@@ -31,6 +31,9 @@ export default {
           dark: "hsla(224, 76%, 18%, 1)",
           light: "#E8F3FC",
         },
+        black: {
+          main: "hsl(210,9%,31%) !important",
+        },
         "hover-color": "hsla(202,85%,50%,0.2)",
         glass: "#F1F5F8",
         "grey-swatch": {

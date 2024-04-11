@@ -1,4 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  ScrollRestoration,
+} from "react-router-dom";
 import { Home, Login, Register } from "@/pages/public";
 import AccountSetup from "@/pages/protected/shared/account-setup/AccountSetup";
 import Layout from "@/layouts/Layout";
@@ -25,6 +29,9 @@ import {
   AggregatorStaff,
   AggregatorWallet,
 } from "@/pages/protected/aggregator";
+import ApplyToAggregator from "@/pages/protected/home-occupant/ApplyToAggregator";
+import ApplyToHIA from "@/pages/protected/home-occupant/ApplyToHIA";
+import ApplyToFinance from "@/pages/protected/home-occupant/ApplyToFinance";
 import {
   HiaAddPackage,
   HiaAddStaff,
@@ -91,6 +98,49 @@ const Router = createBrowserRouter([
       {
         path: "applications",
         element: <Applications />,
+        children: [
+          {
+            path: "",
+            element: (
+              <>
+                <Navigate to={"/dashboard/applications/aggregator"} />
+                <ScrollRestoration />
+              </>
+            ),
+          },
+          {
+            path: "aggregator",
+            element: <ApplyToAggregator />,
+          },
+          {
+            path: "aggregator-applications",
+            element: <ApplyToAggregator />,
+          },
+          {
+            path: "hia",
+            element: <ApplyToHIA />,
+          },
+          {
+            path: "hia-applications",
+            element: <ApplyToAggregator />,
+          },
+          {
+            path: "finance",
+            element: <ApplyToFinance />,
+          },
+          {
+            path: "finance-applications",
+            element: <ApplyToAggregator />,
+          },
+          {
+            path: "insurance",
+            element: <ApplyToAggregator />,
+          },
+          {
+            path: "insurance-applications",
+            element: <ApplyToAggregator />,
+          },
+        ],
       },
       {
         path: "devices",

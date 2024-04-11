@@ -14,6 +14,15 @@ import {
 } from "@/assets/icons";
 // import { elements } from "chart.js";
 
+export const image1 =
+  "https://th.bing.com/th/id/R.3d6a2ad56bc3403c5cfcc3efe09b741b?rik=gnNKMMZSvZ3uMA&riu=http%3a%2f%2fpurepng.com%2fpublic%2fuploads%2flarge%2fpurepng.com-microsoft-logo-iconlogobrand-logoiconslogos-251519939091wmudn.png&ehk=1%2fl4i5MeDLTCpvZhUZlCefvhSzsGR16HIPqagpDxYDg%3d&risl=&pid=ImgRaw&r=0";
+export const image2 =
+  "https://th.bing.com/th/id/R.a2d4d66ef94dd85d56a082816b30f3e6?rik=KfrbgNT4gOOP3Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fapple-logo-transparent-png%2fapple-logo-transparent-png-10.png&ehk=sXHp47rdJ7jzwYOZuUZwbWhT8m3wcoEbbTof%2fX6I6LU%3d&risl=&pid=ImgRaw&r=0";
+export const image3 =
+  "https://th.bing.com/th/id/OIP.m1ar389tpEOAFN1NTurqvwAAAA?rs=1&pid=ImgDetMain";
+export const image4 =
+  "https://th.bing.com/th/id/R.c741810f9c33cf1dcc57c99d72e0a88f?rik=cpqlbe4biPOuAA&riu=http%3a%2f%2fwww.freelogovectors.net%2fwp-content%2fuploads%2f2018%2f03%2freal_madrid_cub_de_futbol-logo.png&ehk=0leBxEk7hblAGXb64NVnUz83tfO1n%2bVtT9C3rBadqUM%3d&risl=&pid=ImgRaw&r=0";
+
 export const accountTypes = [
   { id: 1, label: "Home occupant", value: "home-occupant" },
   { id: 2, label: "Aggregator", value: "aggregator" },
@@ -120,163 +129,6 @@ export const aggregatorSideBarItems = [
     icon: ProfileIcon,
     title: "Profile",
     href: "/aggregator/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-
-// HIA SIDE ITEMS
-export const hiaSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/hia",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/hia/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/hia/packages",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/hia/staff",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/hia/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/hia/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/hia/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/hia/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/hia/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-
-//FINANCE SIDE ITEMS
-export const financeSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/finance",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/finance/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/finance/packages",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/finance/staff",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/finance/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/finance/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/finance/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/finance/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/finance/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-
-// INSURANCE SIDE ITEMS
-export const insuranceSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/insurance",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/insurance/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/insurance/packages",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/insurance/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/insurance/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/insurance/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/insurance/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/insurance/profile",
   },
   {
     icon: LogoutIcon,
@@ -446,14 +298,14 @@ export const barChartOptions = {
   maintainAspectRatio: false,
   scales: {
     x: {
-      barThickness: 5,
+      barThickness: 20,
       grid: {
         display: false,
       },
     },
 
     y: {
-      barThickness: 5,
+      barThickness: 10,
       grid: {
         display: false,
       },
@@ -472,16 +324,362 @@ export const barChartOptions = {
 };
 
 export const doughnutChartOptions = {
-  circumference: 360,
-  cutout: "60%",
-  weight: 0,
   plugins: {
     legend: {
       display: false,
     },
   },
-  // radius: { outer: "80%" },
+  radius: "90%",
 };
+
+export const placeholderHIAPackages = [
+  {
+    org_name: "Home Improvement Agency",
+    location: "London, UK",
+    rating: "4.1",
+    subcontractors: "8",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    users: [image1, image3],
+    logo: image1,
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "London, UK",
+    rating: "4.1",
+    subcontractors: "8",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    users: [image1, image2],
+    logo: image2,
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "London, UK",
+    rating: "4.1",
+    subcontractors: "8",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+
+    users: [image1, image2, image3],
+    logo: image3,
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "London, UK",
+    rating: "4.1",
+    subcontractors: "8",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    users: [image1, image2, image3],
+    logo: image4,
+  },
+];
+
+export const placeholderFinancialPackages = [
+  {
+    org_name: "Bank of Carbon Credit",
+    location: "North East, UK",
+    loan_amount: 32000,
+    loan_duration: "3 years",
+    interest_rate: 5,
+    repayment_installment_options: {
+      weekly: 1.5,
+      monthly: 2.5,
+      quarterly: 3.5,
+    },
+    logo: image1,
+  },
+];
+
+export const pendingApplications = [
+  {
+    org_name: "Home Improvement Agency",
+    location: "1st venue, London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    subcontractors: [image1, image2],
+    logo: image1,
+    status: "approved",
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "1st venue, London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    subcontractors: [image1, image2],
+    logo: image1,
+    status: "approved/accepted",
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "1st venue, London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    subcontractors: [image1, image2],
+    logo: image1,
+    status: "applied",
+  },
+  {
+    org_name: "Home Improvement Agency",
+    location: "1st venue, London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    subcontractors: [image1, image2],
+    logo: image1,
+    status: "under-review",
+  },
+];
+
+export const subContractors = [
+  {
+    org_name: "Sub Contractor 1",
+    location: "London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    logo: image1,
+  },
+  {
+    org_name: "Sub Contractor 2",
+    location: "London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    logo: image2,
+  },
+  {
+    org_name: "Sub Contractor 3",
+    location: "London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    logo: image3,
+  },
+  {
+    org_name: "Sub Contractor 4",
+    location: "London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    homes_retrofitted: "4.7k",
+    logo: image4,
+  },
+];
+export const insuranceOptions = [
+  {
+    org_name: "Carbon Credit Bank",
+    package_name: "Insurance 1",
+    location: "London, UK",
+    rating: "4.1",
+    created_at: "2022",
+    repayment_date: "12 years",
+    loan_amount: "£32K",
+    logo: image1,
+  },
+  {
+    org_name: "Carbon Credit Bank",
+    package_name: "Insurance 1",
+    location: "London, UK",
+    rating: "4.1",
+    created_at: "2022",
+    repayment_date: "12 years",
+    loan_amount: "£32K",
+    logo: image3,
+  },
+  {
+    org_name: "Carbon Credit Bank",
+    package_name: "Insurance 1",
+    location: "London, UK",
+    rating: "4.1",
+    created_at: "2022",
+    repayment_date: "12 years",
+    loan_amount: "£32K",
+    logo: image2,
+  },
+  {
+    org_name: "Carbon Credit Bank",
+    package_name: "Insurance 1",
+    location: "London, UK",
+    rating: "4.1",
+    services: ["Window Retrofitting"],
+    created_at: "2022",
+    repayment_date: "12 years",
+    logo: image1,
+  },
+];
+
+// HIA SIDE ITEMS
+export const hiaSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/hia",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/hia/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/hia/packages",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/hia/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/hia/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/hia/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/hia/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/hia/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/hia/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+//FINANCE SIDE ITEMS
+export const financeSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/finance",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/finance/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/finance/packages",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/finance/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/finance/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/finance/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/finance/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/finance/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/finance/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+// INSURANCE SIDE ITEMS
+export const insuranceSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/insurance",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/insurance/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/insurance/packages",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/insurance/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/insurance/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/insurance/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/insurance/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/insurance/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
 
 export const lineChartOptions = {
   responsive: true,
