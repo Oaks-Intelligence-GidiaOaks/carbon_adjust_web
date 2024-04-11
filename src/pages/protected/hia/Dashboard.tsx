@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { BarChart } from "@/components/charts";
+import { BarChart, LineChart } from "@/components/charts";
 import { Grid } from "@/components/grid";
-import { DoughnutCard } from "@/components/ui";
-import { barChartOptions } from "@/constants";
+// import { DoughnutCard } from "@/components/ui";
+import { barChartOptions, lineChartOptionss } from "@/constants";
 import dummy from "@/dummy/aggregator.json";
 
 const Dashboard: FC = () => {
@@ -27,14 +27,33 @@ const Dashboard: FC = () => {
     datasets: [
       {
         label: "Received",
-        data: labels.map(() => 4),
+        data: labels.map(() => Math.random()),
         backgroundColor: `#2196F3`,
       },
       {
         label: "Declined",
-        data: labels.map(() => 5),
+        data: labels.map(() => Math.random()),
         backgroundColor: `#EF1E1E`,
       },
+    ],
+  };
+
+  const dataa = {
+    labels,
+    datasets: [
+      {
+        label: "Received",
+        data: labels.map(() => Math.random()),
+        lineTension: 0.5,
+        pointRadius: 0,
+        borderColor: "rgba(52, 122, 226, 0.8)",
+        backgroundColor: "rgba(52, 122, 226, 0.2)",
+      },
+      // {
+      //   label: "Declined",
+      //   data: labels.map(() => Math.random()),
+      //   backgroundColor: `#EF1E1E`,
+      // },
     ],
   };
 
@@ -42,17 +61,19 @@ const Dashboard: FC = () => {
     <div className="w-full px-3">
       {/* dougnuts section */}
       <div>
-        <h2>Monthly Applications Status</h2>
+        <h2>Applications Received</h2>
 
-        <div className="flex items-center overflow-x-scroll w-full gap-[33px]">
-          {labels.map((it, i) => (
+        <div className="w-full h-[250px]">
+          {/* {labels.map((it, i) => (
             <DoughnutCard
               key={i}
               title={`${it} 2023`}
               countOne={20}
               countTwo={70}
             />
-          ))}
+          ))} */}
+
+          <LineChart data={dataa} options={lineChartOptionss} />
         </div>
       </div>
 
