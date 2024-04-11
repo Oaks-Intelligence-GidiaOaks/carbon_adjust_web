@@ -1,12 +1,22 @@
+import { FC, useState } from "react";
 import TabToggler from "@/components/containers/TabToggler";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui";
-import { FC, useState } from "react";
+import agg_app from "../../../dummy/agg_app.json";
+import assigned_app from "../../../dummy/assigned_app.json";
+import { IComponentMap } from "@/types/general";
 
 const Database: FC = () => {
   const databaseTabs = ["All Applications", "Assigned Applications"];
 
   const [activeTab, setActiveTab] = useState<string>(databaseTabs[0]);
+
+  const getCurrentTData: IComponentMap = {
+    "All Applications": <Grid data={agg_app} pageSize={20} tableStyles="" />,
+    "Assigned Applications": (
+      <Grid data={assigned_app} pageSize={20} tableStyles="" />
+    ),
+  };
 
   return (
     <div className="">
@@ -33,9 +43,7 @@ const Database: FC = () => {
       </div>
 
       {/* table */}
-      <div>
-        <Grid data={[]} pageSize={20} tableStyles="" />
-      </div>
+      <div>{getCurrentTData[activeTab]}</div>
     </div>
   );
 };

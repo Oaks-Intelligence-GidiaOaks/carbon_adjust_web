@@ -53,8 +53,15 @@ ChartJS.register(
 type Props = {
   options: {};
   data: {
-    label: [];
-    datasets: [];
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      lineTension: number;
+      borderColor: string;
+      backgroundColor: string;
+      pointRadius: number;
+    }[];
   };
 };
 

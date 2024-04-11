@@ -12,7 +12,7 @@ const Layout = (props: Props) => {
       <Sidebar accountType={props.sidebarType} />
       <div className="flex-1 items-center">
         <TopBar />
-        <div className="w-full max-w-[1440px] pb-16 mx-auto h-full overflow-y-scroll">
+        <div className="w-full max-w-[1440px] pb-16 px-4 mx-auto h-full overflow-y-scroll">
           <Outlet />
         </div>
       </div>

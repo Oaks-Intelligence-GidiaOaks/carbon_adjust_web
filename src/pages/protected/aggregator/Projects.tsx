@@ -2,6 +2,10 @@ import TabToggler from "@/components/containers/TabToggler";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui";
 import { FC, useState } from "react";
+import agg_app from "../../../dummy/agg_app.json";
+import project_review from "../../../dummy/project_review.json";
+import project_completed from "../../../dummy/project_completed.json";
+import { IComponentMap } from "@/types/general";
 
 const Projects: FC = () => {
   const projectTabs = [
@@ -11,6 +15,16 @@ const Projects: FC = () => {
   ];
 
   const [activeTab, setActiveTab] = useState<string>(projectTabs[0]);
+
+  const getCurrentTData: IComponentMap = {
+    "Create project": <Grid data={agg_app} pageSize={40} tableStyles={` `} />,
+    "Project in review": (
+      <Grid data={project_review} pageSize={40} tableStyles={` `} />
+    ),
+    "Project Completed": (
+      <Grid data={project_completed} pageSize={40} tableStyles={` `} />
+    ),
+  };
 
   return (
     <div>
@@ -36,9 +50,7 @@ const Projects: FC = () => {
         />
       </div>
 
-      <div className="mt-4">
-        <Grid data={[]} pageSize={40} tableStyles={` `} />
-      </div>
+      <div className="mt-4">{getCurrentTData[activeTab]}</div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
   PNGIcon,
   ProfileIcon,
 } from "@/assets/icons";
+// import { elements } from "chart.js";
 
 export const accountTypes = [
   { id: 1, label: "Home occupant", value: "home-occupant" },
@@ -119,6 +120,163 @@ export const aggregatorSideBarItems = [
     icon: ProfileIcon,
     title: "Profile",
     href: "/aggregator/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+// HIA SIDE ITEMS
+export const hiaSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/hia",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/hia/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/hia/packages",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/hia/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/hia/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/hia/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/hia/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/hia/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/hia/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+//FINANCE SIDE ITEMS
+export const financeSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/finance",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/finance/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/finance/packages",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/finance/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/finance/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/finance/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/finance/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/finance/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/finance/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
+// INSURANCE SIDE ITEMS
+export const insuranceSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/insurance",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/insurance/applications",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/insurance/packages",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/insurance/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/insurance/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/insurance/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/insurance/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/insurance/profile",
   },
   {
     icon: LogoutIcon,
@@ -288,14 +446,14 @@ export const barChartOptions = {
   maintainAspectRatio: false,
   scales: {
     x: {
-      barThickness: 20,
+      barThickness: 5,
       grid: {
         display: false,
       },
     },
 
     y: {
-      barThickness: 10,
+      barThickness: 5,
       grid: {
         display: false,
       },
@@ -314,10 +472,59 @@ export const barChartOptions = {
 };
 
 export const doughnutChartOptions = {
+  circumference: 360,
+  cutout: "60%",
+  weight: 0,
   plugins: {
     legend: {
       display: false,
     },
   },
-  radius: "90%",
+  // radius: { outer: "80%" },
 };
+
+export const lineChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      barThickness: 20,
+      grid: {
+        display: false,
+      },
+      border: {
+        color: "rgba(230, 237, 255, 1)",
+      },
+    },
+
+    y: {
+      barThickness: 10,
+      grid: {
+        color: "rgba(230, 237, 255, 1)",
+      },
+      border: {
+        color: "rgba(230, 237, 255, 1)",
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+      position: "top" as const,
+    },
+    title: {
+      display: false,
+      text: "Chart.js Line Chart",
+    },
+  },
+};
+
+export const yearLabels = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+];

@@ -71,5 +71,5 @@ export type ProfileTabProps = {
 };
 
 export type IComponentMap = {
-  [key: string]: JSX.Element;
+  [key: string]: JSX.Element | [];
 };
