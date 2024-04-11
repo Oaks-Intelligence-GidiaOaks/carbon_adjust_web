@@ -37,7 +37,7 @@ const PackageCard = ({
   data,
   setShowSheet,
   setShowInsuranceSheet,
-  setShowInsurancePackagesSheet,
+  // setShowInsurancePackagesSheet,
   isSelected,
   closeOtherSheets,
   className,

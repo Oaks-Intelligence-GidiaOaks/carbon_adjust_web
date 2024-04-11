@@ -22,7 +22,7 @@ const RadioGroupComponent = ({
       aria-label="View density"
     >
       {options.map((option, i) => (
-        <div className="flex items-center my-2">
+        <div className="flex items-center my-2" key={i}>
           <RadioGroup.Item
             key={option}
             className={cn(
