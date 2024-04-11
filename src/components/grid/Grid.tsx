@@ -79,9 +79,9 @@ const Grid = (props: IGrid) => {
               >
                 {headerGroup.headers.map((header, i) => (
                   <th
-                    style={{
-                      color: "red",
-                    }}
+                    // style={{
+                    //   color: "red",
+                    // }}
                     className={`bg-blue-light h-[55px] leading-[16.09px] capitalize ${
                       i == 0 && "rounded-l-[12px]"
                     }`}
