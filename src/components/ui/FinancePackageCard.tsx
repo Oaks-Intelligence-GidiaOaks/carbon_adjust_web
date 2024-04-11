@@ -38,7 +38,7 @@ const FinancePackageCard = ({
   return (
     <div className={`font-titleFont font-[500] text-xs w-[403px] shrink-0`}>
       <div
-        className={`p-4 pb-6  flex items-start gap-3 w- rounded-lg shadow-md relative border bg-cover bg-[url('/public/assets/graphics/financial-card-bg.svg')] `}
+        className={`p-4 pb-6  flex items-start gap-3 w- rounded-lg shadow-md relative border bg-cover bg-[url('/assets/graphics/financial-card-bg.svg')] `}
       >
         <div className="min-w-[50px] min-h-[50px] w-[50px] h-[50px] bg-white rounded-full overflow-hidden">
           <img

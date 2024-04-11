@@ -3,7 +3,13 @@ import { cn } from "@/utils";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import * as Checkbox from "@radix-ui/react-checkbox";
 
-const CheckBox = ({ className, id, checked }: CheckboxProps) => {
+const CheckBox = ({
+  className,
+  id,
+  checked,
+  setIsChecked,
+  iconStyle,
+}: CheckboxProps) => {
   return (
     <Checkbox.Root
       className={cn(
@@ -12,9 +18,14 @@ const CheckBox = ({ className, id, checked }: CheckboxProps) => {
       )}
       checked={checked}
       id={id}
+      onClick={() => {
+        if (setIsChecked) {
+          setIsChecked(!checked);
+        }
+      }}
     >
       <Checkbox.Indicator className="text-blue-main">
-        <CheckIcon width={14} className="text-blue-main" />
+        <CheckIcon width={14} className={cn("text-blue-main", iconStyle)} />
       </Checkbox.Indicator>
     </Checkbox.Root>
   );

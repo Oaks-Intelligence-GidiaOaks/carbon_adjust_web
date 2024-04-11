@@ -36,7 +36,10 @@ const Input = ({
       {label && (
         <Label
           htmlFor={props.id}
-          className={`mb-1 block ${labelClassName} text-[#888888] group-valid:text-[#171717] group-has-[:valid]:text-[#171717]`}
+          className={cn(
+            `mb-1 block text-[#888888] group-valid:text-[#171717] group-has-[:valid]:text-[#171717]`,
+            labelClassName
+          )}
         >
           {label}
         </Label>

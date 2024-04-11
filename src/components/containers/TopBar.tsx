@@ -18,7 +18,7 @@ const TopBar = (_: Props) => {
                 to={match.pathname}
                 className="capitalize font-poppins"
               >
-                <span className="text-red-500">{breadcrumb}</span>
+                <span className="text-black-main text-sm">{breadcrumb}</span>
               </Link>
               {i < arr.length - 1 ? <span>/</span> : null}
             </div>
