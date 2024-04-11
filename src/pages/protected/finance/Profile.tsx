@@ -47,7 +47,7 @@ const Profile: FC = () => {
             <p>You have access to financial aid. Start Application now.</p>
           </div>
 
-          <div className="border mt-[60px] space-y-[7px] w-full">
+          <div className="mt-[60px] space-y-[7px] w-full">
             <h5>Profile Completeness</h5>
             <div className="flex-center gap-[7px]">
               <span className="h-[6px] w-[29px] bg-[#1BAF9E] rounded-[2px]" />

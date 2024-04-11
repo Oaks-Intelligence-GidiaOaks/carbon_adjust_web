@@ -519,6 +519,43 @@ export const lineChartOptions = {
   },
 };
 
+export const lineChartOptionss = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      barThickness: 20,
+      grid: {
+        display: false,
+      },
+      border: {
+        color: "rgba(230, 237, 255, 1)",
+      },
+    },
+
+    y: {
+      barThickness: 10,
+      grid: {
+        color: "rgba(230, 237, 255, 1)",
+        display: false,
+      },
+      border: {
+        color: "rgba(230, 237, 255, 1)",
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+      position: "top" as const,
+    },
+    title: {
+      display: false,
+      text: "Chart.js Line Chart",
+    },
+  },
+};
+
 export const yearLabels = [
   "January",
   "February",

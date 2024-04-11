@@ -6,6 +6,17 @@ import HiaPackageCard from "@/components/ui/HiaPackageCard";
 import { Link } from "react-router-dom";
 
 const Packages = () => {
+  const props = {
+    logo: "/assets/graphics/folder-graphic.svg",
+    package_name: "lorem ipsum",
+    services: [
+      "window retrofitting, door retrofitting",
+      "insulation",
+      "flexible dispatch",
+    ],
+    locations: ["England", "hawei"],
+  };
+
   if (false) {
     return <NoPackages route="/hia/package/add" />;
   }
@@ -33,10 +44,10 @@ const Packages = () => {
       </div>
 
       {/* cards */}
-      <div className="flex-center border overflow-x-scroll gap-3 mt-[40px]">
-        <HiaPackageCard data={[]} />
-        <HiaPackageCard data={[]} />
-        <HiaPackageCard data={[]} />
+      <div className="flex-center overflow-x-scroll gap-3 mt-[40px]">
+        <HiaPackageCard data={props} />
+        <HiaPackageCard data={props} />
+        <HiaPackageCard data={props} />
       </div>
 
       {/* table */}

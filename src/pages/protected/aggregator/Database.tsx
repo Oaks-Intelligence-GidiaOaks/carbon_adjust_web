@@ -5,6 +5,7 @@ import { Button } from "@/components/ui";
 import agg_app from "../../../dummy/agg_app.json";
 import assigned_app from "../../../dummy/assigned_app.json";
 import { IComponentMap } from "@/types/general";
+import { Link } from "react-router-dom";
 
 const Database: FC = () => {
   const databaseTabs = ["All Applications", "Assigned Applications"];
@@ -23,14 +24,16 @@ const Database: FC = () => {
       <div className="flex-center justify-between mb-9">
         <h2 className="page-header">Database</h2>
 
-        <Button className="flex-center gap-2">
-          <span className="text-white">Add staff</span>
-          <img
-            src="/assets/icons/plus-circle.svg"
-            className="h-6 w-6"
-            alt="carbon-adjust icon"
-          />
-        </Button>
+        <Link to={`/aggregator/staff/add`}>
+          <Button className="flex-center gap-2">
+            <span className="text-white">Add staff</span>
+            <img
+              src="/assets/icons/plus-circle.svg"
+              className="h-6 w-6"
+              alt="carbon-adjust icon"
+            />
+          </Button>
+        </Link>
       </div>
 
       {/* toggler */}
