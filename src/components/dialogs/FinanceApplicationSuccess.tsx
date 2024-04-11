@@ -7,7 +7,9 @@ type Props = {
   setShowApplicationSuccessDialog: (value: boolean) => void;
 };
 
-const FinanceApplicationSuccess = (_: Props) => {
+const FinanceApplicationSuccess = ({
+  setShowApplicationSuccessDialog,
+}: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -22,16 +24,17 @@ const FinanceApplicationSuccess = (_: Props) => {
               />
             </div>
             <p className="text-green-500 font-poppins text-center">
-              Application to Finance is successfully
+              Application to Finance is successful
             </p>
             <p className="text-black-main mt-4 font-poppins text-center">
               your application will be reviewed and you will receive feedback
             </p>
             <div className="mt-10">
               <Button
-                onClick={() =>
-                  navigate("/dashboard/applications/finance-applications")
-                }
+                onClick={() => {
+                  setShowApplicationSuccessDialog(false);
+                  navigate("/dashboard/applications/finance-applications");
+                }}
                 className="w-full text-white font-poppins h-12"
               >
                 Okay

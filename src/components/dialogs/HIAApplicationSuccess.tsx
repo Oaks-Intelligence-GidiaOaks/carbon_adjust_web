@@ -1,13 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../ui";
 import { GrClose } from "react-icons/gr";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 
 type Props = {
   setShowApplicationSuccessDialog: (value: boolean) => void;
 };
 
-const HIAApplicationSuccess = (_: Props) => {
+const HIAApplicationSuccess = ({ setShowApplicationSuccessDialog }: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -29,9 +29,15 @@ const HIAApplicationSuccess = (_: Props) => {
             </p>
             <div className="mt-10">
               <Button
-                onClick={() =>
-                  navigate("/dashboard/applications/hia-applications")
-                }
+                onClick={() => {
+                  setShowApplicationSuccessDialog(false);
+                  navigate({
+                    pathname: "",
+                    search: createSearchParams({
+                      state: "pending-applications",
+                    }).toString(),
+                  });
+                }}
                 className="w-full text-white font-poppins h-12"
               >
                 Okay

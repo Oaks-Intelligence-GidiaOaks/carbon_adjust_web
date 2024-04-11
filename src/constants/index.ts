@@ -341,7 +341,7 @@ export const placeholderHIAPackages = [
     services: ["Window Retrofitting"],
     created_at: "2022",
     homes_retrofitted: "4.7k",
-    users: [image1],
+    users: [image1, image3],
     logo: image1,
   },
   {

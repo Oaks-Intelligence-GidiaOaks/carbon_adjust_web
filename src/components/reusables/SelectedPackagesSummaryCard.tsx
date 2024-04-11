@@ -47,6 +47,7 @@ const SelectedPackagesSummaryCard = ({
           setShowSelectedPackagesSheet(false);
         }}
         className="rounded-none rounded-t-2xl"
+        type="hia"
       />
       <Button
         onClick={() => setShowMore(!showMore)}

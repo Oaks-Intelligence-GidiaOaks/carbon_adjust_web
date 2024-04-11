@@ -220,13 +220,14 @@ const ApplyToHIA = (_: Props) => {
                     Cancel
                   </Button>
                   <Button
-                    onClick={() =>
-                      navigate({
-                        pathname: "",
-                        search: createSearchParams({
-                          state: "pending-applications",
-                        }).toString(),
-                      })
+                    onClick={
+                      () => setShowApplicationSuccessDialog(true)
+                      // navigate({
+                      //   pathname: "",
+                      //   search: createSearchParams({
+                      //     state: "pending-applications",
+                      //   }).toString(),
+                      // })
                     }
                     className="text-white max-w-[192px] w-full min-w-[120px] gap-3"
                   >
@@ -270,6 +271,7 @@ const ApplyToHIA = (_: Props) => {
                         key={i}
                         setShowSheet={setShowSheet}
                         isSelected={selectedPackages.includes(i)}
+                        type="hia"
                       />
                     ))}
                   </div>

@@ -193,7 +193,8 @@ const ApplyToAggregator = (_: Props) => {
                   className="bg-white h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6 w-full"
                   onClick={() =>
                     navigate({
-                      pathname: "/dashboard/applications/hia",
+                      pathname:
+                        "/dashboard/applications/aggregator-applications",
                     })
                   }
                 >
@@ -203,14 +204,7 @@ const ApplyToAggregator = (_: Props) => {
                   variant="outline"
                   // disabled
                   className="bg-transparent h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6 w-full border-blue-main"
-                  onClick={() =>
-                    navigate({
-                      pathname: "",
-                      search: createSearchParams({
-                        state: "aggregator-form",
-                      }).toString(),
-                    })
-                  }
+                  onClick={() => navigate("/dashboard/applications/hia")}
                 >
                   <span className="text-blue-main">Apply to HIA</span>
                   <ArrowRightIcon width={24} className="text-blue-main" />
