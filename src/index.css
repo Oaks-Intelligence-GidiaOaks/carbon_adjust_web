@@ -13,7 +13,7 @@
 
 /* CSS reset */
 * {
-  @apply box-border p-0 m-0 text-[hsl(210,9%,31%)];
+  @apply box-border p-0 m-0;
 }
 
 .react-date-picker__wrapper {
@@ -53,4 +53,50 @@ react-calendar__tile react-calendar__month-view__days__day {
 
 .react-tel-input .country-list {
   @apply shadow-xl !important;
+}
+
+@layer components {
+  .transit-2 {
+    transition: all 200ms ease-in-out;
+  }
+  .transit-3 {
+    transition: all 300ms ease-in-out;
+  }
+  .pointer-inner {
+    width: 200px;
+    height: 60px;
+    position: relative;
+    background: white;
+    clip-path: polygon(80% 5%, 90.5% 50%, 80% 95%, 2% 95%, 12% 50%, 2% 5%);
+    stroke-width: 0.25em;
+  }
+  .pointer-outer {
+    width: 200px;
+    height: 60px;
+    position: relative;
+    background: white;
+    clip-path: polygon(80% 5%, 90.5% 50%, 80% 95%, 2% 95%, 12% 50%, 2% 5%);
+    stroke-linecap: round;
+    stroke-width: 0.25em;
+    transform: translateX(-12%);
+  }
+  .pointer-inner-start {
+    width: 200px;
+    height: 60px;
+    position: relative;
+    background: white;
+    clip-path: polygon(80% 5%, 90.5% 50%, 80% 95%, 0% 95%, 0% 50%, 0% 5%);
+    stroke-width: 0.25em;
+  }
+  .pointer-outer-start {
+    width: 200px;
+    height: 60px;
+    position: relative;
+    background: white;
+    clip-path: polygon(80% 5%, 90.5% 50%, 80% 95%, 0% 95%, 0% 50%, 0% 5%);
+    stroke-width: 0.25em;
+  }
+  .invert-icon {
+    filter: invert(1) brightness(2000%);
+  }
 }

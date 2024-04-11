@@ -26,6 +26,8 @@ export type CheckboxProps = {
   id?: string;
   defaultChecked?: boolean;
   checked: boolean;
+  setIsChecked?: (boolean) => void;
+  iconStyle?: string;
 };
 
 export type AccountActionHeaderProps = {

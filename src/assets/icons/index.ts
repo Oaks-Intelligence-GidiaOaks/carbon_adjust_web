@@ -20,6 +20,10 @@ import JPGIcon from "./jpg.svg?react";
 import PNGIcon from "./png.svg?react";
 import ContactMailIcon from "./contact-email.svg?react";
 import ContactLocationIcon from "./contact-location.svg?react";
+import AggregatorIcon from "./aggregator-icon.svg?react";
+import HIAIcon from "./hia-icon.svg?react";
+import FinanceIcon from "./finance-icon.svg?react";
+import InsuranceIcon from "./insurance-icon.svg?react";
 
 export {
   Logo,
@@ -44,4 +48,8 @@ export {
   JPGIcon,
   ContactMailIcon,
   ContactLocationIcon,
+  AggregatorIcon,
+  HIAIcon,
+  FinanceIcon,
+  InsuranceIcon,
 };
