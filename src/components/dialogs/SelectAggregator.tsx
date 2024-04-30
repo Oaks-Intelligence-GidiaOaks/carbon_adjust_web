@@ -3,25 +3,120 @@ import { Button, CountryRegionDropdown, Dropdown } from "../ui";
 import * as Dialog from "@radix-ui/react-dialog";
 import { GrClose } from "react-icons/gr";
 import { createSearchParams, useNavigate } from "react-router-dom";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { aggregatorTypes } from "@/constants";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { applyToAgg, fetchAggregators } from "@/services/homeOccupant";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 type Props = {
   setShowSelectAggregatorDialog: (value: boolean) => void;
+  formData: {
+    country: {
+      label: string;
+      value: string;
+    };
+    cityOrProvince: {
+      label: string;
+      value: string;
+    };
+    firstLineAddress: string;
+    zipcode: string;
+    retrofittingActivity: string;
+  };
 };
 
-const SelectAggregator = ({ setShowSelectAggregatorDialog }: Props) => {
+const SelectAggregator = ({
+  setShowSelectAggregatorDialog,
+  formData,
+}: Props) => {
   const navigate = useNavigate();
+
+  const [aggFilterFormState, setAggFilterFormState] = useState({
+    country: {
+      label: "",
+      value: "",
+    },
+    cityOrProvince: {
+      label: "",
+      value: "",
+    },
+    aggregatorType: {
+      label: "",
+      value: "",
+    },
+    aggregatorName: {
+      label: "",
+      value: "",
+    },
+    aggId: "",
+  });
+
+  const aggregators = useQuery({
+    queryKey: ["fetch-aggregators"],
+    queryFn: () =>
+      fetchAggregators(
+        aggFilterFormState.country.value,
+        aggFilterFormState.cityOrProvince.value,
+        aggFilterFormState.aggregatorType.value
+      ),
+    enabled: Boolean(
+      aggFilterFormState.country.value.length > 0 &&
+        aggFilterFormState.cityOrProvince.value.length > 0 &&
+        aggFilterFormState.aggregatorType.value.length > 0
+    ),
+  });
+
+  const applyToAggregator = useMutation({
+    mutationKey: ["apply-to-aggregator"],
+    mutationFn: () =>
+      applyToAgg({
+        retrofittingType: formData.retrofittingActivity,
+        aggId: aggFilterFormState.aggId,
+        address: {
+          cityOrProvince: formData.cityOrProvince.label,
+          country: formData.country.label,
+          zipcode: formData.zipcode,
+          firstLineAddress: formData.firstLineAddress,
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Application to aggregator submitted successfully");
+
+      setShowSelectAggregatorDialog(false);
+      navigate({
+        pathname: "",
+        search: createSearchParams({
+          state: "pending-application",
+        }).toString(),
+      });
+    },
+    onError: () => {
+      toast.error("Error sending application to aggregator");
+      setShowSelectAggregatorDialog(false);
+    },
+  });
+
+  console.log(aggregators.data?.data);
+
+  useEffect(() => {
+    if (aggregators.isError) {
+      toast.error("Error fetching aggregators.");
+    }
+    if (aggregators.isSuccess) {
+      if (aggregators.data?.data.data.length <= 0) {
+        toast.error("No aggregator found");
+      }
+    }
+  }, [aggregators.isSuccess, aggregators.isError]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowSelectAggregatorDialog(false);
-    navigate({
-      pathname: "",
-      search: createSearchParams({
-        state: "pending-application",
-      }).toString(),
-    });
+
+    applyToAggregator.mutate();
   };
+
   let countryData = Country.getAllCountries();
   return (
     <div className="w-screen max-w-[806px] bg-white h-fit rounded-md pt-6 mt-[10vh] relative">
@@ -44,6 +139,13 @@ const SelectAggregator = ({ setShowSelectAggregatorDialog }: Props) => {
                 label="Country of Residence"
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select country"
+                value={aggFilterFormState.country}
+                countryChange={(value) => {
+                  setAggFilterFormState((prev) => ({
+                    ...prev,
+                    country: value,
+                  }));
+                }}
               />
             </div>
             <div className="mt-6">
@@ -58,39 +160,77 @@ const SelectAggregator = ({ setShowSelectAggregatorDialog }: Props) => {
                 label="City/State/Province"
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select city/state/province"
+                value={aggFilterFormState.cityOrProvince}
+                cityChange={(value) =>
+                  setAggFilterFormState((prev) => ({
+                    ...prev,
+                    cityOrProvince: value,
+                  }))
+                }
               />
             </div>
             <div className="mt-6">
               <Dropdown
                 name="AggregatorType"
                 labelClassName="mb-4 text-[#000000_!important] font-poppins"
-                options={[
-                  {
-                    id: 1,
-                    label: "Local Authorities",
-                    value: "local_authorities",
-                  },
-                ]}
+                options={aggregatorTypes}
                 label="Aggregator type"
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select aggregator type"
+                value={aggFilterFormState!.aggregatorType}
+                onOptionChange={(value) =>
+                  setAggFilterFormState!((prev) => ({
+                    ...prev,
+                    aggregatorType: value,
+                  }))
+                }
               />
             </div>
             <div className="mt-6">
               <Dropdown
-                name="Aggregator name"
+                name="AggregatorName"
                 labelClassName="mb-4 text-[#000000_!important] font-poppins"
-                options={[
-                  { id: 1, label: "Amuwo Odofin LGA", value: "amuwo_odofin" },
-                ]}
-                label="City/Province"
+                options={
+                  aggregators.data?.data.data.length > 0
+                    ? aggregators.data?.data.data.map((agg: any) => ({
+                        label: agg.name,
+                        value: agg._id,
+                      }))
+                    : []
+                }
+                label="Aggregator Name"
                 wrapperClassName="bg-gray-100 w-full font-poppins"
-                placeholder="Select aggregator"
+                placeholder="Select aggregator name"
+                isLoading={aggregators.isLoading}
+                loadingText="Searching for aggregators"
+                value={aggFilterFormState!.aggregatorName}
+                onOptionChange={(value) =>
+                  setAggFilterFormState!((prev) => ({
+                    ...prev,
+                    aggregatorName: value,
+                    aggId: value.value,
+                  }))
+                }
               />
             </div>
             <div className="mt-10">
-              <Button className="w-full text-white font-poppins h-12">
-                Send
+              <Button
+                disabled={applyToAggregator.isPending}
+                className="rounded-lg text-white mt-4 w-full h-11 flex justify-center items-center"
+              >
+                {applyToAggregator.isPending ? (
+                  <Oval
+                    visible={applyToAggregator.isPending}
+                    height="20"
+                    width="20"
+                    color="#ffffff"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                  />
+                ) : (
+                  <span>Send</span>
+                )}
               </Button>
             </div>
           </form>

@@ -44,10 +44,12 @@ const Packages = () => {
       </div>
 
       {/* cards */}
-      <div className="flex-center overflow-x-scroll gap-3 mt-[40px]">
-        <HiaPackageCard data={props} />
-        <HiaPackageCard data={props} />
-        <HiaPackageCard data={props} />
+      <div className="overflow-x-scroll mt-[40px]">
+        <div className="w-0 overflow-visible flex gap-4">
+          <HiaPackageCard data={props} />
+          <HiaPackageCard data={props} />
+          <HiaPackageCard data={props} />
+        </div>
       </div>
 
       {/* table */}

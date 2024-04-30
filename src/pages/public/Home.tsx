@@ -1,10 +1,9 @@
+import { LandingPage } from "../LandingPage";
 
-type Props = {}
+type Props = {};
 
 const Home = (_: Props) => {
-  return (
-    <div>Home</div>
-  )
-}
+  return <LandingPage />;
+};
 
-export default Home
+export default Home;

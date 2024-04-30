@@ -10,6 +10,7 @@ import Card from "@/components/ui/Card";
 import HiaPackageCard from "@/components/ui/HiaPackageCard";
 import TopHiaCard from "@/components/ui/TopHiaCard";
 import { ProgressBar } from "@/components/ui";
+import { dummyHiaPackages } from "@/constants";
 
 const image =
   "https://th.bing.com/th/id/R.3d6a2ad56bc3403c5cfcc3efe09b741b?rik=gnNKMMZSvZ3uMA&riu=http%3a%2f%2fpurepng.com%2fpublic%2fuploads%2flarge%2fpurepng.com-microsoft-logo-iconlogobrand-logoiconslogos-251519939091wmudn.png&ehk=1%2fl4i5MeDLTCpvZhUZlCefvhSzsGR16HIPqagpDxYDg%3d&risl=&pid=ImgRaw&r=0";
@@ -197,76 +198,7 @@ const Dashboard = () => {
 
         <div className="flex items-center overflow-x-scroll h-fit gap-3 scrollbar-horizontal">
           <div className="max-w-[50vw] h-fit flex gap-x-3">
-            {[
-              {
-                logo: image,
-                package_name: "Double rumble 4 one",
-                services: [
-                  "Window retrofitting",
-                  "Door retrofitting",
-                  "Roof retrofitting",
-                  "Energy  retrofitting",
-                ],
-                locations: [
-                  "London",
-                  "Lagos",
-                  "Dublin",
-                  "Brentwood",
-                  "Manchester",
-                ],
-              },
-              {
-                logo: image2,
-                package_name: "Double rumble 4 one",
-                services: [
-                  "Window retrofitting",
-                  "Door retrofitting",
-                  "Roof retrofitting",
-                  "Energy  retrofitting",
-                ],
-                locations: [
-                  "London",
-                  "Lagos",
-                  "Dublin",
-                  "Brentwood",
-                  "Manchester",
-                ],
-              },
-              {
-                logo: image3,
-                package_name: "Double rumble 4 one",
-                services: [
-                  "Window retrofitting",
-                  "Door retrofitting",
-                  "Roof retrofitting",
-                  "Energy  retrofitting",
-                ],
-                locations: [
-                  "London",
-                  "Lagos",
-                  "Dublin",
-                  "Brentwood",
-                  "Manchester",
-                ],
-              },
-              {
-                logo: image4,
-                package_name: "Double rumble 4 one",
-                services: [
-                  "Window retrofitting",
-                  "Door retrofitting",
-                  "Roof retrofitting",
-                  "Energy  retrofitting",
-                ],
-                locations: [
-                  "London",
-                  "Lagos",
-                  "Dublin",
-                  "Brentwood",
-                  "Manchester",
-                ],
-              },
-            ].map((pkg: any) => (
+            {dummyHiaPackages.map((pkg: any) => (
               <HiaPackageCard data={pkg} key={pkg._id} />
             ))}
           </div>

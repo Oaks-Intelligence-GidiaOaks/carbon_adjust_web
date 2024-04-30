@@ -11,7 +11,11 @@ import {
   PDFIcon,
   PNGIcon,
   ProfileIcon,
+  UsersIcon,
+  ProjectIcon,
 } from "@/assets/icons";
+import { Payment } from "@/types/general";
+import { ColumnDef } from "@tanstack/react-table";
 // import { elements } from "chart.js";
 
 export const image1 =
@@ -24,11 +28,25 @@ export const image4 =
   "https://th.bing.com/th/id/R.c741810f9c33cf1dcc57c99d72e0a88f?rik=cpqlbe4biPOuAA&riu=http%3a%2f%2fwww.freelogovectors.net%2fwp-content%2fuploads%2f2018%2f03%2freal_madrid_cub_de_futbol-logo.png&ehk=0leBxEk7hblAGXb64NVnUz83tfO1n%2bVtT9C3rBadqUM%3d&risl=&pid=ImgRaw&r=0";
 
 export const accountTypes = [
-  { id: 1, label: "Home occupant", value: "home-occupant" },
-  { id: 2, label: "Aggregator", value: "aggregator" },
-  { id: 3, label: "Home Improvement Agency", value: "hia" },
-  { id: 4, label: "Financial Institution", value: "financial-institution" },
-  { id: 5, label: "Insurance", value: "insurance" },
+  { id: 1, label: "Home occupant", value: "HOME_OCCUPANT" },
+  { id: 2, label: "Aggregator", value: "AGGREGATOR" },
+  { id: 3, label: "Home Improvement Agency", value: "HIA" },
+  { id: 4, label: "Financial Institution", value: "FINANCIAL_INSTITUTION" },
+  { id: 5, label: "Insurance", value: "INSURANCE" },
+];
+export const aggregatorTypes = [
+  { id: 1, label: "Local Authority", value: "LOCAL_AUTHORITY" },
+  { id: 2, label: "Housing Association", value: "HOUSING_ASSOCIATION" },
+  { id: 3, label: "Property Developer", value: "PROPERTY_DEVELOPER" },
+  { id: 4, label: "Others", value: "FINANCIAL_INSTITUTION" },
+];
+
+export const retrofittingServices = [
+  { label: "Heating/Cooling", value: "Heating/Cooling" },
+  { label: "Insulation", value: "Insulation" },
+  { label: "Lighting", value: "Lighting" },
+  { label: "Flexible Dispatch", value: "Flexible Dispatch" },
+  { label: "Others", value: "Others" },
 ];
 
 export const homeOwnerSideBarItems = [
@@ -537,6 +555,11 @@ export const hiaSideBarItems = [
     href: "/hia/applications",
   },
   {
+    icon: ApplicationsIcon,
+    title: "Subcontractors",
+    href: "/hia/subcontractors",
+  },
+  {
     icon: DevicesIcon,
     title: "Packages",
     href: "/hia/packages",
@@ -570,6 +593,64 @@ export const hiaSideBarItems = [
     icon: ProfileIcon,
     title: "Profile",
     href: "/hia/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+// SUBCONTRACTOR SIDE ITEMS
+export const subcontractorSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/subcontractor",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/subcontractor/applications",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Subcontractors",
+    href: "/subcontractor/subcontractors",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Packages",
+    href: "/subcontractor/packages",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/subcontractor/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/subcontractor/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/subcontractor/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/subcontractor/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/subcontractor/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/subcontractor/profile",
   },
   {
     icon: LogoutIcon,
@@ -681,6 +762,65 @@ export const insuranceSideBarItems = [
   },
 ];
 
+// ADMIN SIDE ITEMS
+export const adminSideBarItems = [
+  {
+    icon: DashboardIcon,
+    title: "Dashboard",
+    href: "/admin",
+  },
+  {
+    icon: UsersIcon,
+    title: "Users Registration",
+    href: "/admin/users-registration",
+  },
+  {
+    icon: ApplicationsIcon,
+    title: "Applications",
+    href: "/admin/applications",
+  },
+  {
+    icon: ProjectIcon,
+    title: "Projects",
+    href: "/admin/projects",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/admin/staff",
+  },
+  {
+    icon: CarbonCreditIcon,
+    title: "Carbon Credit Account",
+    href: "/admin/carbon-credit",
+  },
+  {
+    icon: InboxIcon,
+    title: "Inbox",
+    href: "/admin/inbox",
+  },
+  {
+    icon: DocumentCentreIcon,
+    title: "Document Centre",
+    href: "/admin/document-centre",
+  },
+  {
+    icon: ContactIcon,
+    title: "Contact Us",
+    href: "/admin/contact",
+  },
+  {
+    icon: ProfileIcon,
+    title: "Profile",
+    href: "/admin/profile",
+  },
+  {
+    icon: LogoutIcon,
+    title: "Logout",
+    href: "/..",
+  },
+];
+
 export const lineChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -762,4 +902,98 @@ export const yearLabels = [
   "May",
   "June",
   "July",
+];
+
+export const epcRatings = [
+  { value: "A", label: "A (92-100)" },
+  { value: "B", label: "B (81-91)" },
+  { value: "C", label: "C (69-80)" },
+  { value: "D", label: "D (55-68)" },
+  { value: "E", label: "E (39-54)" },
+  { value: "F", label: "F (21-38)" },
+  { value: "G", label: "G (1-20)" },
+];
+
+export const idTypes = [
+  { value: "Passport", label: "Passport" },
+  { value: "Driver License", label: "Driver License" },
+  { value: "Resident Permit", label: "Resident Permit" },
+  { value: "Others", label: "Others" },
+];
+
+export const payments: Payment[] = [
+  {
+    id: "728ed52f",
+    amount: 100,
+    status: "pending",
+    email: "m@example.com",
+  },
+  {
+    id: "489e1d42",
+    amount: 125,
+    status: "processing",
+    email: "example@gmail.com",
+  },
+  // ...
+];
+export const columns: ColumnDef<Payment>[] = [
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+  },
+];
+
+export const dummyHiaPackages = [
+  {
+    logo: image1,
+    package_name: "Double rumble 4 one",
+    services: [
+      "Window retrofitting",
+      "Door retrofitting",
+      "Roof retrofitting",
+      "Energy  retrofitting",
+    ],
+    locations: ["London", "Lagos", "Dublin", "Brentwood", "Manchester"],
+  },
+  {
+    logo: image2,
+    package_name: "Double rumble 4 one",
+    services: [
+      "Window retrofitting",
+      "Door retrofitting",
+      "Roof retrofitting",
+      "Energy  retrofitting",
+    ],
+    locations: ["London", "Lagos", "Dublin", "Brentwood", "Manchester"],
+  },
+  {
+    logo: image3,
+    package_name: "Double rumble 4 one",
+    services: [
+      "Window retrofitting",
+      "Door retrofitting",
+      "Roof retrofitting",
+      "Energy  retrofitting",
+    ],
+    locations: ["London", "Lagos", "Dublin", "Brentwood", "Manchester"],
+  },
+  {
+    logo: image4,
+    package_name: "Double rumble 4 one",
+    services: [
+      "Window retrofitting",
+      "Door retrofitting",
+      "Roof retrofitting",
+      "Energy  retrofitting",
+    ],
+    locations: ["London", "Lagos", "Dublin", "Brentwood", "Manchester"],
+  },
 ];

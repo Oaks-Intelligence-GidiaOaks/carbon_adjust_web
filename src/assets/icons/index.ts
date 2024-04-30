@@ -24,6 +24,8 @@ import AggregatorIcon from "./aggregator-icon.svg?react";
 import HIAIcon from "./hia-icon.svg?react";
 import FinanceIcon from "./finance-icon.svg?react";
 import InsuranceIcon from "./insurance-icon.svg?react";
+import UsersIcon from "./users.svg?react";
+import ProjectIcon from "./projects.svg?react";
 
 export {
   Logo,
@@ -52,4 +54,6 @@ export {
   HIAIcon,
   FinanceIcon,
   InsuranceIcon,
+  UsersIcon,
+  ProjectIcon,
 };

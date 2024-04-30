@@ -1,10 +1,12 @@
 import { Logo } from "@/assets/icons";
 import {
+  adminSideBarItems,
   aggregatorSideBarItems,
   financeSideBarItems,
   hiaSideBarItems,
   homeOwnerSideBarItems,
   insuranceSideBarItems,
+  subcontractorSideBarItems,
 } from "@/constants";
 import { SideBarItem, SideBarProps } from "@/types/general";
 import { cn } from "@/utils";
@@ -22,10 +24,14 @@ const Sidebar = ({ accountType }: SideBarProps) => {
         return aggregatorSideBarItems;
       case "hia":
         return hiaSideBarItems;
+      case "subcontractor":
+        return subcontractorSideBarItems;
       case "finance":
         return financeSideBarItems;
       case "insurance":
         return insuranceSideBarItems;
+      case "admin":
+        return adminSideBarItems;
       default:
         return homeOwnerSideBarItems;
     }

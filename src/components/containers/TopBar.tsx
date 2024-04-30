@@ -29,7 +29,7 @@ const TopBar = (_: Props) => {
             <div className="flex justify-center items-center">
               <UserCircleIcon fontSize={20} width={32} />
             </div>
-            <span>Jeffery Cooper</span>
+            {/* <span>Jeffery Cooper</span> */}
           </div>
         </div>
       </div>

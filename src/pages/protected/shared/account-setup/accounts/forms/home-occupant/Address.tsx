@@ -1,13 +1,37 @@
 import { Dropdown, Input, CountryRegionDropdown } from "@/components/ui";
+import { epcRatings } from "@/constants";
+import { AddressSetupForm } from "@/types/general";
 import { Country, State } from "country-state-city";
+import { useEffect, useState } from "react";
 
-type Props = {};
+type Props = {
+  formState: AddressSetupForm;
+  setFormState: React.Dispatch<React.SetStateAction<AddressSetupForm>>;
+};
 
-const Address = (_: Props) => {
+const Address = ({ formState, setFormState }: Props) => {
   let countryData = Country.getAllCountries();
 
+  const [country, setCountry] = useState({ label: "", value: "" });
+  const [statesList, setStatesList] = useState<
+    { label: string; value: string }[]
+  >([]);
+
+  useEffect(() => {
+    setStatesList(
+      State.getStatesOfCountry(country?.value).map((state) => ({
+        label: state.name,
+        value: state.isoCode,
+      }))
+    );
+    setFormState((prev) => ({
+      ...prev,
+      cityOrProvince: { label: "", value: "" },
+    }));
+  }, [country]);
+
   return (
-    <div className="">
+    <div>
       <div className="p-6 px-14 pt-14 bg-white my-10 pb-20 rounded-xl flex flex-col gap-y-6">
         <div>
           <CountryRegionDropdown
@@ -22,6 +46,14 @@ const Address = (_: Props) => {
             label="Country of Residence"
             wrapperClassName="bg-gray-100 w-full"
             placeholder="Select country"
+            value={formState.country}
+            countryChange={(value) => {
+              setCountry(value);
+              setFormState((prev) => ({
+                ...prev,
+                country: value,
+              }));
+            }}
           />
         </div>
 
@@ -29,14 +61,18 @@ const Address = (_: Props) => {
           <CountryRegionDropdown
             name="city/province"
             labelClassName="mb-4 text-[#000000_!important]"
-            options={State.getStatesOfCountry("NG").map((state) => ({
-              label: state.name,
-              value: state.isoCode,
-            }))}
+            options={statesList}
             searchable={true}
             label="City/Province"
             wrapperClassName="bg-gray-100 w-full"
             placeholder="Select city/province"
+            value={formState.cityOrProvince}
+            cityChange={(value) =>
+              setFormState((prev) => ({
+                ...prev,
+                cityOrProvince: value,
+              }))
+            }
           />
         </div>
         <Input
@@ -45,6 +81,13 @@ const Address = (_: Props) => {
           labelClassName="mb-4"
           inputClassName="bg-gray-100"
           placeholder="Enter address"
+          value={formState.firstLineAddress}
+          onChange={(e) =>
+            setFormState((prev) => ({
+              ...prev,
+              firstLineAddress: e.target.value,
+            }))
+          }
         />
         <Input
           name="zipCode"
@@ -52,15 +95,26 @@ const Address = (_: Props) => {
           labelClassName="mb-4"
           inputClassName="bg-gray-100"
           placeholder="Enter zip code"
+          value={formState.zipcode}
+          onChange={(e) =>
+            setFormState((prev) => ({ ...prev, zipcode: e.target.value }))
+          }
         />
         <div>
           <Dropdown
             name="epcRating"
             labelClassName="mb-4 text-[#000000_!important]"
-            options={[{ id: 1, label: "Nigeria", value: "nigeria" }]}
+            options={epcRatings}
             label="EPC Rating"
             wrapperClassName="bg-gray-100 w-full"
             placeholder="Select EPC rating"
+            value={formState.epcRating}
+            onOptionChange={(value) =>
+              setFormState((prev) => ({
+                ...prev,
+                epcRating: value,
+              }))
+            }
           />
         </div>
       </div>

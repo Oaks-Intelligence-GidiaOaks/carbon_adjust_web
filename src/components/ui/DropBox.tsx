@@ -6,15 +6,24 @@ import { Button } from "./Button";
 import { CameraIcon } from "@heroicons/react/20/solid";
 import { formatBytes } from "@/utils";
 
-const DropBox = (_: DropBoxProps) => {
+const DropBox = ({
+  value,
+  setFile: setStateFile,
+  setFiles: setStateOrgFiles,
+  docName,
+}: DropBoxProps) => {
   // interface HTMLInputEvent extends Event {
   //   target: HTMLInputElement & EventTarget;
   // }
 
   const wrapperRef = useRef<HTMLElement>();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [fileList, setFileList] = useState<File[]>([]);
-  const [, setFile] = useState<null | File>(null);
+  const [, setFile] = useState<null | File>(
+    value !== null && value !== undefined ? value[0] : null
+  );
   const [fileSizeError, setFileSizeError] = useState(false);
 
   const generateFileTypeIcon = (mimeType: string) => {
@@ -52,6 +61,15 @@ const DropBox = (_: DropBoxProps) => {
         localStorage.setItem("file", JSON.stringify(newFile));
         const updatedList = [newFile];
         setFileList(updatedList);
+        if (setStateFile) {
+          setStateFile((prev) => ({ ...prev, doc: updatedList }));
+        }
+        if (setStateOrgFiles) {
+          setStateOrgFiles((prev) => ({
+            ...prev,
+            ...(docName ? { [docName]: updatedList } : {}),
+          }));
+        }
         // onFileChange(updatedList);
         // onFileChange(newFile);
       }
@@ -63,6 +81,15 @@ const DropBox = (_: DropBoxProps) => {
     const updatedList = [...fileList];
     updatedList.splice(fileList.indexOf(file), 1);
     setFileList(updatedList);
+    if (setStateFile) {
+      setStateFile((prev) => ({ ...prev, doc: updatedList }));
+    }
+    if (setStateOrgFiles) {
+      setStateOrgFiles((prev) => ({
+        ...prev,
+        ...(docName ? { [docName]: updatedList } : {}),
+      }));
+    }
     // props.onFileChange(updatedList);
     // onFileChange(updatedList);
   };
@@ -94,9 +121,11 @@ const DropBox = (_: DropBoxProps) => {
           </div>
           <input
             type="file"
+            ref={fileInputRef}
             value=""
-            className=" opacity-0 absolute inset-0 h-full w-full cursor-pointer"
+            className="opacity-0 absolute inset-0 h-full w-full cursor-pointer"
             onChange={onFileDrop}
+            id="file"
           />
         </div>
         {/* {children} */}

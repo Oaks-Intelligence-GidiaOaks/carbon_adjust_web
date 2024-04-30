@@ -46,6 +46,20 @@ import {
   HiaWallet,
 } from "@/pages/protected/hia";
 import {
+  AdminAddPackage,
+  AdminAddStaff,
+  AdminApplications,
+  AdminContact,
+  AdminDashboard,
+  AdminDocumentCentre,
+  AdminInbox,
+  AdminPackages,
+  AdminProfile,
+  AdminStaff,
+  AdminUsersRegistration,
+  AdminWallet,
+} from "@/pages/protected/admin";
+import {
   FinanceAddPackage,
   FinanceAddStaff,
   FinanceApplications,
@@ -69,6 +83,9 @@ import {
   InsuranceProfile,
   InsuranceWallet,
 } from "@/pages/protected/insurance";
+import PendingVerification from "@/pages/protected/shared/PendingVerification";
+import Registration from "@/pages/protected/hia/Registration";
+import Specializations from "@/pages/protected/hia/Specialization";
 
 const Router = createBrowserRouter([
   {
@@ -86,6 +103,10 @@ const Router = createBrowserRouter([
   {
     path: "/account-setup",
     element: <AccountSetup />,
+  },
+  {
+    path: "/pending-verification",
+    element: <PendingVerification />,
   },
   {
     path: "/dashboard",
@@ -235,6 +256,94 @@ const Router = createBrowserRouter([
       {
         path: "applications",
         element: <HiaApplications />,
+      },
+      {
+        path: "subcontractors",
+        children: [
+          {
+            path: "",
+            element: <Registration />,
+          },
+          {
+            path: "specialization",
+            element: <Specializations />,
+          },
+        ],
+      },
+      {
+        path: "packages",
+        children: [
+          {
+            path: "",
+            element: <HiaPackages />,
+          },
+          {
+            path: "add",
+            element: <HiaAddPackage />,
+          },
+        ],
+      },
+
+      {
+        path: "staff",
+        children: [
+          {
+            path: "",
+            element: <HiaStaff />,
+          },
+          {
+            path: "add",
+            element: <HiaAddStaff />,
+          },
+        ],
+      },
+      {
+        path: "carbon-credit",
+        element: <HiaWallet />,
+      },
+      {
+        path: "inbox",
+        element: <HiaInbox />,
+      },
+      {
+        path: "document-centre",
+        element: <HiaDocumentCentre />,
+      },
+      {
+        path: "contact",
+        element: <HiaContact />,
+      },
+      {
+        path: "profile",
+        element: <HiaProfile />,
+      },
+    ],
+  },
+  // SUBCONTRACTOR ROUTES
+  {
+    path: "/subcontractor",
+    element: <Layout sidebarType="hia" />,
+    children: [
+      {
+        path: "",
+        element: <HiaDashboard />,
+      },
+      {
+        path: "applications",
+        element: <HiaApplications />,
+      },
+      {
+        path: "subcontractors",
+        children: [
+          {
+            path: "",
+            element: <Registration />,
+          },
+          {
+            path: "specialization",
+            element: <Specializations />,
+          },
+        ],
       },
       {
         path: "packages",
@@ -392,6 +501,72 @@ const Router = createBrowserRouter([
       {
         path: "profile",
         element: <InsuranceProfile />,
+      },
+    ],
+  },
+  // ADMIN ROUTES
+  {
+    path: "/admin",
+    element: <Layout sidebarType="admin" />,
+    children: [
+      {
+        path: "",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "users-registration",
+        element: <AdminUsersRegistration />,
+      },
+      {
+        path: "applications",
+        element: <AdminApplications />,
+      },
+      {
+        path: "projects",
+        children: [
+          {
+            path: "",
+            element: <AdminPackages />,
+          },
+          {
+            path: "add",
+            element: <AdminAddPackage />,
+          },
+        ],
+      },
+
+      {
+        path: "staff",
+        children: [
+          {
+            path: "",
+            element: <AdminStaff />,
+          },
+          {
+            path: "add",
+            element: <AdminAddStaff />,
+          },
+        ],
+      },
+      {
+        path: "carbon-credit",
+        element: <AdminWallet />,
+      },
+      {
+        path: "inbox",
+        element: <AdminInbox />,
+      },
+      {
+        path: "document-centre",
+        element: <AdminDocumentCentre />,
+      },
+      {
+        path: "contact",
+        element: <AdminContact />,
+      },
+      {
+        path: "profile",
+        element: <AdminProfile />,
       },
     ],
   },

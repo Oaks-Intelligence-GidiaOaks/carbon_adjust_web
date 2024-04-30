@@ -3,14 +3,21 @@ import { Input } from "../../components/ui";
 import { Button } from "@/components/ui/Button";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterFormContext } from "@/types/form";
+import { LoginFormContext } from "@/types/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormSchemas } from "@/schemas/forms";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import AccountActionHeader from "@/components/reusables/account-setup/AccountActionHeader";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
+import { setToken } from "@/features/userSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,12 +28,43 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormContext>({
-    resolver: yupResolver(FormSchemas().RegisterSchema),
+  } = useForm<LoginFormContext>({
+    resolver: yupResolver(FormSchemas().LoginSchema),
   });
 
-  const onSubmit: SubmitHandler<RegisterFormContext> = (data) => {
+  const loginUser = useMutation({
+    mutationFn: (loginCredentials: { email: string; password: string }) =>
+      axiosInstance.post(`/auth/login`, loginCredentials),
+    mutationKey: ["login-account"],
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ?? "Error encountered trying to login."
+      );
+    },
+    onSuccess: (data) => {
+      dispatch(setToken(data.data.data.access_token));
+      toast.success(`${"Login successful"}`, { duration: 10000 });
+
+      handleRedirect(data.data.data.user.roles[0]);
+    },
+  });
+
+  const handleRedirect = (role: string) => {
+    if (role === "HOME_OCCUPANT") return navigate("/dashboard");
+    if (role === "AGGREGATOR") return navigate("/aggregator");
+    if (role === "HIA") return navigate("/hia");
+    if (role === "FINANCIAL_INSTITUTION") return navigate("/finance");
+    if (role === "INSURANCE") return navigate("/insurance");
+    if (role === "SUBCONTRACTOR") return navigate("/subcontractor");
+    if (role === "ADMIN") return navigate("/admin");
+  };
+
+  const onSubmit: SubmitHandler<LoginFormContext> = async (data) => {
     console.log(data);
+    await loginUser.mutateAsync({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   const goToRegistration = () => {
@@ -43,8 +81,8 @@ const Login = () => {
           />
         </div>
         <div className="mt-8 flex justify-center mx-auto">
-          <div className="flex justify-between px-14 py-3 w-full max-w-[1440px]">
-            <div className="flex justify-start min-h-screen flex-[0.55] flex-col relative">
+          <div className="flex justify-between px-4 md:px-14 py-3 w-full max-w-[1440px]">
+            <div className="hidden md:flex justify-start min-h-screen flex-[0.55] flex-col relative">
               <div className="flex flex-col items-center gap-y-7 pt-10">
                 <p className="max-w-[342px] text-center">
                   In need of Carbon Credit?
@@ -54,7 +92,7 @@ const Login = () => {
               </div>
               <RegisterGraphic className="absolute bottom-0 right-0 w-[120%] flex justify-center -z-10 min-h-[720px]" />
             </div>
-            <div className="bg-glass h-fit flex-[0.45] py-9 px-12 rounded-xl max-w-[600px]">
+            <div className="bg-glass h-fit flex-1 md:flex-[0.45] py-9 px-4 md:px-12 rounded-xl max-w-[600px]">
               <p className="text-3xl font-bold">Login</p>
               <p className="pt-2">Welcome back, please enter your details.</p>
               <form className="mt-7" onSubmit={handleSubmit(onSubmit)}>
@@ -68,7 +106,7 @@ const Login = () => {
                   placeholder="Email"
                 />
                 <Input
-                  type={"text"}
+                  type={showPassword ? "text" : "password"}
                   labelClassName="text-sm 2xl:text-base font-normal"
                   name="password"
                   register={register}
@@ -91,8 +129,23 @@ const Login = () => {
                   error={errors.password?.message}
                   placeholder="Password"
                 />
-                <Button className="rounded-lg text-white mt-4 w-full h-11">
-                  Login
+                <Button
+                  disabled={loginUser.isPending}
+                  className="rounded-lg text-white mt-4 w-full h-11 flex justify-center items-center"
+                >
+                  {loginUser.isPending ? (
+                    <Oval
+                      visible={loginUser.isPending}
+                      height="20"
+                      width="20"
+                      color="#ffffff"
+                      ariaLabel="oval-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  ) : (
+                    <span>Login</span>
+                  )}
                 </Button>
                 <p className="mt-6 text-sm">
                   Don't have an account?{" "}
@@ -110,9 +163,9 @@ const Login = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="max-w-[1440px] text-center mt-10 text-sm">
-          Copyright Copyright Escrow-Tech Limited {new Date().getFullYear()}.
-          All Rights Reserved.
+        <div className="max-w-[1440px] text-center mt-10 text-sm pb-4">
+          Copyright Escrow-Tech Limited {new Date().getFullYear()}. All Rights
+          Reserved.
         </div>
       </div>
     </div>

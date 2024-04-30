@@ -11,6 +11,10 @@ import DialogComponent from "@/components/reusables/Dialog";
 import { LuRefreshCcw } from "react-icons/lu";
 import { SelectAggregator } from "@/components/dialogs";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+// import { useQuery } from "@tanstack/react-query";
+// import { fetchRetrofittingOptions } from "@/services/homeOccupant";
 
 type Props = {};
 
@@ -21,7 +25,31 @@ const ApplyToAggregator = (_: Props) => {
   const [showSelectAggregatorDialog, setShowSelectAggregatorDialog] =
     useState(false);
 
+  const userData = useSelector((state: RootState) => state.user.user);
+  console.log(userData);
+
+  const [addressFormState, setAddressFormState] = useState({
+    country: {
+      label: userData?.address.country ?? "",
+      value: userData?.address.country ?? "",
+    },
+    cityOrProvince: {
+      label: userData?.address.cityOrProvince ?? "",
+      value: userData?.address.cityOrProvince ?? "",
+    },
+    firstLineAddress: userData?.address.firstLineAddress ?? "",
+    zipcode: userData?.address.zipcode ?? "",
+    retrofittingActivity: "",
+  });
+
   const tab = searchParams.get("state");
+
+  // const retrofittingOptions = useQuery({
+  //   queryKey: ["retrofitting-options"],
+  //   queryFn: fetchRetrofittingOptions,
+  // });
+
+  // console.log(retrofittingOptions.data?.data.data);
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -37,13 +65,20 @@ const ApplyToAggregator = (_: Props) => {
                 seeking Carbon Credit for.
               </p>
 
-              <form className="mt-10">
+              <form className="mt-10" onSubmit={(e) => e.preventDefault()}>
                 <Input
                   name="firstLineOfAddress"
                   label="First Line of Address"
                   labelClassName="mb-4 font-poppins text-black-main"
                   inputClassName="bg-gray-100 font-poppins"
                   placeholder="Enter address"
+                  value={addressFormState.firstLineAddress}
+                  onChange={(e) =>
+                    setAddressFormState((prev) => ({
+                      ...prev,
+                      firstLineAddress: e.target.value,
+                    }))
+                  }
                 />
                 <div className="mt-6">
                   <CountryRegionDropdown
@@ -57,7 +92,14 @@ const ApplyToAggregator = (_: Props) => {
                     searchable={true}
                     label="Country of Residence"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
+                    value={addressFormState.country}
                     placeholder="Select country"
+                    countryChange={(value) => {
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        country: value,
+                      }));
+                    }}
                   />
                 </div>
                 <div className="mt-6">
@@ -72,6 +114,13 @@ const ApplyToAggregator = (_: Props) => {
                     label="City/State/Province"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select city/state/province"
+                    value={addressFormState.cityOrProvince}
+                    cityChange={(value) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        cityOrProvince: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -82,10 +131,24 @@ const ApplyToAggregator = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter post/zip code"
+                    value={addressFormState.zipcode}
+                    onChange={(e) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        zipcode: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <RadioGroupComponent
+                    value={addressFormState.retrofittingActivity}
+                    setValue={(value: string) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        retrofittingActivity: value,
+                      }))
+                    }
                     options={[
                       "Heating/Cooling",
                       "Insulation",
@@ -263,6 +326,7 @@ const ApplyToAggregator = (_: Props) => {
           onOpenChange={() => setShowSelectAggregatorDialog(false)}
         >
           <SelectAggregator
+            formData={addressFormState}
             setShowSelectAggregatorDialog={setShowSelectAggregatorDialog}
           />
         </DialogComponent>

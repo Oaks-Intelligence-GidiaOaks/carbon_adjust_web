@@ -39,6 +39,7 @@ const ProfileForm: FC<Props> = ({}) => {
           name="tel"
           label="Phone"
           labelClassName="mb-4"
+          onInputChange={() => {}}
           inputClassName={inputClassName}
           placeholder="+234"
         />

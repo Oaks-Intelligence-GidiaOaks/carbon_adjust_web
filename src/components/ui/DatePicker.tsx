@@ -19,6 +19,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   inputClassName?: string;
   placeholder?: string;
+  dateValue?: string;
+  onDateChange: (value: Value) => void;
 }
 
 const Datepicker = ({
@@ -32,11 +34,13 @@ const Datepicker = ({
   label,
   inputClassName,
   placeholder,
+  onDateChange,
+  dateValue,
   ...props
 }: //   className,
 
 InputProps) => {
-  const [value, onChange] = useState<Value>(new Date());
+  const [] = useState<Value>(new Date());
 
   return (
     <div className={cn(wrapperClassName, "group w-full")}>
@@ -73,8 +77,8 @@ InputProps) => {
         /> */}
 
         <DatePicker
-          onChange={onChange}
-          value={value}
+          onChange={(value) => onDateChange(value)}
+          value={dateValue}
           className={cn("w-full px-[0px_!important] border-none")}
           calendarClassName={cn(
             "font-manrope rounded-lg border-[0_!important] shadow-lg overflow-hidden"
