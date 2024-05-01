@@ -31,8 +31,11 @@ import { Finance } from "@/types/general";
 import { DataTable } from "@/components/tables/DataTable";
 import { useEffect, useState } from "react";
 import { EpcRatingChart } from "@/components/charts";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 const Dashboard = () => {
+  const userData = useSelector((state: RootState) => state.user.user);
   // const get_hia_packages = useQuery({
   //   queryKey: ["get_hia_packagess"],
   //   queryFn: () => axios.get("package/hia").then((res) => res.data),
@@ -113,7 +116,9 @@ const Dashboard = () => {
             <div className="w-[40%] pt-4 h-full font-poppins text-4xl font-medium">
               <p>
                 Your EPC Rating is{" "}
-                <span className="text-blue-main font-semibold text-5xl">C</span>
+                <span className="text-blue-main font-semibold text-5xl">
+                  {userData?.epcRating}
+                </span>
               </p>
               <p className="relative text-xl font-normal mx-5 pt-6 w-1/2">
                 How you compare to other users
