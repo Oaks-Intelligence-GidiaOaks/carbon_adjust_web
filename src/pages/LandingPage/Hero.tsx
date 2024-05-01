@@ -6,6 +6,8 @@ import Image5 from "../../assets/image-5.png";
 import Image6 from "../../assets/image-6.png";
 import Image7 from "../../assets/image-7.png";
 import Image8 from "../../assets/image-8.png";
+import Image9 from "../../assets/image-9.svg";
+import Image10 from "../../assets/image-10.svg";
 
 import Banner from "../../assets/Banner.svg";
 import { NavLink } from "react-router-dom";
@@ -211,6 +213,8 @@ const Hero = () => {
             <img src={Image5} alt="" className="h-20" />
             <img src={Image6} alt="" className="h-20" />
             <img src={Image7} alt="" className="h-20" />
+            <img src={Image9} alt="" className="h-20" />
+            <img src={Image10} alt="" className="h-20" />
             <img src={Image8} className="mr-28" alt="" />
           </div>
         </Marquee>
