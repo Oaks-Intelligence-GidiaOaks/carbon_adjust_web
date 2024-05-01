@@ -11,17 +11,109 @@ import DialogComponent from "@/components/reusables/Dialog";
 import { LuRefreshCcw } from "react-icons/lu";
 import { SelectAggregator } from "@/components/dialogs";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
+// import { useQuery } from "@tanstack/react-query";
+// import { fetchRetrofittingOptions } from "@/services/homeOccupant";
 
 type Props = {};
 
 const ApplyToAggregator = (_: Props) => {
+  // const queryClient = useQueryClient();
   let countryData = Country.getAllCountries();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSelectAggregatorDialog, setShowSelectAggregatorDialog] =
     useState(false);
 
+  const userData = useSelector((state: RootState) => state.user.user);
+  console.log(userData);
+
+  const [addressFormState, setAddressFormState] = useState({
+    country: {
+      label: userData?.address.country ?? "",
+      value: userData?.address.country ?? "",
+    },
+    cityOrProvince: {
+      label: userData?.address.cityOrProvince ?? "",
+      value: userData?.address.cityOrProvince ?? "",
+    },
+    firstLineAddress: userData?.address.firstLineAddress ?? "",
+    zipcode: userData?.address.zipcode ?? "",
+    retrofittingActivity: "",
+  });
+
   const tab = searchParams.get("state");
+
+  // const retrofittingOptions = useQuery({
+  //   queryKey: ["retrofitting-options"],
+  //   queryFn: fetchRetrofittingOptions,
+  // });
+
+  // console.log(retrofittingOptions.data?.data.data);
+  const getApplicationStatus = useQuery({
+    queryKey: ["application-status"],
+    queryFn: () => axiosInstance.get("/applications/me/latest"),
+  });
+
+  console.log(getApplicationStatus.data?.data);
+
+  // useEffect(() => {
+  //   if (getApplicationStatus.isSuccess) {
+  //     if (!getApplicationStatus.data?.data.data.hasApp) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Initiated"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "pending-application",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Rejected"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "application-rejected",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Approved"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "application-approved",
+  //         }).toString(),
+  //       });
+  //     }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 2) {
+  //     //   return navigate("/dashboard/applications/hia");
+  //     // }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
+  //     //   return navigate("/dashboard/applications/finance");
+  //     // }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
+  //     //   return navigate("/dashboard/applications/insurance");
+  //     // }
+  //   }
+  // }, [getApplicationStatus.isSuccess]);
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -37,13 +129,20 @@ const ApplyToAggregator = (_: Props) => {
                 seeking Carbon Credit for.
               </p>
 
-              <form className="mt-10">
+              <form className="mt-10" onSubmit={(e) => e.preventDefault()}>
                 <Input
                   name="firstLineOfAddress"
                   label="First Line of Address"
                   labelClassName="mb-4 font-poppins text-black-main"
                   inputClassName="bg-gray-100 font-poppins"
                   placeholder="Enter address"
+                  value={addressFormState.firstLineAddress}
+                  onChange={(e) =>
+                    setAddressFormState((prev) => ({
+                      ...prev,
+                      firstLineAddress: e.target.value,
+                    }))
+                  }
                 />
                 <div className="mt-6">
                   <CountryRegionDropdown
@@ -57,7 +156,14 @@ const ApplyToAggregator = (_: Props) => {
                     searchable={true}
                     label="Country of Residence"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
+                    value={addressFormState.country}
                     placeholder="Select country"
+                    countryChange={(value) => {
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        country: value,
+                      }));
+                    }}
                   />
                 </div>
                 <div className="mt-6">
@@ -72,6 +178,13 @@ const ApplyToAggregator = (_: Props) => {
                     label="City/State/Province"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select city/state/province"
+                    value={addressFormState.cityOrProvince}
+                    cityChange={(value) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        cityOrProvince: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -82,10 +195,24 @@ const ApplyToAggregator = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter post/zip code"
+                    value={addressFormState.zipcode}
+                    onChange={(e) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        zipcode: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <RadioGroupComponent
+                    value={addressFormState.retrofittingActivity}
+                    setValue={(value: string) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        retrofittingActivity: value,
+                      }))
+                    }
                     options={[
                       "Heating/Cooling",
                       "Insulation",
@@ -119,16 +246,21 @@ const ApplyToAggregator = (_: Props) => {
                 Awaiting approval
               </p>
               <Button
+                // disabled={useIsFetching({queryKey: ["application-status"]})}
                 variant="default"
                 // disabled
                 className="bg-white h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6"
-                onClick={() =>
-                  navigate({
-                    pathname: "",
-                    search: createSearchParams({
-                      state: "application-approved",
-                    }).toString(),
-                  })
+                onClick={
+                  () =>
+                    navigate({
+                      pathname: "",
+                      search: createSearchParams({
+                        state: "application-approved",
+                      }).toString(),
+                    })
+                  // queryClient.invalidateQueries({
+                  //   queryKey: ["application-status"],
+                  // })
                 }
               >
                 <span className="text-white">Refresh</span>
@@ -263,6 +395,7 @@ const ApplyToAggregator = (_: Props) => {
           onOpenChange={() => setShowSelectAggregatorDialog(false)}
         >
           <SelectAggregator
+            formData={addressFormState}
             setShowSelectAggregatorDialog={setShowSelectAggregatorDialog}
           />
         </DialogComponent>

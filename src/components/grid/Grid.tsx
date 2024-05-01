@@ -18,7 +18,7 @@ import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 const columnHelper = createColumnHelper<any>();
 
-const Grid = (props: IGrid) => {
+const Grid = (props: IGrid & { type?: string }) => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: props.pageSize,
@@ -74,7 +74,7 @@ const Grid = (props: IGrid) => {
           <thead className="w-full text-xs font-[600] font-poppins sticky top-0">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
-                className="rounded-[32px] text-[#2196F3]  w-full  p-2"
+                className="rounded-[32px] text-[#2196F3] w-full p-2"
                 key={headerGroup.id}
               >
                 {headerGroup.headers.map((header, i) => (

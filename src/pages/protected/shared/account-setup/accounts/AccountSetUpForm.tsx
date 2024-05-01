@@ -1,23 +1,62 @@
-import { AccountSetupProps } from "@/types/general";
 import {
+  AccountSetupProps,
+  AddressSetupForm,
+  DocInfoForm,
+} from "@/types/general";
+import {
+  BioData as HomeOccupantBioData,
   Address,
-  BioData,
   Documentation,
   HomeInformation,
 } from "./forms/home-occupant";
 
-const AccountSetUpForm = ({ currentStep }: AccountSetupProps) => {
-  switch (currentStep) {
-    case 1:
-      return <BioData />;
-    case 2:
-      return <Address />;
-    case 3:
-      return <HomeInformation />;
-    case 4:
-      return <Documentation />;
-    default:
-      break;
+const AccountSetUpForm = ({
+  currentStep,
+  accountType,
+  formState,
+  setFormState,
+  addressFormState,
+  setAddressFormState,
+  homeInfoState,
+  setHomeInfoState,
+  DocInfoState,
+  setDocInfoState,
+}: AccountSetupProps) => {
+  console.log(currentStep);
+  if (accountType === "HOME_OCCUPANT") {
+    switch (currentStep) {
+      case 1:
+        return (
+          <HomeOccupantBioData
+            formState={formState}
+            setFormState={setFormState}
+          />
+        );
+      case 2:
+        return (
+          <Address
+            formState={addressFormState || ({} as AddressSetupForm)}
+            setFormState={setAddressFormState || (() => {})}
+          />
+        );
+      case 3:
+        return (
+          <HomeInformation
+            formState={homeInfoState}
+            setFormState={setHomeInfoState}
+          />
+        );
+      case 4:
+        return (
+          <Documentation
+            formState={DocInfoState || ({} as DocInfoForm)}
+            setFormState={setDocInfoState || (() => {})}
+          />
+        );
+      default:
+        <p>Hello</p>;
+        break;
+    }
   }
 };
 

@@ -36,6 +36,17 @@ const ApplyToHIA = (_: Props) => {
 
   const tab = searchParams.get("state");
 
+  const [formData, setFormData] = useState({
+    country: {
+      label: "",
+      value: "",
+    },
+    cityOrProvince: {
+      label: "",
+      value: "",
+    },
+  });
+
   const [showSheet, setShowSheet] = useState(false);
   const [showSelectedPackagesSheet, setShowSelectedPackagesSheet] =
     useState(false);
@@ -487,13 +498,22 @@ const ApplyToHIA = (_: Props) => {
                     label="Select country of residence"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select country"
+                    value={formData.country}
+                    countryChange={(value) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        country: value,
+                      }));
+                    }}
                   />
                 </div>
                 <div className="mt-6">
                   <CountryRegionDropdown
                     name="city/state/province"
                     labelClassName="mb-4 text-black-main font-poppins"
-                    options={State.getStatesOfCountry("NG").map((state) => ({
+                    options={State.getStatesOfCountry(
+                      formData.country.value
+                    ).map((state) => ({
                       label: state.name,
                       value: state.isoCode,
                     }))}
@@ -501,6 +521,13 @@ const ApplyToHIA = (_: Props) => {
                     label=" Select city/state/province"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select city/state/province"
+                    value={formData.cityOrProvince}
+                    cityChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        cityOrProvince: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">

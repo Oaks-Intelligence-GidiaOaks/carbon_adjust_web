@@ -1,4 +1,4 @@
-import PhoneInput from "react-phone-input-2";
+import PhoneInput, { CountryData } from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Label from "./Label";
 import { cn } from "@/utils";
@@ -15,6 +15,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   inputClassName?: string;
   placeholder?: string;
+  value?: string;
+  onInputChange: (
+    value: string,
+    data: CountryData | {},
+    event: React.ChangeEvent<HTMLInputElement>,
+    formattedValue: string
+  ) => void;
 }
 
 const Phoneinput = ({
@@ -24,10 +31,12 @@ const Phoneinput = ({
   appendIcon,
   wrapperClassName,
   // register,
+  onInputChange,
   error,
   label,
   inputClassName,
   placeholder,
+  value,
   ...props
 }: //   className,
 
@@ -78,9 +87,9 @@ InputProps) => {
             width: "100%",
             height: "40px",
             fontFamily: "'Poppins', sans-serif",
-            color: "#495057",
+            color: "#000000",
             border: "0px solid rgba(0, 0, 0, 0.06 )",
-            fontSize: "0.875rem",
+            fontSize: "0.8rem",
             background: "transparent",
             outline: "none",
           }}
@@ -94,15 +103,10 @@ InputProps) => {
             borderRadius: "10px",
             boxShadow: "none",
           }}
-          onChange={() => {
-            // dispatch(
-            //   setOnboardingData({
-            //     section: "bioData",
-            //     title: "phoneNumber",
-            //     data,
-            //   })
-            // );
-          }}
+          value={value}
+          onChange={(value, data, event, formattedValue) =>
+            onInputChange(value, data, event, formattedValue)
+          }
           onFocus={() => {
             // e.target.style.outlineColor = "#2196F3";
             // e.target.style.outlineWidth = "1px";

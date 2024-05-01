@@ -8,18 +8,24 @@ const RadioGroupComponent = ({
   wrapperClassName,
   className,
   showCheckMark,
+  value,
+  setValue,
 }: {
   options: string[];
   showLabel?: boolean;
   wrapperClassName?: string;
   className?: string;
   showCheckMark?: boolean;
+  value?: string;
+  setValue?: (value: string) => void;
 }) => (
   <form>
     <RadioGroup.Root
       className="flex flex-col gap-2.5"
       defaultValue="default"
       aria-label="View density"
+      value={value}
+      onValueChange={setValue}
     >
       {options.map((option, i) => (
         <div className="flex items-center my-2" key={i}>
@@ -29,7 +35,7 @@ const RadioGroupComponent = ({
               "bg-white w-[25px] border-2 border-black-main h-[25px] rounded-full hover:bg-violet3 outline-none cursor-default",
               wrapperClassName
             )}
-            value={option.toLowerCase()}
+            value={option}
             id={option.toLowerCase()}
           >
             <RadioGroup.Indicator

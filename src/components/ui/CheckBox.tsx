@@ -8,6 +8,7 @@ const CheckBox = ({
   id,
   checked,
   setIsChecked,
+  customSetIsChecked,
   iconStyle,
 }: CheckboxProps) => {
   return (
@@ -21,6 +22,9 @@ const CheckBox = ({
       onClick={() => {
         if (setIsChecked) {
           setIsChecked(!checked);
+        }
+        if (customSetIsChecked) {
+          customSetIsChecked();
         }
       }}
     >

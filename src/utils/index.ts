@@ -33,3 +33,20 @@ export const findObjectWithMostKeys = (
       : maxObject
   );
 };
+
+type ObjectType = { [key: string]: any };
+
+export function uniqueObjectsByIdType<T extends ObjectType>(arr: T[]): T[] {
+  const idTypeValuesMap = new Map<T[keyof T], T>();
+
+  // Iterate through the array and store objects based on idType
+  arr.forEach((obj) => {
+    const id = obj.idType; // Assuming idType exists in the object
+    if (!idTypeValuesMap.has(id)) {
+      idTypeValuesMap.set(id, obj);
+    }
+  });
+
+  // Return the values of the map as an array
+  return Array.from(idTypeValuesMap.values());
+}
