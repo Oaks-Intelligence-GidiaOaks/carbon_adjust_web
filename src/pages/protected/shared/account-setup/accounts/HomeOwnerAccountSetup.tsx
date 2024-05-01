@@ -224,6 +224,8 @@ const HomeOwnerAccountSetup = (_: Props) => {
     }
   };
 
+  console.log(currentStep);
+
   useEffect(() => {
     console.log(addressFormState);
   }, [addressFormState]);
@@ -257,7 +259,7 @@ const HomeOwnerAccountSetup = (_: Props) => {
       <div className="flex bg-gray-100 justify-center min-h-screen pb-20 bg-account-setup-image bg-cover bg-fixed">
         <div className="max-w-[760px] w-full">
           <AccountSetUpForm
-            accountType={"home-occupant"}
+            accountType={"HOME_OCCUPANT"}
             currentStep={currentStep}
             formState={formState}
             setFormState={setFormState}

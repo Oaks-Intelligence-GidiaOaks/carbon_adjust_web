@@ -1,10 +1,13 @@
-// import Oaks from "../../assets/GidiakOaks.svg";
-import Oaks from "../../assets/GidiakOaks.svg";
-import Carbonible from "../../assets/Carbonile.svg";
-import InvEmt from "../../assets/InvEmt.svg";
-import EscroTech from "../../assets/Escrow-Tech.svg";
+import Image1 from "../../assets/image-1.png";
+import Image2 from "../../assets/image-2.png";
+import Image3 from "../../assets/image-3.png";
+import Image4 from "../../assets/image-4.png";
+import Image5 from "../../assets/image-5.png";
+import Image6 from "../../assets/image-6.png";
+import Image7 from "../../assets/image-7.png";
+import Image8 from "../../assets/image-8.png";
+
 import Banner from "../../assets/Banner.svg";
-import GidiaOaks from "../../assets/Oak-Intelligence.svg";
 import { NavLink } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 // let easeing = [0.6, -0.05, 0.01, 0.99];
@@ -198,14 +201,17 @@ const Hero = () => {
           // gradientWidth={100}
           className="flex justify-stretch items-center w-[100vw] pb-10 pt-4"
           autoFill={true}
-          speed={50}
+          speed={30}
         >
-          <div className=" flex justify-between gap-x-14 md:gap-x-20 lg:gap-x-28 items-center w-full">
-            <img src={Oaks} alt="" />
-            <img src={Carbonible} alt="" />
-            <img src={InvEmt} alt="" />
-            <img src={EscroTech} alt="" />
-            <img src={GidiaOaks} className="mr-24" alt="" />
+          <div className=" flex justify-between gap-x-14 md:gap-x-20 lg:gap-x-36 items-center w-full">
+            <img src={Image1} alt="" className="h-20" />
+            <img src={Image2} alt="" className="h-20" />
+            <img src={Image3} alt="" className="h-20" />
+            <img src={Image4} alt="" className="h-20" />
+            <img src={Image5} alt="" className="h-20" />
+            <img src={Image6} alt="" className="h-20" />
+            <img src={Image7} alt="" className="h-20" />
+            <img src={Image8} className="mr-28" alt="" />
           </div>
         </Marquee>
       </div>

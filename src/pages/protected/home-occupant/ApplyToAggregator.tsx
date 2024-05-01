@@ -13,12 +13,15 @@ import { SelectAggregator } from "@/components/dialogs";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchRetrofittingOptions } from "@/services/homeOccupant";
 
 type Props = {};
 
 const ApplyToAggregator = (_: Props) => {
+  // const queryClient = useQueryClient();
   let countryData = Country.getAllCountries();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -50,6 +53,67 @@ const ApplyToAggregator = (_: Props) => {
   // });
 
   // console.log(retrofittingOptions.data?.data.data);
+  const getApplicationStatus = useQuery({
+    queryKey: ["application-status"],
+    queryFn: () => axiosInstance.get("/applications/me/latest"),
+  });
+
+  console.log(getApplicationStatus.data?.data);
+
+  // useEffect(() => {
+  //   if (getApplicationStatus.isSuccess) {
+  //     if (!getApplicationStatus.data?.data.data.hasApp) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Initiated"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "pending-application",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Rejected"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "application-rejected",
+  //         }).toString(),
+  //       });
+  //     }
+  //     if (
+  //       getApplicationStatus.data?.data.data.hasApp &&
+  //       getApplicationStatus.data?.data.data.currentAppStatus === "Approved"
+  //     ) {
+  //       return navigate({
+  //         pathname: "",
+  //         search: createSearchParams({
+  //           state: "application-approved",
+  //         }).toString(),
+  //       });
+  //     }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 2) {
+  //     //   return navigate("/dashboard/applications/hia");
+  //     // }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
+  //     //   return navigate("/dashboard/applications/finance");
+  //     // }
+  //     // if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
+  //     //   return navigate("/dashboard/applications/insurance");
+  //     // }
+  //   }
+  // }, [getApplicationStatus.isSuccess]);
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -182,16 +246,21 @@ const ApplyToAggregator = (_: Props) => {
                 Awaiting approval
               </p>
               <Button
+                // disabled={useIsFetching({queryKey: ["application-status"]})}
                 variant="default"
                 // disabled
                 className="bg-white h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6"
-                onClick={() =>
-                  navigate({
-                    pathname: "",
-                    search: createSearchParams({
-                      state: "application-approved",
-                    }).toString(),
-                  })
+                onClick={
+                  () =>
+                    navigate({
+                      pathname: "",
+                      search: createSearchParams({
+                        state: "application-approved",
+                      }).toString(),
+                    })
+                  // queryClient.invalidateQueries({
+                  //   queryKey: ["application-status"],
+                  // })
                 }
               >
                 <span className="text-white">Refresh</span>

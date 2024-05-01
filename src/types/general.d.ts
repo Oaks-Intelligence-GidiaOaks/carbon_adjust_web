@@ -150,6 +150,8 @@ export type OrgAccountSetupProps = {
 
 export type SideBarProps = {
   accountType: string;
+  mobileMenuIsOpen: boolean;
+  setMobileMenuIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export type DropBoxProps = {
@@ -191,6 +193,7 @@ export type AuthUserProfile = {
     firstLineAddress: string;
     zipcode: string;
   };
+  epcRating: string;
   applications: Array;
   contactEmail: string;
   contactName?: string;
@@ -220,4 +223,13 @@ export type Payment = {
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
   email: string;
+};
+
+export type Finance = {
+  id: string;
+  logo: string;
+  name: string;
+  apr: string;
+  loanTerm: string;
+  MaxLoanAmount: string;
 };

@@ -26,6 +26,7 @@ import FinanceIcon from "./finance-icon.svg?react";
 import InsuranceIcon from "./insurance-icon.svg?react";
 import UsersIcon from "./users.svg?react";
 import ProjectIcon from "./projects.svg?react";
+import SideBarBtn from "./sidebarbtn.svg?react";
 
 export {
   Logo,
@@ -56,4 +57,5 @@ export {
   InsuranceIcon,
   UsersIcon,
   ProjectIcon,
+  SideBarBtn,
 };

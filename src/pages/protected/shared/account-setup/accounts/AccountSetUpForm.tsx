@@ -22,6 +22,7 @@ const AccountSetUpForm = ({
   DocInfoState,
   setDocInfoState,
 }: AccountSetupProps) => {
+  console.log(currentStep);
   if (accountType === "HOME_OCCUPANT") {
     switch (currentStep) {
       case 1:
@@ -53,6 +54,7 @@ const AccountSetUpForm = ({
           />
         );
       default:
+        <p>Hello</p>;
         break;
     }
   }

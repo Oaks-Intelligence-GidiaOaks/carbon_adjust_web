@@ -1,15 +1,21 @@
+import axiosInstance from "@/api/axiosInstance";
 import { HomeOccupantApplicationsHeader } from "@/components/contextual/index";
+import { useQuery } from "@tanstack/react-query";
+// import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 const Applications = () => {
+  // const navigate = useNavigate();
   // const dispatch = useDispatch();
   // const { activeComponent, applicationModalToShow } = useSelector(
   //   (state) => state.applicationForm
   // );
-  // const allApplicationsQuery = useQuery({
-  //   queryKey: ["application"],
-  //   queryFn: getAllApplications,
-  // });
+  const getApplicationStatus = useQuery({
+    queryKey: ["application-status"],
+    queryFn: () => axiosInstance.get("/applications/me/latest"),
+  });
+
+  console.log(getApplicationStatus.data?.data);
 
   // allApplicationsQuery.isSuccess && allApplicationsQuery.data.length >= 1
   //   ? (dispatch(setActiveApplicationTab("aggregatorApplications")),
@@ -29,7 +35,24 @@ const Applications = () => {
   //     // dispatch(setActiveApplicationTab(""));
   //     // dispatch(setActiveComponent(""));
   //   }
-  // }, [allApplicationsQuery.data, allApplicationsQuery.isSuccess, dispatch]);
+  // }, [allApplicationsQuery.data, allApplicationsQuery.isSuccess, dispatch])
+
+  // useEffect(() => {
+  //   if (getApplicationStatus.isSuccess) {
+  //     if (getApplicationStatus.data?.data.data.currentAppStage === 1) {
+  //       return navigate("/dashboard/applications/aggregator");
+  //     }
+  //     if (getApplicationStatus.data?.data.data.currentAppStage === 2) {
+  //       return navigate("/dashboard/applications/hia");
+  //     }
+  //     if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
+  //       return navigate("/dashboard/applications/finance");
+  //     }
+  //     if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
+  //       return navigate("/dashboard/applications/insurance");
+  //     }
+  //   }
+  // }, [getApplicationStatus.isSuccess]);
 
   return (
     <div>
@@ -59,7 +82,9 @@ const Applications = () => {
         </main>
       )} */}
 
-      <HomeOccupantApplicationsHeader />
+      <HomeOccupantApplicationsHeader
+        currentStage={getApplicationStatus.data?.data.data.currentStage ?? ""}
+      />
       <Outlet />
     </div>
   );

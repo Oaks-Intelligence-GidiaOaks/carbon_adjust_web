@@ -8,6 +8,8 @@ type Props = {};
 const AccountSetup = (_: Props) => {
   const userData = useSelector((state: RootState) => state.user.user);
 
+  console.log(userData?.roles[0]);
+
   switch (userData?.roles[0]) {
     case "HOME_OCCUPANT":
       return <HomeOwnerAccountSetup />;

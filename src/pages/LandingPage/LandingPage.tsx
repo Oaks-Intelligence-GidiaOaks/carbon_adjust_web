@@ -294,7 +294,7 @@ const LandingPage = () => {
       </div>
       {/* Carousel */}
 
-      <div className="bg-[#F7EEF4] pb-4">
+      <div className="bg-[#F7EEF4]">
         <div className="lg:container">{/* <CarouselComponent /> */}</div>
       </div>
 

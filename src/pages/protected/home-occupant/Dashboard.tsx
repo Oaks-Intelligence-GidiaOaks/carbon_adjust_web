@@ -7,19 +7,30 @@
 // import axios from "axios";
 import FinancePackageCard from "@/components/ui/FinancePackageCard";
 import Card from "@/components/ui/Card";
-import HiaPackageCard from "@/components/ui/HiaPackageCard";
+// import HiaPackageCard from "@/components/ui/HiaPackageCard";
 import TopHiaCard from "@/components/ui/TopHiaCard";
 import { ProgressBar } from "@/components/ui";
-import { dummyHiaPackages } from "@/constants";
-
-const image =
-  "https://th.bing.com/th/id/R.3d6a2ad56bc3403c5cfcc3efe09b741b?rik=gnNKMMZSvZ3uMA&riu=http%3a%2f%2fpurepng.com%2fpublic%2fuploads%2flarge%2fpurepng.com-microsoft-logo-iconlogobrand-logoiconslogos-251519939091wmudn.png&ehk=1%2fl4i5MeDLTCpvZhUZlCefvhSzsGR16HIPqagpDxYDg%3d&risl=&pid=ImgRaw&r=0";
-const image2 =
-  "https://th.bing.com/th/id/R.a2d4d66ef94dd85d56a082816b30f3e6?rik=KfrbgNT4gOOP3Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fapple-logo-transparent-png%2fapple-logo-transparent-png-10.png&ehk=sXHp47rdJ7jzwYOZuUZwbWhT8m3wcoEbbTof%2fX6I6LU%3d&risl=&pid=ImgRaw&r=0";
-const image3 =
-  "https://th.bing.com/th/id/OIP.m1ar389tpEOAFN1NTurqvwAAAA?rs=1&pid=ImgDetMain";
-const image4 =
-  "https://th.bing.com/th/id/R.c741810f9c33cf1dcc57c99d72e0a88f?rik=cpqlbe4biPOuAA&riu=http%3a%2f%2fwww.freelogovectors.net%2fwp-content%2fuploads%2f2018%2f03%2freal_madrid_cub_de_futbol-logo.png&ehk=0leBxEk7hblAGXb64NVnUz83tfO1n%2bVtT9C3rBadqUM%3d&risl=&pid=ImgRaw&r=0";
+import {
+  chartEPCRatings,
+  // columns,
+  // dummyHiaPackages,
+  epcColors,
+  financeColumns,
+  finImage1,
+  finImage2,
+  finImage3,
+  finImage4,
+  image1,
+  image2,
+  image3,
+  image4,
+  placeholderHIAPackages,
+} from "@/constants";
+import PackageCard from "@/components/reusables/PackageCard";
+import { Finance } from "@/types/general";
+import { DataTable } from "@/components/tables/DataTable";
+import { useEffect, useState } from "react";
+import { EpcRatingChart } from "@/components/charts";
 
 const Dashboard = () => {
   // const get_hia_packages = useQuery({
@@ -35,6 +46,53 @@ const Dashboard = () => {
   // function getCurrentYear() {
   //   return new Date().getFullYear();
   // }
+
+  const [tableData, setTableData] = useState<Finance[]>([]);
+
+  async function getData(): Promise<Finance[]> {
+    // Fetch data from your API here.
+    return [
+      {
+        id: "728ed52f",
+        logo: finImage1,
+        name: "Bank of Carbon Credit",
+        apr: "12%",
+        loanTerm: "10 years",
+        MaxLoanAmount: "£23,000",
+      },
+      {
+        id: "728ed52f",
+        logo: finImage4,
+        name: "Citibank",
+        apr: "12%",
+        loanTerm: "10 years",
+        MaxLoanAmount: "£23,000",
+      },
+      {
+        id: "728ed52f",
+        logo: finImage2,
+        name: "Chase Bank",
+        apr: "12%",
+        loanTerm: "10 years",
+        MaxLoanAmount: "£23,000",
+      },
+      {
+        id: "728ed52f",
+        logo: finImage3,
+        name: "Berkshare Holdings",
+        apr: "12%",
+        loanTerm: "10 years",
+        MaxLoanAmount: "£23,000",
+      },
+      // ...
+    ];
+  }
+
+  useEffect(() => {
+    getData().then((data) => {
+      setTableData(data);
+    });
+  }, []);
 
   return (
     <div className="pt-6 px-6 pb-20 bg-white">
@@ -68,10 +126,36 @@ const Dashboard = () => {
             </div>
             <div className="flex-1 h-full flex justify-center items-center">
               {/* Chart goes here */}
-              <img
+              {/* <img
                 src="/assets/graphics/epc-chart-placeholder.svg"
                 className="block w-[200%]"
-              />
+              /> */}
+              <>
+                <div className="flex-[0.7] flex justify-center">
+                  <EpcRatingChart />
+                </div>
+                <div className="w-full flex items-end min-[510px]:w-[clamp(100px,10%,160px)]">
+                  <div className="p-2 w-full flex flex-wrap justify-center gap-x-3 gap-y-2 min-[510px]:flex-col">
+                    {Object.entries(epcColors).map((color, i) => (
+                      <div key={i} className="flex gap-x-1 items-center h-fit">
+                        <div
+                          style={{ background: color[1] }}
+                          className={`w-4 h-4 rounded-full flex items-center justify-center`}
+                        >
+                          <span className="text-sm text-white">{color[0]}</span>
+                        </div>
+                        <span className="text-sm text-main whitespace-nowrap">
+                          {
+                            chartEPCRatings[
+                              color[0] as keyof typeof chartEPCRatings
+                            ]
+                          }
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
             </div>
           </div>
         </div>
@@ -89,24 +173,24 @@ const Dashboard = () => {
 
             <div className="p-2 h-full rounded-lg flex flex-col gap-[1px] mt-4 overflow-hidden bg-gray-100">
               <TopHiaCard
-                name="Microsoft Corporation"
-                image={image}
+                name="Homes Realty"
+                image={image1}
                 retrofitCount="267,502"
                 className="rounded-t"
               />
               <TopHiaCard
-                name="Apple Inc."
-                image={image2}
+                name="Brown Boys Roofing"
+                image={image3}
                 retrofitCount="217,034"
               />
               <TopHiaCard
-                name="Tesla Inc."
-                image={image3}
+                name="Roofing Construction"
+                image={image4}
                 retrofitCount="193,205"
               />
               <TopHiaCard
-                name="Real Madrid CF"
-                image={image4}
+                name="Billings Roofing & Solar"
+                image={image2}
                 retrofitCount="154,005"
                 className="rounded-b"
               />
@@ -126,30 +210,30 @@ const Dashboard = () => {
           <div className="max-w-[50vw] flex gap-x-3">
             {[
               {
-                logo: image,
-                package_name: "Double rumble 4 one",
-                max_amount: "21,000",
+                logo: finImage1,
+                package_name: "Citibank Financial Solutions",
+                max_amount: "43,200",
                 interest_rate_type: "Fixed",
                 max_repayment_period: "24 ",
               },
               {
-                logo: image2,
-                package_name: "Special combo",
-                max_amount: "21,000",
+                logo: finImage2,
+                package_name: "BFinance CreditLink",
+                max_amount: "31,000",
                 interest_rate_type: "Fixed",
                 max_repayment_period: "24 ",
               },
               {
-                logo: image3,
-                package_name: "Double rumble 4 one",
-                max_amount: "21,000",
+                logo: finImage3,
+                package_name: "Chase TransactEase Package",
+                max_amount: "11,000",
                 interest_rate_type: "Fixed",
                 max_repayment_period: "24 ",
               },
               {
-                logo: image4,
-                package_name: "Double rumble 4 one",
-                max_amount: "21,000",
+                logo: finImage4,
+                package_name: "Red Cort CashFlowPro Package",
+                max_amount: "19,650",
                 interest_rate_type: "Fixed",
                 max_repayment_period: "24 ",
               },
@@ -182,10 +266,24 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          <Card />
-          <Card />
-          <Card />
+        <div className="">
+          <div className="flex gap-4 overflow-scroll">
+            <div className="flex gap-4 mt-4 w-0 overflow-visible">
+              <Card
+                title={"Cambridgeshire and Peterborough"}
+                subtitle="London, England"
+              />
+              <Card title={"Cornwall and Devon"} subtitle="Clifford, England" />
+              <Card
+                title={"Dorset and Somerset"}
+                subtitle="Liverpool, Merseyside"
+              />
+              <Card
+                title={"West Midlands and Staffordshire"}
+                subtitle="Dublin, Ireland"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -198,8 +296,20 @@ const Dashboard = () => {
 
         <div className="flex items-center overflow-x-scroll h-fit gap-3 scrollbar-horizontal">
           <div className="max-w-[50vw] h-fit flex gap-x-3">
-            {dummyHiaPackages.map((pkg: any) => (
+            {/* {dummyHiaPackages.map((pkg: any) => (
               <HiaPackageCard data={pkg} key={pkg._id} />
+            ))} */}
+            {placeholderHIAPackages.map((hiaPackage, i) => (
+              <div key={i} className="min-w-[403px]">
+                <PackageCard
+                  data={hiaPackage}
+                  hideOverlay
+                  key={i}
+                  setShowSheet={() => {}}
+                  isSelected={false}
+                  type="hia"
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -212,6 +322,10 @@ const Dashboard = () => {
         <div className="grid grid-cols-4 gap-4 ">
           <div className="col-span-3 w-full">
             {/* <FinancialInstitutionGrid /> */}
+            <DataTable<Finance, any>
+              columns={financeColumns}
+              data={tableData}
+            />
           </div>
           <div className="w-full py-8 px-6  border-[1px] border-[#E1E1E1] rounded-[10px]">
             <h1 className="text-[20px] leading-[20px] font-medium font-poppins text-main mb-2">

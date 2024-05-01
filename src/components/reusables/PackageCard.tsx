@@ -24,6 +24,7 @@ export type PackageCardProps = {
       quarterly: number;
     };
   };
+  hideOverlay?: boolean;
   setShowSheet?: Dispatch<SetStateAction<boolean>>;
   setShowInsuranceSheet?: Dispatch<SetStateAction<boolean>>;
   setShowInsurancePackagesSheet?: Dispatch<SetStateAction<boolean>>;
@@ -37,6 +38,7 @@ const PackageCard = ({
   data,
   setShowSheet,
   setShowInsuranceSheet,
+  hideOverlay = false,
   // setShowInsurancePackagesSheet,
   isSelected,
   closeOtherSheets,
@@ -132,25 +134,27 @@ const PackageCard = ({
       </div>
 
       {/*  hover overlay */}
-      <div
-        className={cn(
-          "absolute w-full h-full hidden group-hover:flex bg-[#191919]/20 top-0 left-0 pointer-events-none items-center justify-end px-6"
-        )}
-      >
-        <Button
-          onClick={() => {
-            if (setShowSheet) {
-              setShowSheet(true);
-            }
-            if (closeOtherSheets) {
-              closeOtherSheets();
-            }
-          }}
-          className="size-14 rounded-full bg-blue-main border-2 border-white flex justify-center items-center p-0 pointer-events-auto"
+      {!hideOverlay && (
+        <div
+          className={cn(
+            "absolute w-full h-full hidden group-hover:flex bg-[#191919]/20 top-0 left-0 pointer-events-none items-center justify-end px-6"
+          )}
         >
-          <BiChevronRight className="text-white text-2xl" />
-        </Button>
-      </div>
+          <Button
+            onClick={() => {
+              if (setShowSheet) {
+                setShowSheet(true);
+              }
+              if (closeOtherSheets) {
+                closeOtherSheets();
+              }
+            }}
+            className="size-14 rounded-full bg-blue-main border-2 border-white flex justify-center items-center p-0 pointer-events-auto"
+          >
+            <BiChevronRight className="text-white text-2xl" />
+          </Button>
+        </div>
+      )}
     </div>
   ) : (
     <div

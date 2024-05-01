@@ -14,18 +14,27 @@ import {
   UsersIcon,
   ProjectIcon,
 } from "@/assets/icons";
-import { Payment } from "@/types/general";
+import { Finance, Payment } from "@/types/general";
 import { ColumnDef } from "@tanstack/react-table";
 // import { elements } from "chart.js";
 
 export const image1 =
-  "https://th.bing.com/th/id/R.3d6a2ad56bc3403c5cfcc3efe09b741b?rik=gnNKMMZSvZ3uMA&riu=http%3a%2f%2fpurepng.com%2fpublic%2fuploads%2flarge%2fpurepng.com-microsoft-logo-iconlogobrand-logoiconslogos-251519939091wmudn.png&ehk=1%2fl4i5MeDLTCpvZhUZlCefvhSzsGR16HIPqagpDxYDg%3d&risl=&pid=ImgRaw&r=0";
+  "https://th.bing.com/th/id/OIP.SSxXL28WR6P12-VGu95DWAHaHa?rs=1&pid=ImgDetMain";
 export const image2 =
-  "https://th.bing.com/th/id/R.a2d4d66ef94dd85d56a082816b30f3e6?rik=KfrbgNT4gOOP3Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fapple-logo-transparent-png%2fapple-logo-transparent-png-10.png&ehk=sXHp47rdJ7jzwYOZuUZwbWhT8m3wcoEbbTof%2fX6I6LU%3d&risl=&pid=ImgRaw&r=0";
+  "https://th.bing.com/th/id/OIP.EXdNwqnydPKaR6CU9i3iWAHaHa?pid=ImgDet&w=207&h=207&c=7&dpr=2";
 export const image3 =
-  "https://th.bing.com/th/id/OIP.m1ar389tpEOAFN1NTurqvwAAAA?rs=1&pid=ImgDetMain";
+  "https://th.bing.com/th/id/OIP.QGhXPPFYxDZQgNXzR80fKAAAAA?w=400&h=400&rs=1&pid=ImgDetMain";
 export const image4 =
-  "https://th.bing.com/th/id/R.c741810f9c33cf1dcc57c99d72e0a88f?rik=cpqlbe4biPOuAA&riu=http%3a%2f%2fwww.freelogovectors.net%2fwp-content%2fuploads%2f2018%2f03%2freal_madrid_cub_de_futbol-logo.png&ehk=0leBxEk7hblAGXb64NVnUz83tfO1n%2bVtT9C3rBadqUM%3d&risl=&pid=ImgRaw&r=0";
+  "https://th.bing.com/th/id/OIP.t0JYKn5--D1ft06REt31ogHaHa?rs=1&pid=ImgDetMain";
+
+export const finImage1 =
+  "https://icons.veryicon.com/png/o/business/bank-logo-2/bank-citigroup.png";
+export const finImage2 =
+  "https://clipground.com/images/logo-bank-mandiri-clipart-7.png";
+export const finImage3 =
+  "https://th.bing.com/th/id/OIP.KpdM9q-5qXxtzY3dkQNoDAHaHa?rs=1&pid=ImgDetMain";
+export const finImage4 =
+  "https://global.discourse-cdn.com/glowforge/original/3X/8/4/847df06516d2d1e4d69d5eb64ef58e4f299f48f4.png";
 
 export const accountTypes = [
   { id: 1, label: "Home occupant", value: "HOME_OCCUPANT" },
@@ -352,33 +361,33 @@ export const doughnutChartOptions = {
 
 export const placeholderHIAPackages = [
   {
-    org_name: "Home Improvement Agency",
-    location: "London, UK",
-    rating: "4.1",
+    org_name: "Homes Realty Agency",
+    location: "Liverpool, UK",
+    rating: "4.7",
     subcontractors: "8",
-    services: ["Window Retrofitting"],
+    services: ["Window Retrofitting, Insulation"],
     created_at: "2022",
     homes_retrofitted: "4.7k",
     users: [image1, image3],
     logo: image1,
   },
   {
-    org_name: "Home Improvement Agency",
+    org_name: "Billings Roofing& Solar Inc",
     location: "London, UK",
-    rating: "4.1",
+    rating: "4.6",
     subcontractors: "8",
-    services: ["Window Retrofitting"],
+    services: ["Flexible Dispatch, Roofing"],
     created_at: "2022",
     homes_retrofitted: "4.7k",
     users: [image1, image2],
     logo: image2,
   },
   {
-    org_name: "Home Improvement Agency",
-    location: "London, UK",
+    org_name: "Brown Boy Roofing Enterprise",
+    location: "Blackpool, UK",
     rating: "4.1",
     subcontractors: "8",
-    services: ["Window Retrofitting"],
+    services: ["Lighting"],
     created_at: "2022",
     homes_retrofitted: "4.7k",
 
@@ -386,8 +395,8 @@ export const placeholderHIAPackages = [
     logo: image3,
   },
   {
-    org_name: "Home Improvement Agency",
-    location: "London, UK",
+    org_name: "Roofing Construction & Co",
+    location: "Manchester, UK",
     rating: "4.1",
     subcontractors: "8",
     services: ["Window Retrofitting"],
@@ -950,6 +959,28 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Amount",
   },
 ];
+export const financeColumns: ColumnDef<Finance>[] = [
+  {
+    accessorKey: "logo",
+    header: "",
+  },
+  {
+    accessorKey: "name",
+    header: "Name of Institution",
+  },
+  {
+    accessorKey: "apr",
+    header: "APR",
+  },
+  {
+    accessorKey: "loanTerm",
+    header: "Loan Term",
+  },
+  {
+    accessorKey: "MaxLoanAmount",
+    header: "Max Loan Amount",
+  },
+];
 
 export const dummyHiaPackages = [
   {
@@ -997,3 +1028,22 @@ export const dummyHiaPackages = [
     locations: ["London", "Lagos", "Dublin", "Brentwood", "Manchester"],
   },
 ];
+
+export const epcColors = {
+  A: "#306f1d",
+  B: "#53b645",
+  C: "#85d842",
+  D: "#f7f752",
+  E: "#ecaf3d",
+  F: "#e7792e",
+  G: "#e23122",
+};
+export const chartEPCRatings = {
+  A: "92+",
+  B: "81-91",
+  C: "69-80",
+  D: "55-68",
+  E: "39-54",
+  F: "21-38",
+  G: "1-20",
+};
