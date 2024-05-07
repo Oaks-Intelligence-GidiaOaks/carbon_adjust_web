@@ -18,6 +18,17 @@ import { Finance, Payment } from "@/types/general";
 import { ColumnDef } from "@tanstack/react-table";
 // import { elements } from "chart.js";
 
+export const financeIcon = "/assets/graphics/finance-icon.svg";
+export const insuranceIcon = "/assets/graphics/insurance-icon.svg";
+export const hiaIcon = "/assets/graphics/hia-icon.svg";
+export const subContractorsIcon = "/assets/graphics/subcontractor-icon.svg";
+export const hiaServiceIcon = "/assets/graphics/hia-service-icon.svg";
+export const insuranceAidIcon = "/assets/graphics/insurance-aid-icon.svg";
+
+export const briefcaseIcon = "/assets/graphics/briefcase.svg";
+export const docIcon = "/assets/graphics/doc.svg";
+export const institutionIcon = "/assets/graphics/institution.svg";
+
 export const image1 =
   "https://th.bing.com/th/id/OIP.SSxXL28WR6P12-VGu95DWAHaHa?rs=1&pid=ImgDetMain";
 export const image2 =
@@ -36,6 +47,13 @@ export const finImage3 =
 export const finImage4 =
   "https://global.discourse-cdn.com/glowforge/original/3X/8/4/847df06516d2d1e4d69d5eb64ef58e4f299f48f4.png";
 
+export const userRegistrationAccountTypes = [
+  { id: 1, label: "Home occupant", value: "HOME_OCCUPANT" },
+  { id: 3, label: "Home Improvement Agency", value: "HIA" },
+  { id: 4, label: "Financial Institution", value: "FINANCIAL_INSTITUTION" },
+  { id: 5, label: "Insurance", value: "INSURANCE" },
+];
+
 export const accountTypes = [
   { id: 1, label: "Home occupant", value: "HOME_OCCUPANT" },
   { id: 2, label: "Aggregator", value: "AGGREGATOR" },
@@ -47,7 +65,7 @@ export const aggregatorTypes = [
   { id: 1, label: "Local Authority", value: "LOCAL_AUTHORITY" },
   { id: 2, label: "Housing Association", value: "HOUSING_ASSOCIATION" },
   { id: 3, label: "Property Developer", value: "PROPERTY_DEVELOPER" },
-  { id: 4, label: "Others", value: "FINANCIAL_INSTITUTION" },
+  { id: 4, label: "Others", value: "OTHERS" },
 ];
 
 export const retrofittingServices = [
@@ -547,6 +565,7 @@ export const insuranceOptions = [
     services: ["Window Retrofitting"],
     created_at: "2022",
     repayment_date: "12 years",
+    loan_amount: "£32K",
     logo: image1,
   },
 ];

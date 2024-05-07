@@ -86,6 +86,16 @@ import {
 import PendingVerification from "@/pages/protected/shared/PendingVerification";
 import Registration from "@/pages/protected/hia/Registration";
 import Specializations from "@/pages/protected/hia/Specialization";
+import {
+  HOAggregatorApplications,
+  HOHIAApplications,
+} from "@/components/sub-pages/applications";
+import {
+  FinanceMorePage,
+  HIAMorePage,
+  InsuranceMorePage,
+  SubContractorMorePage,
+} from "@/components/sub-pages/dashboard/home-occupant";
 
 const Router = createBrowserRouter([
   {
@@ -114,7 +124,28 @@ const Router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Dashboard />,
+        children: [
+          {
+            path: "",
+            element: <Dashboard />,
+          },
+          {
+            path: "finance",
+            element: <FinanceMorePage />,
+          },
+          {
+            path: "insurance",
+            element: <InsuranceMorePage />,
+          },
+          {
+            path: "hia",
+            element: <HIAMorePage />,
+          },
+          {
+            path: "subcontractor",
+            element: <SubContractorMorePage />,
+          },
+        ],
       },
       {
         path: "applications",
@@ -135,7 +166,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "aggregator-applications",
-            element: <ApplyToAggregator />,
+            element: <HOAggregatorApplications />,
           },
           {
             path: "hia",
@@ -143,7 +174,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "hia-applications",
-            element: <ApplyToAggregator />,
+            element: <HOHIAApplications />,
           },
           {
             path: "finance",
@@ -151,7 +182,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "finance-applications",
-            element: <ApplyToAggregator />,
+            element: <FinanceApplications />,
           },
           {
             path: "insurance",
@@ -159,7 +190,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "insurance-applications",
-            element: <ApplyToAggregator />,
+            element: <InsuranceApplications />,
           },
         ],
       },

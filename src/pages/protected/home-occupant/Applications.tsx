@@ -1,11 +1,12 @@
 import axiosInstance from "@/api/axiosInstance";
 import { HomeOccupantApplicationsHeader } from "@/components/contextual/index";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 // import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const Applications = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const dispatch = useDispatch();
   // const { activeComponent, applicationModalToShow } = useSelector(
   //   (state) => state.applicationForm
@@ -37,22 +38,55 @@ const Applications = () => {
   //   }
   // }, [allApplicationsQuery.data, allApplicationsQuery.isSuccess, dispatch])
 
-  // useEffect(() => {
-  //   if (getApplicationStatus.isSuccess) {
-  //     if (getApplicationStatus.data?.data.data.currentAppStage === 1) {
-  //       return navigate("/dashboard/applications/aggregator");
-  //     }
-  //     if (getApplicationStatus.data?.data.data.currentAppStage === 2) {
-  //       return navigate("/dashboard/applications/hia");
-  //     }
-  //     if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
-  //       return navigate("/dashboard/applications/finance");
-  //     }
-  //     if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
-  //       return navigate("/dashboard/applications/insurance");
-  //     }
-  //   }
-  // }, [getApplicationStatus.isSuccess]);
+  useEffect(() => {
+    if (getApplicationStatus.isSuccess) {
+      // if (getApplicationStatus.data?.data.data.currentAppStage === 1) {
+      //   return navigate("/dashboard/applications/aggregator");
+      // }
+      if (!getApplicationStatus.data?.data.data.hasApp) {
+        return navigate("/dashboard/applications/aggregator?state=");
+      }
+      if (
+        getApplicationStatus.data?.data.data.currentAppStage === 1 &&
+        getApplicationStatus.data?.data.data.hasApp &&
+        getApplicationStatus.data?.data.data.currentAppStatus === "Initiated"
+      ) {
+        return navigate(
+          "/dashboard/applications/aggregator?state=pending-application"
+        );
+
+        // alert("In here");
+      }
+      if (
+        getApplicationStatus.data?.data.data.currentAppStage === 1 &&
+        getApplicationStatus.data?.data.data.hasApp &&
+        getApplicationStatus.data?.data.data.currentAppStatus === "Rejected"
+      ) {
+        return navigate(
+          "/dashboard/applications/aggregator?state=application-rejected"
+        );
+      }
+      if (
+        getApplicationStatus.data?.data.data.currentAppStage === 1 &&
+        getApplicationStatus.data?.data.data.hasApp &&
+        getApplicationStatus.data?.data.data.currentAppStatus === "Approved"
+      ) {
+        return navigate(
+          "/dashboard/applications/aggregator?state=application-approved"
+        );
+      }
+
+      if (getApplicationStatus.data?.data.data.currentAppStage === 2) {
+        return navigate("/dashboard/applications/hia");
+      }
+      if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
+        return navigate("/dashboard/applications/finance");
+      }
+      if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
+        return navigate("/dashboard/applications/insurance");
+      }
+    }
+  }, [getApplicationStatus.isSuccess]);
 
   return (
     <div>

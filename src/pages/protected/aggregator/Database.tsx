@@ -65,7 +65,7 @@ const Database: FC = () => {
   //   ),
   // };
 
-  console.log(aggApplications.data?.data);
+  console.log(aggApplications);
 
   return (
     <div className="">
@@ -95,7 +95,7 @@ const Database: FC = () => {
       {/* <div>{getCurrentTData[activeTab]}</div> */}
       <div className="flex gap-4 flex-wrap">
         {aggApplications.isSuccess &&
-          aggApplications.data?.data.data.applications.length > 1 &&
+          aggApplications.data?.data.data.applications.length >= 1 &&
           aggApplications.data?.data.data.applications.map(
             (app: any, i: number) => <AggAppCard app={app} key={i} />
           )}
@@ -106,6 +106,10 @@ const Database: FC = () => {
 
 const AggAppCard = ({ app }: { app: any }) => {
   const queryClient = useQueryClient();
+
+  const [file, setFile] = useState<File | null>();
+
+  // const handleSubmit = (type: string) => {};
 
   const declineMutation = useMutation({
     mutationKey: ["decline application"],
@@ -141,10 +145,6 @@ const AggAppCard = ({ app }: { app: any }) => {
     },
   });
 
-  const [file, setFile] = useState<File | null>();
-
-  // const handleSubmit = (type: string) => {};
-
   const approvedMutation = useMutation({
     mutationKey: ["approve application"],
     mutationFn: (id: string) => {
@@ -178,6 +178,7 @@ const AggAppCard = ({ app }: { app: any }) => {
       toast.error("Error approving application");
     },
   });
+
   return (
     <PlaceholderActionCard>
       <p>Name: {app.applicant.name}</p>
@@ -237,7 +238,7 @@ const AggAppCard = ({ app }: { app: any }) => {
                   wrapperClass=""
                 />
               ) : (
-                <span>Approved</span>
+                <span>Approve</span>
               )}
             </Button>
           </label>

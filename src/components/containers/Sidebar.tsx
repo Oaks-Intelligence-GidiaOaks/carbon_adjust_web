@@ -46,11 +46,11 @@ const Sidebar = ({
       {/* desktop sidebar */}
       <div
         className={cn(
-          "w-[20%] min-w-[260px] max-w-[302px] h-screen px-4 pt-10 sm:sticky bg-white z-20 border-r border-[hsla(110,49%,88%,1)] top-0 hidden sm:block"
+          "w-[20%] min-w-[260px] max-w-[302px] h-screen px-4 sm:sticky bg-white overflow-y-scroll pb-10 z-20 border-r border-[hsla(110,49%,88%,1)] top-0 hidden sm:block"
         )}
       >
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-x-2">
+        <div className="flex justify-between items-center sticky top-0 pt-10 pb-2 z-10 bg-white">
+          <div className="flex items-center gap-x-2 sticky top-0">
             <Logo />
             <p className="font-poppins text-black">Carbon-Adjust</p>
           </div>
@@ -68,7 +68,7 @@ const Sidebar = ({
           </button>
         </div>
 
-        <div className="flex flex-col gap-y-4 mt-10">
+        <div className="flex flex-col gap-y-4 mt-8">
           {identifyUserSideBar(accountType).map((item, i) => {
             const Icon = item.icon;
             return (
@@ -126,7 +126,7 @@ const Sidebar = ({
           </button>
         </div>
 
-        <div className="flex flex-col gap-y-4 mt-10">
+        <div className="flex flex-col gap-y-4 mt-10 overflow-y-scroll">
           {identifyUserSideBar(accountType).map((item, i) => {
             const Icon = item.icon;
             return (

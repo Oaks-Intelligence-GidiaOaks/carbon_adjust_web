@@ -14,38 +14,40 @@ import {
   image3,
   image4,
   pendingApplications,
-  placeholderHIAPackages,
-  subContractors,
+  // placeholderHIAPackages,
+  // subContractors,
 } from "@/constants";
 import PackageCard from "@/components/reusables/PackageCard";
 import TopHiaCard from "@/components/ui/TopHiaCard";
 import FlyoutSidebar from "@/components/reusables/FlyoutSidebar";
 import SubContractorCard from "@/components/reusables/SubContractorCard";
-import SelectedPackagesSummaryCard from "@/components/reusables/SelectedPackagesSummaryCard";
+// import SelectedPackagesSummaryCard from "@/components/reusables/SelectedPackagesSummaryCard";
 import { FaChevronRight } from "react-icons/fa";
 import DialogComponent from "@/components/reusables/Dialog";
 import { HIAApplicationSuccess } from "@/components/dialogs";
 import { HIAApplicationStatus } from "@/components/contextual";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+// import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { BsArrowLeft } from "react-icons/bs";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { applyToHIA, fetchHIAPackages } from "@/services/homeOccupant";
+import Loading from "@/components/reusables/Loading";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 type Props = {};
 
 const ApplyToHIA = (_: Props) => {
+  const queryClient = useQueryClient();
   let countryData = Country.getAllCountries();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const tab = searchParams.get("state");
+  const userData = useSelector((state: RootState) => state.user.user);
+  console.log(userData);
 
-  const [formData, setFormData] = useState({
-    country: {
-      label: "",
-      value: "",
-    },
-    cityOrProvince: {
-      label: "",
-      value: "",
-    },
-  });
+  const tab = searchParams.get("state");
 
   const [showSheet, setShowSheet] = useState(false);
   const [showSelectedPackagesSheet, setShowSelectedPackagesSheet] =
@@ -53,7 +55,61 @@ const ApplyToHIA = (_: Props) => {
   const [showApplicationSuccessDialog, setShowApplicationSuccessDialog] =
     useState(false);
 
-  const selectedPackages = [0, 1];
+  // const selectedPackages = [0, 1];
+
+  const [addressFormState, setAddressFormState] = useState({
+    country: {
+      label: userData?.address.country ?? "",
+      value: userData?.address.country ?? "",
+    },
+    cityOrProvince: {
+      label: userData?.address.cityOrProvince ?? "",
+      value: userData?.address.cityOrProvince ?? "",
+    },
+    firstLineAddress: userData?.address.firstLineAddress ?? "",
+    zipcode: userData?.address.zipcode ?? "",
+    retrofittingActivity: "",
+  });
+
+  const [details, setDetails] = useState({
+    houseHoldIncome: "",
+    otherIncome: "",
+    houseHoldMonthlyExpenses: "",
+    otherMonthlyExpense: "",
+    noOfDependents: "",
+  });
+
+  const [selectedPackages] = useState([]);
+
+  const [currentHIA, setCurrentHIA] = useState();
+
+  const [packages, setPackages] = useState([]);
+
+  const currentApplicationDetails = queryClient.getQueryData([
+    "application-status",
+  ]);
+
+  const hiaMutation = useMutation({
+    mutationKey: ["apply-to-hia"],
+    mutationFn: (data) =>
+      applyToHIA(data, (currentApplicationDetails as any)?.data?.data.appId),
+    onSuccess: () => {
+      toast.success("Application to HIA successful");
+      setShowApplicationSuccessDialog(true);
+    },
+    onError: () => {
+      toast.error("Error sending application to HIA");
+    },
+  });
+
+  const HIAPackages = useQuery({
+    queryKey: ["fetch-HIA-packages"],
+    queryFn: () =>
+      fetchHIAPackages((currentApplicationDetails as any)?.data?.data.appId),
+    enabled: tab === "packages",
+  });
+
+  console.log(HIAPackages.data?.data.data);
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -61,6 +117,20 @@ const ApplyToHIA = (_: Props) => {
         return (
           <div className="flex justify-center text-black-main bg-white/80 min-h-screen py-10 px-6">
             <div className="max-w-[706px] w-full">
+              <div className="my-4 mb-10">
+                <Button
+                  variant={"ghost"}
+                  className="flex items-center justify-center gap-x-2 px-0 font-poppins hover:bg-transparent hover:text-ca-blue"
+                  onClick={() => {
+                    navigate({
+                      pathname: "",
+                    });
+                  }}
+                >
+                  <BsArrowLeft className="text-black-main" />
+                  <span>Back</span>
+                </Button>
+              </div>
               <div className="flex justify-between items-center gap-x-4">
                 <p className="font-semibold font-poppins text-xl">Details</p>
                 <Button
@@ -80,16 +150,32 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Your annual household income"
+                    type="number"
+                    value={details.houseHoldIncome}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        houseHoldIncome: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <Input
                     name="otherIncome"
-                    label="Other income (Spouse, additional employment, etc."
+                    label="Other income (Spouse, additional employment, etc.)"
                     required
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other income"
+                    type="number"
+                    value={details.otherIncome}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        otherIncome: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -100,6 +186,14 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Household monthly expenses"
+                    type="number"
+                    value={details.houseHoldMonthlyExpenses}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        houseHoldMonthlyExpenses: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -110,6 +204,14 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other monthly expenses"
+                    type="number"
+                    value={details.otherMonthlyExpense}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        otherMonthlyExpense: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -120,6 +222,14 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Number of dependents"
+                    type="number"
+                    value={details.noOfDependents}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        noOfDependents: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-8">
@@ -142,7 +252,11 @@ const ApplyToHIA = (_: Props) => {
           </div>
         );
       case "packages":
-        return (
+        return HIAPackages.isLoading ? (
+          <div className="mt-20">
+            <Loading message="Finding packages" />
+          </div>
+        ) : (
           <>
             {/* Select Packages sub contractors Sheet */}
             <FlyoutSidebar isOpen={showSheet} onOpenChange={setShowSheet}>
@@ -157,18 +271,36 @@ const ApplyToHIA = (_: Props) => {
                     </p>
                   </div>
                   <div>
-                    <p className="font-medium text-green-600 mt-6">
-                      4/8 Subcontractors Selected
-                    </p>
+                    {(currentHIA !== null || currentHIA !== undefined) ?? (
+                      <p className="font-medium text-green-600 mt-6">
+                        {(
+                          packages.find(
+                            (p: any) =>
+                              p.package !== (currentHIA as any).package
+                          ) as any
+                        )?.subcontractors?.length ?? 0}
+                        /{(currentHIA as any)?.subcontractors.length}{" "}
+                        {(currentHIA as any)?.subcontractors.length > 1
+                          ? "Subcontractors"
+                          : "Subcontractor"}{" "}
+                        Selected
+                      </p>
+                    )}
                   </div>
                   <div className="mt-6 flex flex-col gap-y-4">
-                    {subContractors.map((subcontractor, i) => (
-                      <SubContractorCard
-                        data={subcontractor}
-                        key={i}
-                        setShowSheet={setShowSheet}
-                      />
-                    ))}
+                    {(currentHIA as any)?.subcontractors.map(
+                      (subcontractor: any, i: number) => (
+                        <SubContractorCard
+                          data={subcontractor}
+                          hiaDetails={currentHIA}
+                          packages={packages}
+                          setPackages={setPackages}
+                          key={i}
+                          isLiveData={true}
+                          setShowSheet={setShowSheet}
+                        />
+                      )
+                    )}
                   </div>
                 </div>
                 <div className="sticky bottom-0 mt-20 bg-white left-0 p-4 flex justify-around gap-2 flex-wrap font-poppins border w-full border-t-black-main/50 z-50">
@@ -203,22 +335,26 @@ const ApplyToHIA = (_: Props) => {
                   </div>
                   <div>
                     <p className="font-medium text-green-600 mt-6">
-                      2/8 Packages selected
+                      {packages.length} Package(s) selected
                     </p>
                   </div>
                   <div className="mt-6 flex flex-col gap-y-4 min-h-screen">
-                    {placeholderHIAPackages
-                      .slice(0, 1)
-                      .map((packageData, i) => (
-                        <SelectedPackagesSummaryCard
-                          key={i}
-                          packageData={packageData}
-                          setShowSelectedPackagesSheet={
-                            setShowSelectedPackagesSheet
-                          }
-                          setShowSheet={setShowSheet}
-                          subContractorData={subContractors.slice(0, 2)}
-                        />
+                    {HIAPackages.data?.data.data
+                      .filter((d: any) =>
+                        packages.map((p: any) => p.package).includes(d._id)
+                      )
+                      .map((hiaPackage: any, i: number) => (
+                        <>
+                          <PackageCard
+                            data={hiaPackage}
+                            key={i}
+                            setShowSheet={setShowSheet}
+                            setCurrentHIA={setCurrentHIA}
+                            isSelected={(selectedPackages as any).includes(i)}
+                            type="hia"
+                            liveData={true}
+                          />
+                        </>
                       ))}
                   </div>
                 </div>
@@ -231,8 +367,14 @@ const ApplyToHIA = (_: Props) => {
                     Cancel
                   </Button>
                   <Button
+                    disabled={hiaMutation.isPending}
                     onClick={
-                      () => setShowApplicationSuccessDialog(true)
+                      () => {
+                        const payload = {
+                          packages: packages,
+                        };
+                        hiaMutation.mutate(payload as any);
+                      }
                       // navigate({
                       //   pathname: "",
                       //   search: createSearchParams({
@@ -242,7 +384,20 @@ const ApplyToHIA = (_: Props) => {
                     }
                     className="text-white max-w-[192px] w-full min-w-[120px] gap-3"
                   >
-                    <span>Apply now</span>
+                    {hiaMutation.isPending ? (
+                      <Oval
+                        visible={hiaMutation.isPending}
+                        height="20"
+                        width="20"
+                        color="#ffffff"
+                        ariaLabel="oval-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                      />
+                    ) : (
+                      <span>Apply now</span>
+                    )}
+
                     <FaChevronRight />
                   </Button>
                 </div>
@@ -266,9 +421,11 @@ const ApplyToHIA = (_: Props) => {
                 <div className="flex-[0.5] h-full">
                   <div className="flex justify-between items-center gap-x-5 flex-wrap">
                     <p className="font-poppins text-blue-main text-base">
-                      0/20 Packages selected
+                      {packages.length}/{HIAPackages.data?.data.data.length}{" "}
+                      Packages selected
                     </p>
                     <Button
+                      disabled={packages.length < 1}
                       onClick={() => setShowSelectedPackagesSheet(true)}
                       className="font-poppins text-white font-normal"
                     >
@@ -276,15 +433,21 @@ const ApplyToHIA = (_: Props) => {
                     </Button>
                   </div>
                   <div className="mt-6 flex flex-col gap-y-5">
-                    {placeholderHIAPackages.map((hiaPackage, i) => (
-                      <PackageCard
-                        data={hiaPackage}
-                        key={i}
-                        setShowSheet={setShowSheet}
-                        isSelected={selectedPackages.includes(i)}
-                        type="hia"
-                      />
-                    ))}
+                    {HIAPackages.data?.data.data.map(
+                      (hiaPackage: any, i: number) => (
+                        <>
+                          <PackageCard
+                            data={hiaPackage}
+                            key={i}
+                            setShowSheet={setShowSheet}
+                            setCurrentHIA={setCurrentHIA}
+                            isSelected={(selectedPackages as any).includes(i)}
+                            type="hia"
+                            liveData={true}
+                          />
+                        </>
+                      )
+                    )}
                   </div>
                 </div>
                 <div className="flex-[0.5] h-full flex flex-col sticky top-0">
@@ -297,7 +460,7 @@ const ApplyToHIA = (_: Props) => {
                       <span className="text-[16px] leading-[20px] font-medium font-poppins text-sub-header">
                         Top Home Improvement Agencies
                       </span>
-                      <button className="text-[14px] leading-[12px] font-normal font-poppins text-main text-[#2196F3]">
+                      <button className="text-[14px] leading-[12px] font-normal font-poppins text-[#2196F3]">
                         See More
                       </button>
                     </div>
@@ -498,9 +661,9 @@ const ApplyToHIA = (_: Props) => {
                     label="Select country of residence"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select country"
-                    value={formData.country}
+                    value={addressFormState.country}
                     countryChange={(value) => {
-                      setFormData((prev) => ({
+                      setAddressFormState((prev) => ({
                         ...prev,
                         country: value,
                       }));
@@ -512,7 +675,7 @@ const ApplyToHIA = (_: Props) => {
                     name="city/state/province"
                     labelClassName="mb-4 text-black-main font-poppins"
                     options={State.getStatesOfCountry(
-                      formData.country.value
+                      addressFormState.country.value
                     ).map((state) => ({
                       label: state.name,
                       value: state.isoCode,
@@ -521,9 +684,9 @@ const ApplyToHIA = (_: Props) => {
                     label=" Select city/state/province"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select city/state/province"
-                    value={formData.cityOrProvince}
+                    value={addressFormState.cityOrProvince}
                     cityChange={(value) =>
-                      setFormData((prev) => ({
+                      setAddressFormState((prev) => ({
                         ...prev,
                         cityOrProvince: value,
                       }))
@@ -537,6 +700,13 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter address"
+                    value={addressFormState.firstLineAddress}
+                    onChange={(e) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        firstLineAddress: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
@@ -547,6 +717,13 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter post/zip code"
+                    value={addressFormState.zipcode}
+                    onChange={(e) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        zipcode: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-8">
@@ -555,7 +732,7 @@ const ApplyToHIA = (_: Props) => {
                       navigate({
                         pathname: "",
                         search: createSearchParams({
-                          state: "details",
+                          state: "packages",
                         }).toString(),
                       })
                     }
