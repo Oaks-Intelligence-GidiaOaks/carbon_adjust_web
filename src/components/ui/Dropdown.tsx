@@ -1,4 +1,9 @@
-import { Listbox } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { cn } from "../../utils";
 import { DropdownOption, DropdownProps } from "../../types/general";
@@ -92,7 +97,7 @@ const Dropdown = ({
                 />
               </Listbox.Button>
             ) : (
-              <Listbox.Button
+              <ListboxButton
                 className={cn(
                   "border-none h-12 bg-white relative rounded-lg px-3 pr-3 py-3 flex justify-between items-center gap-4 text-sm",
                   wrapperClassName,
@@ -111,12 +116,12 @@ const Dropdown = ({
                   <LoadingSpinner />
                   <p>{loadingText}</p>
                 </div>
-              </Listbox.Button>
+              </ListboxButton>
             )}
 
-            <Listbox.Options
+            <ListboxOptions
               className={cn(
-                "border-none max-h-[240px] overflow-scroll text-sm z-20 bg-white rounded-lg w-full mt-10 absolute top-11 shadow-lg",
+                "border-none max-h-[240px] mt-10 overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg absolute top-11 shadow-lg w-[var(--button-width)]",
                 optionsContainerClassName
               )}
             >
@@ -137,7 +142,7 @@ const Dropdown = ({
                       .includes(searchValue.toLowerCase())
                   )
                   .map((option, i) => (
-                    <Listbox.Option
+                    <ListboxOption
                       key={i}
                       value={option}
                       disabled={disabled}
@@ -152,7 +157,7 @@ const Dropdown = ({
                       <div className="flex gap-4 items-center">
                         <span>{option.label}</span>
                       </div>
-                    </Listbox.Option>
+                    </ListboxOption>
                   ))
               ) : (
                 <div className="flex gap-x-3 items-center">
@@ -160,7 +165,7 @@ const Dropdown = ({
                   <p>{loadingText}</p>
                 </div>
               )}
-            </Listbox.Options>
+            </ListboxOptions>
           </div>
         </Listbox>
       )}
@@ -181,7 +186,7 @@ const Dropdown = ({
             {label}
           </Label>
         )}
-        <Listbox.Button
+        <ListboxButton
           className={cn(
             "border-none h-12 bg-white relative rounded-lg px-3 pr-3 py-3 flex justify-between items-center gap-4 text-sm",
             wrapperClassName,
@@ -196,10 +201,10 @@ const Dropdown = ({
               "ui-open:rotate-180 transition-all absolute top-3 right-3"
             )}
           />
-        </Listbox.Button>
-        <Listbox.Options
+        </ListboxButton>
+        <ListboxOptions
           className={cn(
-            "border-none max-h-[240px] overflow-scroll text-sm z-20 bg-white rounded-lg w-full mt-10 absolute top-11 shadow-lg",
+            "border-none max-h-[240px] overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg mt-10 absolute top-11 shadow-lg w-[var(--button-width)]",
             optionsContainerClassName
           )}
         >
@@ -218,7 +223,7 @@ const Dropdown = ({
                 option.label.toLowerCase().includes(searchValue.toLowerCase())
               )
               .map((option, i) => (
-                <Listbox.Option
+                <ListboxOption
                   key={i}
                   value={option}
                   disabled={disabled}
@@ -233,7 +238,7 @@ const Dropdown = ({
                   <div className="flex gap-4 items-center">
                     <span>{option.label}</span>
                   </div>
-                </Listbox.Option>
+                </ListboxOption>
               ))
           ) : (
             <div className="flex gap-x-3 items-center">
@@ -241,7 +246,7 @@ const Dropdown = ({
               <p>{loadingText}</p>
             </div>
           )}
-        </Listbox.Options>
+        </ListboxOptions>
       </div>
     </Listbox>
   );

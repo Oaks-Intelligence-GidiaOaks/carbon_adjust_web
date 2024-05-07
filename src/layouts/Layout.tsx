@@ -3,12 +3,12 @@ import userService from "@/api/services/user";
 import Sidebar from "@/components/containers/Sidebar";
 import TopBar from "@/components/containers/TopBar";
 import { setUser } from "@/features/userSlice";
-import { cn } from "@/utils";
+import { cn, uniqueObjectsByIdType } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 type Props = {
   sidebarType: string;
@@ -16,7 +16,7 @@ type Props = {
 
 const Layout = (props: Props) => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { pathname } = useLocation();
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<boolean>(false);
@@ -31,27 +31,39 @@ const Layout = (props: Props) => {
     if (userData.isSuccess) {
       dispatch(setUser(userData.data.data.data));
 
-      // console.log(userData.data.data.data);
+      console.log(userData.data.data.data);
 
-      // if (userData.data.data.data.roles[0] === "ADMIN") {
-      //   return navigate("/admin");
-      // }
-      // if (
-      //   userData.data.data.data.roles[0] !== "HOME_OCCUPANT" &&
-      //   uniqueObjectsByIdType(userData.data.data.data?.doc).length < 3
-      // ) {
-      //   return navigate("/account-setup");
-      // }
-      // if (
-      //   userData.data.data.data.status === "pending" &&
-      //   (userData.data.data.data?.step < 4 || !userData.data.data.data?.step)
-      // ) {
-      //   return navigate("/account-setup");
-      // }
-      // if (userData.data.data.data.status === "pending") {
-      //   return navigate("/pending-verification");
-      // }
-      // return navigate("/dashboard");
+      if (userData.data.data.data.roles[0] === "ADMIN") {
+        return navigate("/admin");
+      }
+      if (
+        userData.data.data.data.roles[0] !== "HOME_OCCUPANT" &&
+        uniqueObjectsByIdType(userData.data.data.data?.doc).length < 3
+      ) {
+        return navigate("/account-setup");
+      }
+      if (
+        userData.data.data.data.status === "pending" &&
+        (userData.data.data.data?.step < 4 || !userData.data.data.data?.step)
+      ) {
+        return navigate("/account-setup");
+      }
+      if (userData.data.data.data.status === "pending") {
+        return navigate("/pending-verification");
+      }
+      if (userData.data.data.data.roles[0] === "AGGREGATOR") {
+        return navigate("/aggregator");
+      }
+      if (userData.data.data.data.roles[0] === "HIA") {
+        return navigate("/hia");
+      }
+      if (userData.data.data.data.roles[0] === "FINANCE") {
+        return navigate("/finance");
+      }
+      if (userData.data.data.data.roles[0] === "INSURANCE") {
+        return navigate("/insurance");
+      }
+      return navigate("/dashboard");
     }
   }, [userData.isSuccess]);
 

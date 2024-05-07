@@ -1,3 +1,4 @@
+import userService from "@/api/services/user";
 import { RootState } from "@/app/store";
 // import {
 //   AccountSetupScribbleLeft,
@@ -6,19 +7,74 @@ import { RootState } from "@/app/store";
 // } from "@/assets/icons";
 import AccountActionHeader from "@/components/reusables/account-setup/AccountActionHeader";
 import { Button } from "@/components/ui";
+import { setUser } from "@/features/userSlice";
+import { uniqueObjectsByIdType } from "@/utils";
 import { UserCircleIcon } from "@heroicons/react/20/solid";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { LuRefreshCcw } from "react-icons/lu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const PendingVerification = (_: Props) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.user.user);
   const logOut = () => {
     navigate("/");
   };
+
+  const [verify, setVerify] = useState<boolean>(false);
+
+  const verifyApp = useQuery({
+    queryKey: ["fetch-user-info-2"],
+    queryFn: userService().fetchUserInfo,
+    enabled: verify,
+  });
+
+  // ---------------------UNCOMMENT THIS CODE WHEN ADMIN STARTS VERIFYING USERS
+  useEffect(() => {
+    if (verifyApp.isSuccess) {
+      dispatch(setUser(verifyApp.data.data.data));
+
+      console.log(verifyApp.data.data.data);
+
+      if (verifyApp.data.data.data.roles[0] === "ADMIN") {
+        return navigate("/admin");
+      }
+      if (
+        verifyApp.data.data.data.roles[0] !== "HOME_OCCUPANT" &&
+        uniqueObjectsByIdType(verifyApp.data.data.data?.doc).length < 3
+      ) {
+        return navigate("/account-setup");
+      }
+      if (
+        verifyApp.data.data.data.status === "pending" &&
+        (verifyApp.data.data.data?.step < 4 || !verifyApp.data.data.data?.step)
+      ) {
+        return navigate("/account-setup");
+      }
+      if (verifyApp.data.data.data.status === "pending") {
+        return navigate("/pending-verification");
+      }
+      if (verifyApp.data.data.data.roles[0] === "AGGREGATOR") {
+        return navigate("/aggregator");
+      }
+      if (verifyApp.data.data.data.roles[0] === "HIA") {
+        return navigate("/hia");
+      }
+      if (verifyApp.data.data.data.roles[0] === "FINANCE") {
+        return navigate("/finance");
+      }
+      if (verifyApp.data.data.data.roles[0] === "INSURANCE") {
+        return navigate("/insurance");
+      }
+      return navigate("/dashboard");
+    }
+  }, [verifyApp.isSuccess]);
+
   return (
     <div className="min-h-screen relative">
       <AccountActionHeader
@@ -55,7 +111,16 @@ const PendingVerification = (_: Props) => {
             variant="default"
             // disabled
             className="bg-white h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6"
-            onClick={() => navigate("/dashboard")}
+            // onClick={() => navigate("/dashboard")}
+            onClick={() =>
+              // navigate({
+              //   pathname: "",
+              //   search: createSearchParams({
+              //     state: "application-approved",
+              //   }).toString(),
+              // })
+              setVerify(true)
+            }
           >
             <span className="text-white">Refresh</span>
             <LuRefreshCcw width={24} className="text-white" color="#FFFFFF" />

@@ -20,7 +20,7 @@ const Tab: FC<tabProps> = ({ isActive, text, onClick }) => {
       onClick={() => onClick(text)}
       className={`${
         isActive ? activeStyle : " text-[#667085] "
-      } font-[500] text-sm  min-w-[237px] h-full text-center grid place-items-center rounded-[6px] cursor-pointer  `}
+      } font-[500] text-sm  min-w-[237px] h-full text-center grid place-items-center rounded-[6px] cursor-pointer`}
     >
       <span>{text}</span>
     </div>

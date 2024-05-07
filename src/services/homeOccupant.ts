@@ -13,9 +13,10 @@ export const fetchAggregators = async (
     `/applications/aggregators?country=${country}&cityOrProvince=${cityOrProvince}&aggregatorType=${aggType}`
   );
 };
-// export const getFollowing = async (): Promise<any> => {
-//     return axiosInstance.get<any>("/followers/following");
-//   };
+
+export const fetchHIAPackages = async (id: string) => {
+  return axiosInstance.get(`/applications/${id}/hia/packages`);
+};
 
 export const applyToAgg = async (data: {
   retrofittingType: string;
@@ -28,4 +29,8 @@ export const applyToAgg = async (data: {
   };
 }) => {
   return axiosInstance.post(`/applications/ho/initiate`, data);
+};
+
+export const applyToHIA = async (data: any, id: string) => {
+  return axiosInstance.post(`/applications/ho/${id}/hia/apply`, data);
 };

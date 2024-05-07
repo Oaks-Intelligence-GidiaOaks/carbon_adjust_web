@@ -43,7 +43,7 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
       <div className="max-w-[630px] w-full mx-auto px-2 sm:px-6 relative">
         <div className="mx-auto pb-[10vh]">
           <p className="font-semibold text-blue-main text-lg text-center font-poppins">
-            SELECT AGGREGATOR
+            SELECT SPECIALIZATION
           </p>
           <form onSubmit={handleSubmit} className="mt-10 mx-auto">
             <div className="mt-6">
@@ -51,7 +51,7 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
                 name="AggregatorType"
                 labelClassName="mb-4 text-[#000000_!important] font-poppins"
                 options={retrofittingServices}
-                label="Aggregator type"
+                label="Select type"
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select aggregator type"
                 value={specialization}
