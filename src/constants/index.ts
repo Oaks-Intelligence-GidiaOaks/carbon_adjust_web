@@ -28,6 +28,7 @@ export const insuranceAidIcon = "/assets/graphics/insurance-aid-icon.svg";
 export const briefcaseIcon = "/assets/graphics/briefcase.svg";
 export const docIcon = "/assets/graphics/doc.svg";
 export const institutionIcon = "/assets/graphics/institution.svg";
+export const defaultPackageImage = "/assets/icons/default-package-icon.jpeg";
 
 export const image1 =
   "https://th.bing.com/th/id/OIP.SSxXL28WR6P12-VGu95DWAHaHa?rs=1&pid=ImgDetMain";
@@ -1066,3 +1067,81 @@ export const chartEPCRatings = {
   F: "21-38",
   G: "1-20",
 };
+
+export const maximumRepaymentOptions = [
+  {
+    label: "1 year",
+    value: "1",
+  },
+  {
+    label: "2 years",
+    value: "2",
+  },
+  {
+    label: "3 years",
+    value: "3",
+  },
+  {
+    label: "4 years",
+    value: "4",
+  },
+  {
+    label: "5 years",
+    value: "5",
+  },
+  {
+    label: "6 years",
+    value: "6",
+  },
+  {
+    label: "7 years",
+    value: "7",
+  },
+  {
+    label: "8 years",
+    value: "8",
+  },
+  {
+    label: "9 years",
+    value: "9",
+  },
+  {
+    label: "10 years",
+    value: "10",
+  },
+  {
+    label: "11 years",
+    value: "11",
+  },
+  {
+    label: "12 years",
+    value: "12",
+  },
+  {
+    label: "13 years",
+    value: "13",
+  },
+  {
+    label: "14 years",
+    value: "14",
+  },
+  {
+    label: "15 years",
+    value: "15",
+  },
+];
+
+export const staffLevels = [
+  {
+    label: "level 1",
+    value: "level 1",
+  },
+  {
+    label: "level 2",
+    value: "level 2",
+  },
+  {
+    label: "level 3",
+    value: "level 3",
+  },
+];

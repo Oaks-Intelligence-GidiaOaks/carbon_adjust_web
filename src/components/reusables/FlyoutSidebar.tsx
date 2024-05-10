@@ -16,7 +16,7 @@ const FlyoutSidebar = ({ isOpen, onOpenChange, children }: Props) => {
   useOutsideCloser(myRef, isOpen, onOpenChange);
 
   return isOpen ? (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-gray-950/40 z-10 pointer-events-auto">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-gray-950/40 z-30 pointer-events-auto">
       <div
         ref={myRef}
         className={cn(

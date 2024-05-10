@@ -166,7 +166,12 @@ const Finance = ({}: Props) => {
                   max_repayment_period: "24 ",
                 },
               ].map((pkg: any) => (
-                <FinancePackageCard data={pkg} home_owner key={pkg._id} />
+                <FinancePackageCard
+                  isPlaceholder={true}
+                  data={pkg}
+                  home_owner
+                  key={pkg._id}
+                />
               ))}
             </div>
           </div>

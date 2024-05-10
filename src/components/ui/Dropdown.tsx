@@ -31,7 +31,8 @@ const Dropdown = ({
   countryChange,
   onOptionChange,
   cityChange,
-}: DropdownProps) => {
+}: // addPortal,
+DropdownProps) => {
   const [selectedOption, setSelectedOption] = useState<DropdownOption | null>(
     value
   );
@@ -120,6 +121,8 @@ const Dropdown = ({
             )}
 
             <ListboxOptions
+              portal
+              anchor={{ to: "bottom start" }}
               className={cn(
                 "border-none max-h-[240px] mt-10 overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg absolute top-11 shadow-lg w-[var(--button-width)]",
                 optionsContainerClassName
@@ -203,6 +206,8 @@ const Dropdown = ({
           />
         </ListboxButton>
         <ListboxOptions
+          // portal={true}
+          // anchor={{ to: "bottom start" }}
           className={cn(
             "border-none max-h-[240px] overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg mt-10 absolute top-11 shadow-lg w-[var(--button-width)]",
             optionsContainerClassName

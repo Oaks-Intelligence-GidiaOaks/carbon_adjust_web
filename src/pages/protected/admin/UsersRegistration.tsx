@@ -138,7 +138,7 @@ const UsersRegistration = () => {
       {/* table */}
       {/* <div>{getCurrentTData[activeTab]}</div> */}
       <div>{/* <DataTable columns={columns} data={data} /> */}</div>
-      <div className="w-full flex flex-wrap gap-x-4 mt-10">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 flex-wrap gap-4 mt-10">
         {userRegistrations.isSuccess &&
           userRegistrations.data?.data.data.users.length > 1 &&
           userRegistrations.data?.data.data.users.map((hs: any, i: number) => (

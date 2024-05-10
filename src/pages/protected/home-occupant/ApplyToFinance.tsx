@@ -13,11 +13,11 @@ import {
   image3,
   image4,
   insuranceOptions,
-  placeholderFinancialPackages,
+  // placeholderFinancialPackages,
   placeholderHIAPackages,
   subContractors,
 } from "@/constants";
-import PackageCard from "@/components/reusables/PackageCard";
+// import PackageCard from "@/components/reusables/PackageCard";
 import TopHiaCard from "@/components/ui/TopHiaCard";
 import FlyoutSidebar from "@/components/reusables/FlyoutSidebar";
 import SubContractorCard from "@/components/reusables/SubContractorCard";
@@ -26,10 +26,22 @@ import { FaChevronRight } from "react-icons/fa";
 import DialogComponent from "@/components/reusables/Dialog";
 import { FinanceApplicationSuccess } from "@/components/dialogs";
 import InsuranceCard from "@/components/reusables/InsuranceCard";
+// import { object } from "yup";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  applyToFinance,
+  // applyToHIA,
+  fetchFinancePackages,
+  // fetchHIAPackages,
+} from "@/services/homeOccupant";
+import FinanceOptionCard from "@/components/reusables/FinanceOptionCard";
+import toast from "react-hot-toast";
+import MainFinanceApplicationSuccess from "@/components/dialogs/MainFinanceApplicationSuccessDialog";
 
 type Props = {};
 
 const ApplyToFinance = (_: Props) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -43,8 +55,56 @@ const ApplyToFinance = (_: Props) => {
     useState(false);
   const [showApplicationSuccessDialog, setShowApplicationSuccessDialog] =
     useState(false);
+  const [
+    showMainFinanceApplicationSuccessDialog,
+    setShowMainFinanceApplicationSuccessDialog,
+  ] = useState(false);
 
   const selectedPackages = [0, 1];
+
+  const [details, setDetails] = useState({
+    houseHoldIncome: "",
+    otherIncome: "",
+    houseHoldMonthlyExpenses: "",
+    otherMonthlyExpense: "",
+    noOfDependents: "",
+  });
+
+  const currentApplicationDetails = queryClient.getQueryData([
+    "application-status",
+  ]);
+
+  const financePackages = useQuery({
+    queryKey: ["fetch-finance-packages"],
+    queryFn: () =>
+      fetchFinancePackages(
+        (currentApplicationDetails as any)?.data?.data.appId
+      ),
+    enabled: tab === "packages",
+  });
+
+  const financeMutation = useMutation({
+    mutationKey: ["apply-to-finance"],
+    mutationFn: (packageId: string = "") =>
+      applyToFinance(
+        {
+          packageId: packageId,
+          annHouseholdIncome: parseInt(details.houseHoldIncome),
+          otherIncome: parseInt(details.otherIncome),
+          moHouseholdExp: parseInt(details.houseHoldMonthlyExpenses),
+          othMonthlyExp: parseInt(details.otherMonthlyExpense),
+          dependants: parseInt(details.noOfDependents),
+        },
+        (currentApplicationDetails as any)?.data?.data.appId
+      ),
+    onSuccess: () => {
+      toast.success("Application to Financial Institution successful");
+      setShowMainFinanceApplicationSuccessDialog(true);
+    },
+    onError: () => {
+      toast.error("Error sending application to Financial Institution");
+    },
+  });
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -311,7 +371,7 @@ const ApplyToFinance = (_: Props) => {
                 Financing options
               </p>
               <Input
-                name="firstLineOfAddress"
+                name="search"
                 inputClassName="bg-white font-poppins h-10"
                 wrapperClassName="max-w-[400px_!important] rounded-lg border border-black-main/70"
                 placeholder="Search here"
@@ -322,19 +382,23 @@ const ApplyToFinance = (_: Props) => {
               <div className="w-full flex justify-center gap-x-6">
                 <div className="flex-[0.5] h-full">
                   <div className="mt-6 flex flex-col gap-y-5">
-                    {placeholderFinancialPackages.map((financePackage, i) => (
-                      <PackageCard
-                        data={financePackage}
-                        key={i}
-                        setShowInsuranceSheet={setShowInsuranceSheet}
-                        setShowInsurancePackagesSheet={
-                          setShowInsurancePackagesSheet
-                        }
-                        isSelected={selectedPackages.includes(i)}
-                        className="bg-[#DBEEF8]"
-                        type="finance"
-                      />
-                    ))}
+                    {financePackages.data?.data.data.map(
+                      (financePackage: any, i: number) => (
+                        <FinanceOptionCard
+                          data={financePackage}
+                          key={i}
+                          liveData={true}
+                          setShowInsuranceSheet={setShowInsuranceSheet}
+                          setShowInsurancePackagesSheet={
+                            setShowInsurancePackagesSheet
+                          }
+                          mutation={financeMutation}
+                          isSelected={selectedPackages.includes(i)}
+                          className="bg-[#DBEEF8]"
+                          type="finance"
+                        />
+                      )
+                    )}
                   </div>
                 </div>
                 <div className="flex-[0.5] h-full flex flex-col sticky top-0">
@@ -347,7 +411,7 @@ const ApplyToFinance = (_: Props) => {
                       <span className="text-[16px] leading-[20px] font-medium font-poppins text-sub-header">
                         Top Financial Institutions
                       </span>
-                      <button className="text-[14px] leading-[12px] font-normal font-poppins text-main text-[#2196F3]">
+                      <button className="text-[14px] leading-[12px] font-normal font-poppins text-[#2196F3]">
                         See More
                       </button>
                     </div>
@@ -393,65 +457,96 @@ const ApplyToFinance = (_: Props) => {
               <form className="mt-10">
                 <div className="mt-6">
                   <Input
-                    name="firstLineOfAddress"
-                    label="What is your annual household Income?"
+                    name="annualIncome"
+                    type="number"
+                    label="What is your annual household income?"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Your annual household income"
+                    value={details.houseHoldIncome}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        houseHoldIncome: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <Input
-                    name="postCode/zipCode"
-                    label="Other income (Spouse, additional employment, etc. *"
+                    name="otherIncome"
+                    label="Other income (Spouse, additional employment, etc.) *"
                     required
+                    type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other income"
+                    value={details.otherIncome}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        otherIncome: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <Input
-                    name="postCode/zipCode"
-                    label="Other income (Spouse, additional employment, etc."
-                    required
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="Other income"
-                  />
-                </div>
-                <div className="mt-6">
-                  <Input
-                    name="postCode/zipCode"
+                    name="monthlyExpenses"
                     label="Household monthly expenses (excluding loans, credit card, etc)"
                     required
+                    type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other income"
+                    value={details.houseHoldMonthlyExpenses}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        houseHoldMonthlyExpenses: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <Input
-                    name="postCode/zipCode"
+                    name="otherMonthlyExpenses"
                     label="Other monthly expenses"
                     required
+                    type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other monthly expenses"
+                    value={details.otherMonthlyExpense}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        otherMonthlyExpense: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-6">
                   <Input
-                    name="postCode/zipCode"
+                    name="noOfDependents"
                     label="Number of dependents"
                     required
+                    type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Number of dependents"
+                    value={details.noOfDependents}
+                    onChange={(e) =>
+                      setDetails((prev) => ({
+                        ...prev,
+                        noOfDependents: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mt-8">
                   <Button
+                    disabled={Object.values(details).some((val) => val === "")}
                     onClick={() =>
                       navigate({
                         pathname: "",
@@ -474,6 +569,22 @@ const ApplyToFinance = (_: Props) => {
 
   return (
     <div className="min-h-screen bg-no-repeat bg-fixed bg-contain bg-bottom bg-[url(/assets/graphics/applications-bg.svg)] bg-opacity-20">
+      {/* If user end application after applying to insurance */}
+      <DialogComponent
+        isOpen={showMainFinanceApplicationSuccessDialog}
+        onOpenChange={() =>
+          navigate("/dashboard/applications/hia-applications")
+        }
+      >
+        <MainFinanceApplicationSuccess
+          setShowApplicationSuccessDialog={
+            setShowMainFinanceApplicationSuccessDialog
+          }
+          setShowInsuranceSheet={setShowInsuranceSheet}
+        />
+      </DialogComponent>
+
+      {/* If user chooses to apply for insurance */}
       <DialogComponent
         isOpen={showApplicationSuccessDialog}
         onOpenChange={() =>

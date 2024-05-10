@@ -1,32 +1,140 @@
 // type Props = {};
 
-import { Button, Dropdown, Input } from "@/components/ui";
+import axiosInstance from "@/api/axiosInstance";
+import { RootState } from "@/app/store";
+import {
+  Button,
+  CountryRegionDropdown,
+  Dropdown,
+  Input,
+} from "@/components/ui";
+import RadioGroupComponent from "@/components/ui/RadioGroup";
+import { maximumRepaymentOptions } from "@/constants";
+import { cn, convertImageToDataURL } from "@/utils";
+import { useMutation } from "@tanstack/react-query";
+import { Country, ICountry, State } from "country-state-city";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Select, { MultiValue } from "react-select";
 
 const AddPackage = () => {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.user);
 
-  let inputClassName = ` bg-[#E4E7E863] bg-opacity-30 text-xs !text-[#9C9C9C] !font-[400] `;
+  const country = Country.getAllCountries().filter(
+    (c: ICountry) => c.name === user?.address.country
+  )[0];
+
+  let inputClassName = ` bg-[#E4E7E863] bg-opacity-30 text-xs text-black-main !font-[400] `;
   let labelStyle = `!fonty-[400] !text-sm !leading-[23.97px] !text-[#333333] !mb-[10px]`;
 
-  let staffLevels = [
-    {
-      label: "level 1",
-      value: "level 1",
+  const addPackage = useMutation({
+    mutationKey: ["add-finance-package"],
+    mutationFn: (data: any) =>
+      axiosInstance.post(`/packages/fin`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Package added successfully");
+
+      navigate("/finance/packages");
     },
-    {
-      label: "level 2",
-      value: "level 2",
+    onError: () => {
+      toast.error("Error adding package");
     },
-    {
-      label: "level 3",
-      value: "level 3",
+  });
+
+  const [formData, setFormData] = useState({
+    institutionName: user?.name,
+    packageName: "",
+    maximumAmount: "",
+    annualPercentageRate: "",
+    interestRateType: "",
+    maxRepaymentPeriod: {
+      label: "",
+      value: "",
     },
-  ];
+    country: {
+      label: "",
+      value: "",
+    },
+    packageVisibility: "",
+    regions: [] as MultiValue<any>,
+    file: null as File | null,
+    imageDataUrl: "",
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (!file) {
+      return; // No file selected
+    }
+
+    // Check if the file is an image
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      e.target.files = null; // Reset file input
+      return;
+    }
+
+    // Check if the file size exceeds 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Please select an image file smaller than 2MB.");
+      e.target.files = null; // Reset file input
+      return;
+    }
+    if (file) {
+      const imageDataUrl = await convertImageToDataURL(file);
+      setFormData((prev) => ({
+        ...prev,
+        file: file,
+        imageDataUrl: imageDataUrl as string, // Ensure you have imageDataUrl in your state
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        file: null,
+        imageDataUrl: "/assets/icons/img-icon.svg",
+      }));
+    }
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log(formData);
+    const formDataPayload = new FormData();
+    formDataPayload.append("name", formData.packageName);
+    formDataPayload.append("maxAmount", formData.maximumAmount);
+    formDataPayload.append("annualPercentRate", formData.annualPercentageRate);
+    formDataPayload.append(
+      "maxRepaymentPeriod",
+      formData.maxRepaymentPeriod.value
+    );
+    formDataPayload.append(
+      "interestRateType",
+      formData.interestRateType.toLowerCase()
+    );
+    formDataPayload.append("country", formData.country.label);
+    formDataPayload.append("locationType", formData.packageVisibility);
+    if (formData.file === null) {
+      return toast.error("Please select image for your package");
+    }
+    if (formData.file) {
+      formDataPayload.append("file", formData.file);
+    }
+
+    console.log(formData);
+
+    addPackage.mutate(formDataPayload);
+  };
 
   return (
-    <div className="font-poppins">
+    <div className="font-poppins pb-96">
       <h2 className="page-header"> Create package</h2>
 
       <form
@@ -36,76 +144,206 @@ const AddPackage = () => {
       >
         {/* avatar */}
         <div>
+          <input
+            type="file"
+            name="image"
+            id="image"
+            className="hidden"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
           <span className="text-xs mb-3">Click to insert logo</span>
-          <div className="h-[100px] w-[100px] relative rounded-full border bg-[#F2F2F2] grid place-items-center">
-            <img src="/assets/icons/img-icon.svg" alt="icon" className="" />
+          <label
+            htmlFor="image"
+            className="h-[100px] w-[100px] relative rounded-full border bg-[#F2F2F2] grid place-items-center"
+          >
+            <div className="h-[100px] w-[100px] overflow-hidden rounded-full flex justify-center items-center">
+              <img
+                src={
+                  formData.file
+                    ? formData.imageDataUrl
+                    : "/assets/icons/img-icon.svg"
+                }
+                alt="icon"
+                className={cn(
+                  formData.imageDataUrl && "w-full h-full object-cover"
+                )}
+              />
+            </div>
 
             <img
               src="/assets/icons/pen-icon.svg"
               alt="icon"
               className="absolute bottom-0 -right-1"
             />
-          </div>
+          </label>
         </div>
 
-        <Dropdown
-          labelClassName={labelStyle}
-          placeholder={`Select institution name`}
+        <Input
+          name="institution-name"
           label="Institution name"
-          name=""
-          options={staffLevels}
-          wrapperClassName={inputClassName + ` w-full`}
-          optionClassName={``}
-        />
-
-        <Input
-          name="package_name"
-          label="Package name"
-          placeholder="Enter Package name"
+          readOnly
           inputClassName={inputClassName}
           labelClassName={labelStyle}
-          required
+          placeholder="Enter package name"
+          value={formData.institutionName}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              institutionName: e.target.value,
+            }))
+          }
         />
 
         <Input
+          name="package name"
+          label="Package name *"
+          inputClassName={inputClassName}
+          labelClassName={labelStyle}
+          placeholder="Enter package name"
+          value={formData.packageName}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              packageName: e.target.value,
+            }))
+          }
+        />
+
+        <Input
+          name="maximum-amount"
+          label="Maximum amount (£) *"
           type="number"
-          labelClassName={labelStyle}
-          placeholder={`Select institution name`}
-          label="Maximum amount *"
-          name=""
           inputClassName={inputClassName}
+          labelClassName={labelStyle}
+          placeholder="Enter maximum amount"
+          value={formData.maximumAmount}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              maximumAmount: e.target.value,
+            }))
+          }
+        />
+
+        <Input
+          name="annual-percentage-rate"
+          label="Annual percentage rate (%) *"
+          type="number"
+          inputClassName={inputClassName}
+          labelClassName={labelStyle}
+          placeholder="3.5"
+          value={formData.annualPercentageRate}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              annualPercentageRate: e.target.value,
+            }))
+          }
         />
 
         <Dropdown
           labelClassName={labelStyle}
           placeholder={`Select`}
           label="Maximum repayment period *"
-          name=""
-          options={[
-            { label: "10 months", value: "10" },
-            { label: "18 months", value: "10" },
-          ]}
-          wrapperClassName={inputClassName + ` w-full`}
+          name="maximumRepaymentPeriod"
+          options={maximumRepaymentOptions}
+          wrapperClassName={inputClassName + `w-full text-sm`}
           optionClassName={``}
+          value={formData.maxRepaymentPeriod}
+          onOptionChange={(value) =>
+            setFormData!((prev) => ({
+              ...prev,
+              maxRepaymentPeriod: value,
+            }))
+          }
         />
 
-        <div className="font-[400] text-sm text-[#333333]">
-          <label htmlFor="" className="">
-            Interest rate type
-          </label>
+        <p className={labelStyle}>Interest rate type</p>
+        <RadioGroupComponent
+          size="size-5"
+          value={formData.interestRateType}
+          setValue={(value: string) =>
+            setFormData((prev) => ({
+              ...prev,
+              interestRateType: value,
+            }))
+          }
+          options={["Variable", "Fixed"]}
+        />
 
-          <div className="py-[10px] flex-center gap-2">
-            <input type="radio" name="" id="" className="" />
-            <span>Variable</span>
-          </div>
+        <CountryRegionDropdown
+          name="country"
+          labelClassName={labelStyle}
+          options={Country.getAllCountries().map((country) => ({
+            label: country.name,
+            value: country.isoCode,
+            prefixIcon: country.flag,
+          }))}
+          searchable={true}
+          label="Location"
+          wrapperClassName="bg-gray-100 w-full font-poppins"
+          placeholder="Select country"
+          value={formData.country}
+          countryChange={(value) => {
+            setFormData((prev) => ({
+              ...prev,
+              country: value,
+            }));
+          }}
+        />
 
-          <div className="flex-center gap-2">
-            <input type="radio" name="" id="" className="" /> <span>Fixed</span>
-          </div>
-        </div>
+        <p className={labelStyle}>Package visibility</p>
+        <RadioGroupComponent
+          size="size-5"
+          value={formData.packageVisibility}
+          setValue={(value: string) =>
+            setFormData((prev) => ({
+              ...prev,
+              packageVisibility: value,
+            }))
+          }
+          options={["National", "Regional"]}
+        />
+        {formData.packageVisibility === "Regional" && (
+          <Select
+            isMulti
+            name="colors"
+            options={State.getStatesOfCountry(country.isoCode).map((state) => ({
+              label: state.name,
+              value: state.isoCode,
+            }))}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            value={formData.regions}
+            // isDisabled={formData.regions.length >= 5}
+            onChange={(value) => {
+              if (value.length > 5) return;
+              setFormData((prev) => ({
+                ...prev,
+                regions: value,
+              }));
+            }}
+          />
+        )}
 
-        <Button className="text-center w-full mt-4">
-          <span className="text-white">Create</span>
+        <Button
+          disabled={addPackage.isPending}
+          className="rounded-lg text-white mt-4 w-full h-11"
+        >
+          {addPackage.isPending ? (
+            <Oval
+              visible={addPackage.isPending}
+              height="20"
+              width="20"
+              color="#ffffff"
+              ariaLabel="oval-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+          ) : (
+            <span>Create</span>
+          )}
         </Button>
       </form>
     </div>

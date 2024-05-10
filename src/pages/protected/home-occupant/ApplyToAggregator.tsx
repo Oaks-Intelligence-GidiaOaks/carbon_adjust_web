@@ -1,11 +1,11 @@
-import { Button, CountryRegionDropdown, Input } from "@/components/ui";
+import { Button, CountryRegionDropdown, Input, Label } from "@/components/ui";
 import {
   createSearchParams,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
 import { Country, State } from "country-state-city";
-import RadioGroupComponent from "@/components/ui/RadioGroup";
+// import RadioGroupComponent from "@/components/ui/RadioGroup";
 import { useState } from "react";
 import DialogComponent from "@/components/reusables/Dialog";
 import { LuRefreshCcw } from "react-icons/lu";
@@ -13,9 +13,11 @@ import { SelectAggregator } from "@/components/dialogs";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useIsFetching, useQuery, useQueryClient } from "@tanstack/react-query";
+import Select from "react-select";
 // import axiosInstance from "@/api/axiosInstance";
 import { cn } from "@/utils";
+import { getRetrofittingActivities } from "@/services/homeOccupant";
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchRetrofittingOptions } from "@/services/homeOccupant";
 
@@ -33,6 +35,13 @@ const ApplyToAggregator = (_: Props) => {
   const [showSelectAggregatorDialog, setShowSelectAggregatorDialog] =
     useState(false);
 
+  const retrofittingActivities = useQuery({
+    queryKey: ["retrofitting-activities"],
+    queryFn: () => getRetrofittingActivities(),
+  });
+
+  console.log(retrofittingActivities.data?.data.data.retrofittingTypes);
+
   const userData = useSelector((state: RootState) => state.user.user);
   console.log(userData);
 
@@ -47,7 +56,10 @@ const ApplyToAggregator = (_: Props) => {
     },
     firstLineAddress: userData?.address.firstLineAddress ?? "",
     zipcode: userData?.address.zipcode ?? "",
-    retrofittingActivity: "",
+    retrofittingActivity: {
+      label: "",
+      value: "",
+    },
   });
 
   const tab = searchParams.get("state");
@@ -155,7 +167,7 @@ const ApplyToAggregator = (_: Props) => {
                   />
                 </div>
                 <div className="mt-6">
-                  <RadioGroupComponent
+                  {/* <RadioGroupComponent
                     value={addressFormState.retrofittingActivity}
                     setValue={(value: string) =>
                       setAddressFormState((prev) => ({
@@ -170,6 +182,72 @@ const ApplyToAggregator = (_: Props) => {
                       "Flexible Dispatch",
                       "Others",
                     ]}
+                  /> */}
+                  <Label
+                    htmlFor={"retrofitting-activities"}
+                    className={cn(
+                      `block text-[#888888] group-valid:text-[#171717] group-has-[:valid]:text-[#171717] mb-4 font-poppins text-black-main`
+                    )}
+                  >
+                    Retrofitting Activities
+                  </Label>
+                  <Select
+                    isLoading={retrofittingActivities.isLoading}
+                    name="colors"
+                    options={
+                      retrofittingActivities.data?.data.data.retrofittingTypes
+                        ? Object.values(
+                            retrofittingActivities.data.data.data
+                              .retrofittingTypes
+                          ).map((act: any) => ({
+                            label: act,
+                            value: act,
+                          }))
+                        : []
+                    }
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    classNames={{
+                      container: () => "bg-gray-100",
+                      valueContainer: () => "bg-gray-100",
+                      input: () =>
+                        "[&_input:focus]:ring-0 ring-transparent ring h-10 font-sm",
+                      // control: () => "form-multiselect",
+                      control: () =>
+                        "form-multiselect select-border-removed font-poppins",
+                      menu: () => "bg-slate-200 font-poppins",
+                      indicatorsContainer: () => "bg-gray-100",
+                      dropdownIndicator: () => "bg-gray-100",
+                      option: ({ isFocused, isSelected }) =>
+                        cn(
+                          isFocused &&
+                            `hover:cursor-pointer 
+                                hover:bg-ca-blue/30 
+                                px-3 py-2 rounded`,
+                          isSelected && "bg-slate-300",
+                          "font-poppins"
+                        ),
+                    }}
+                    placeholder="Select retrofitting activity"
+                    value={addressFormState.retrofittingActivity}
+                    onChange={(value) =>
+                      setAddressFormState((prev) => ({
+                        ...prev,
+                        retrofittingActivity: {
+                          label: value?.label ?? "",
+                          value: value?.value ?? "",
+                        },
+                      }))
+                    }
+
+                    // isDisabled={formData.regions.length >= 5}
+                    // onChange={(value) => {
+                    //   if (value.length > 5) return;
+                    //   setFormData((prev) => ({
+                    //     ...prev,
+                    //     regions: value,
+                    //   }));
+                    // }}
                   />
                 </div>
                 <div className="mt-8">

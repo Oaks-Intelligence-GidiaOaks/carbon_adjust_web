@@ -157,7 +157,7 @@ const Register = () => {
                   register={register}
                   wrapperClassName="mt-4"
                   appendIcon={
-                    !showPassword ? (
+                    showPassword ? (
                       <EyeIcon
                         width={18}
                         className="cursor-pointer select-none"
@@ -182,7 +182,7 @@ const Register = () => {
                   register={register}
                   wrapperClassName="mt-4"
                   appendIcon={
-                    !showConfirmPassword ? (
+                    showConfirmPassword ? (
                       <EyeIcon
                         width={18}
                         className="cursor-pointer select-none"

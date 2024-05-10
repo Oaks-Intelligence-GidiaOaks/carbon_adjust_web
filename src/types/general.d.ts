@@ -19,6 +19,7 @@ export type DropdownProps = {
   options: { label: string; value: string; id?: string | number }[];
   searchable?: boolean;
   disabled?: boolean;
+  addPortal?: boolean;
   value?: any;
   onOptionChange?: (value: any) => void;
   countryChange?: (value: any) => void;
