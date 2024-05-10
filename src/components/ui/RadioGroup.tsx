@@ -10,6 +10,7 @@ const RadioGroupComponent = ({
   showCheckMark,
   value,
   setValue,
+  size,
 }: {
   options: string[];
   showLabel?: boolean;
@@ -18,6 +19,7 @@ const RadioGroupComponent = ({
   showCheckMark?: boolean;
   value?: string;
   setValue?: (value: string) => void;
+  size?: string;
 }) => (
   <form>
     <RadioGroup.Root
@@ -33,6 +35,7 @@ const RadioGroupComponent = ({
             key={option}
             className={cn(
               "bg-white w-[25px] border-2 border-black-main h-[25px] rounded-full hover:bg-violet3 outline-none cursor-default",
+              size,
               wrapperClassName
             )}
             value={option}

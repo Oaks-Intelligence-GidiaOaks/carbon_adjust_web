@@ -11,9 +11,9 @@ const HIAApplicationStatus = ({ status }: Props) => {
       <div
         className={cn(
           "absolute h-full bg-green-500 top-0 left-0",
-          status === "applied" && "w-0",
+          status === "APPLIED" && "w-0",
           status === "under-review" && "w-1/2",
-          status === "approved" && "w-full",
+          status === "APPROVED" && "w-full",
           status === "approved/accepted" && "w-full"
         )}
       ></div>
@@ -22,17 +22,17 @@ const HIAApplicationStatus = ({ status }: Props) => {
           <p className="absolute -top-5 left-0 text-xs font-poppins">Applied</p>
           <CheckBox
             checked={[
-              "applied",
+              "APPLIED",
               "under-review",
-              "approved",
+              "APPROVED",
               "approved/accepted",
             ].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
               [
-                "applied",
+                "APPLIED",
                 "under-review",
-                "approved",
+                "APPROVED",
                 "approved/accepted",
               ].includes(status) && "bg-green-500 border-green-500"
             )}
@@ -44,12 +44,12 @@ const HIAApplicationStatus = ({ status }: Props) => {
             Under review
           </p>
           <CheckBox
-            checked={["under-review", "approved", "approved/accepted"].includes(
+            checked={["under-review", "APPROVED", "approved/accepted"].includes(
               status
             )}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
-              ["under-review", "approved", "approved/accepted"].includes(
+              ["under-review", "APPROVED", "approved/accepted"].includes(
                 status
               ) && "bg-green-500 border-green-500"
             )}
@@ -62,13 +62,13 @@ const HIAApplicationStatus = ({ status }: Props) => {
           </p>
           <CheckBox
             checked={[
-              "approved",
+              "APPROVED",
               "approved/accepted",
               "approved/accepted",
             ].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
-              ["approved", "approved/accepted"].includes(status) &&
+              ["APPROVED", "approved/accepted"].includes(status) &&
                 "bg-green-500 border-green-500"
             )}
             iconStyle="text-white"

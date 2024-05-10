@@ -84,6 +84,11 @@
 }
 
 /* CSS reset */
+html {
+  overflow-y: scroll;
+  height: 100dvh;
+}
+
 * {
   @apply box-border p-0 m-0;
 }
@@ -107,9 +112,17 @@ react-calendar__tile react-calendar__month-view__days__day {
 .react-calendar__tile > abbr {
   @apply font-sans;
 }
-.react-calendar__tile--active > abbr {
-  color: white !important;
+.react-calendar__tile > abbr {
+  @apply text-black-main !important;
 }
+.react-calendar__tile--active > abbr {
+  @apply text-white !important;
+}
+
+.react-calendar__tile--now {
+  @apply bg-ca-blue !important;
+}
+
 .selected-flag:hover {
   @apply rounded-[10px_!important];
 }
@@ -301,4 +314,8 @@ input[type="number"] {
     opacity: 0;
     transform: translateY(-20px);
   }
+}
+
+.select-border-removed {
+  border-width: 0 !important;
 }

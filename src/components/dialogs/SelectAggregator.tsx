@@ -23,7 +23,10 @@ type Props = {
     };
     firstLineAddress: string;
     zipcode: string;
-    retrofittingActivity: string;
+    retrofittingActivity: {
+      label: string;
+      value: string;
+    };
   };
 };
 
@@ -72,7 +75,7 @@ const SelectAggregator = ({
     mutationKey: ["apply-to-aggregator"],
     mutationFn: () =>
       applyToAgg({
-        retrofittingType: formData.retrofittingActivity,
+        retrofittingType: formData.retrofittingActivity.value,
         aggId: aggFilterFormState.aggId,
         address: {
           cityOrProvince: formData.cityOrProvince.label,
@@ -126,7 +129,7 @@ const SelectAggregator = ({
             SELECT AGGREGATOR
           </p>
           <form onSubmit={handleSubmit} className="mt-10 mx-auto">
-            <div className="mt-6">
+            <div className="mt-6 relative z-[99999999999]">
               <CountryRegionDropdown
                 name="country"
                 labelClassName="mb-4 text-black-main font-poppins"

@@ -44,7 +44,7 @@ const HiaPackageCard = ({
   //   };
 
   const publishMutation = useMutation({
-    mutationKey: ["decline contractor"],
+    mutationKey: ["publish hia package"],
     mutationFn: (id: string) =>
       axiosInstance.patch(`packages/${id}/publish`, {
         userId: id,
@@ -60,7 +60,7 @@ const HiaPackageCard = ({
   });
 
   const unpublishMutation = useMutation({
-    mutationKey: ["decline contractor"],
+    mutationKey: ["unpublish hia package"],
     mutationFn: (id: string) =>
       axiosInstance.patch(`packages/${id}/unpublish`, {
         userId: id,

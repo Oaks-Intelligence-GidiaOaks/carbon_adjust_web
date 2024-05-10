@@ -88,7 +88,9 @@ import Registration from "@/pages/protected/hia/Registration";
 import Specializations from "@/pages/protected/hia/Specialization";
 import {
   HOAggregatorApplications,
+  HOFinanceApplications,
   HOHIAApplications,
+  HOInsuranceApplications,
 } from "@/components/sub-pages/applications";
 import {
   FinanceMorePage,
@@ -182,7 +184,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "finance-applications",
-            element: <FinanceApplications />,
+            element: <HOFinanceApplications />,
           },
           {
             path: "insurance",
@@ -190,7 +192,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "insurance-applications",
-            element: <InsuranceApplications />,
+            element: <HOInsuranceApplications />,
           },
         ],
       },

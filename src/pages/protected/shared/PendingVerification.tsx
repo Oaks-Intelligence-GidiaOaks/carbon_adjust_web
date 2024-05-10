@@ -8,9 +8,9 @@ import { RootState } from "@/app/store";
 import AccountActionHeader from "@/components/reusables/account-setup/AccountActionHeader";
 import { Button } from "@/components/ui";
 import { setUser } from "@/features/userSlice";
-import { uniqueObjectsByIdType } from "@/utils";
+import { cn, uniqueObjectsByIdType } from "@/utils";
 import { UserCircleIcon } from "@heroicons/react/20/solid";
-import { useQuery } from "@tanstack/react-query";
+import { useIsFetching, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { LuRefreshCcw } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +32,11 @@ const PendingVerification = (_: Props) => {
     queryKey: ["fetch-user-info-2"],
     queryFn: userService().fetchUserInfo,
     enabled: verify,
+  });
+  console.log(verifyApp.data?.data.data);
+
+  const isFetching = useIsFetching({
+    queryKey: ["fetch-user-info-2"],
   });
 
   // ---------------------UNCOMMENT THIS CODE WHEN ADMIN STARTS VERIFYING USERS
@@ -123,7 +128,11 @@ const PendingVerification = (_: Props) => {
             }
           >
             <span className="text-white">Refresh</span>
-            <LuRefreshCcw width={24} className="text-white" color="#FFFFFF" />
+            <LuRefreshCcw
+              width={24}
+              className={cn("text-white", isFetching && "anim animate-spin")}
+              color="#FFFFFF"
+            />
           </Button>
         </div>
       </div>

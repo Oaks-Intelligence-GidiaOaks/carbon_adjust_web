@@ -6,14 +6,14 @@ import {
 } from "react-router-dom";
 import { Country, State } from "country-state-city";
 import { useState } from "react";
-import { BiChevronRight, BiDownload, BiEdit, BiSearch } from "react-icons/bi";
+import { BiEdit, BiSearch } from "react-icons/bi";
 import Map from "@/components/reusables/Map";
 import {
   image1,
   image2,
   image3,
   image4,
-  pendingApplications,
+  // pendingApplications,
   // placeholderHIAPackages,
   // subContractors,
 } from "@/constants";
@@ -25,16 +25,23 @@ import SubContractorCard from "@/components/reusables/SubContractorCard";
 import { FaChevronRight } from "react-icons/fa";
 import DialogComponent from "@/components/reusables/Dialog";
 import { HIAApplicationSuccess } from "@/components/dialogs";
-import { HIAApplicationStatus } from "@/components/contextual";
+// import { HIAApplicationStatus } from "@/components/contextual";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 // import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { BsArrowLeft } from "react-icons/bs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { applyToHIA, fetchHIAPackages } from "@/services/homeOccupant";
+import {
+  applyToHIA,
+  fetchHIAApps,
+  fetchHIAPackages,
+  getSingleHOApp,
+} from "@/services/homeOccupant";
 import Loading from "@/components/reusables/Loading";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
+import { HIAAppMeta } from "@/types/hia";
+import HIAApplicationCard from "@/components/reusables/HIAApplicationCard";
 
 type Props = {};
 
@@ -57,7 +64,7 @@ const ApplyToHIA = (_: Props) => {
 
   // const selectedPackages = [0, 1];
 
-  const [addressFormState, setAddressFormState] = useState({
+  const [addressFormState] = useState({
     country: {
       label: userData?.address.country ?? "",
       value: userData?.address.country ?? "",
@@ -95,6 +102,9 @@ const ApplyToHIA = (_: Props) => {
       applyToHIA(data, (currentApplicationDetails as any)?.data?.data.appId),
     onSuccess: () => {
       toast.success("Application to HIA successful");
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-single-HO-app-details"],
+      });
       setShowApplicationSuccessDialog(true);
     },
     onError: () => {
@@ -109,7 +119,22 @@ const ApplyToHIA = (_: Props) => {
     enabled: tab === "packages",
   });
 
+  const singleHOApp = useQuery({
+    queryKey: ["fetch-single-HO-app-details"],
+    queryFn: () =>
+      getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
+  });
+
+  console.log(singleHOApp.data?.data.data);
+
+  const HIAApplications = useQuery({
+    queryKey: ["fetch-HIA-apps"],
+    queryFn: () => fetchHIAApps(),
+    enabled: tab === "pending-applications",
+  });
+
   console.log(HIAPackages.data?.data.data);
+  console.log(HIAApplications.data?.data.data);
 
   const identifyAggregatorApplicationState = () => {
     switch (tab) {
@@ -441,7 +466,9 @@ const ApplyToHIA = (_: Props) => {
                             key={i}
                             setShowSheet={setShowSheet}
                             setCurrentHIA={setCurrentHIA}
-                            isSelected={(selectedPackages as any).includes(i)}
+                            isSelected={(
+                              packages.map((p: any) => p.package) as any
+                            ).includes(hiaPackage._id)}
                             type="hia"
                             liveData={true}
                           />
@@ -505,129 +532,11 @@ const ApplyToHIA = (_: Props) => {
                 </p>
               </div>
               <div className="flex flex-col gap-y-6 mt-8">
-                {pendingApplications.map((data, i) => (
-                  <div key={i} className="bg-white rounded-2xl px-10 py-6">
-                    <p className="font-sans text-sm text-[#FF8D31]">
-                      Application ID: APP243 45567
-                    </p>
-                    <div className="flex justify-between flex-wrap gap-4 mt-3">
-                      <div className="flex gap-2">
-                        <div className="size-8">
-                          <img
-                            src={image4}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-x-2">
-                            <div className="flex justify-between flex-1 items-center">
-                              <p className="font-poppins text-black text-lg brightness-0">
-                                {data.org_name}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-x-3">
-                            <div className="flex gap-2 flex-wrap items-center">
-                              <p className="text-sm text-blue-main py-1 font-sans rounded">
-                                {data.location}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1 items-center">
-                            <div className="flex items-center">
-                              {data.subcontractors.map(
-                                (subcontractor: string, i: number) => (
-                                  <div
-                                    style={{
-                                      transform: `translateX(-${i * 10}px)`,
-                                    }}
-                                    className={`size-8 rounded-full overflow-hidden shadow-lg bg-white border border-gray-200`}
-                                    key={i}
-                                  >
-                                    <img
-                                      src={subcontractor}
-                                      className="object-cover"
-                                    />
-                                  </div>
-                                )
-                              )}
-                            </div>
-                            <p
-                              className="text-xs font-medium font-poppins"
-                              style={{
-                                transform: `translateX(-${
-                                  data.subcontractors.length === 1
-                                    ? 0
-                                    : data.subcontractors.length * 6
-                                }px)`,
-                              }}
-                            >
-                              {data.subcontractors.length} Subcontractors
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {Boolean(data.status === "approved/accepted") && (
-                        <div className="w-full max-w-[314px] flex justify-between flex-wrap gap-y-4 font-poppins">
-                          <Button
-                            onClick={() =>
-                              navigate("/dashboard/applications/finance")
-                            }
-                            variant={"outline"}
-                            className="w-[145px] border-2 text-blue-main border-blue-main text-xs"
-                          >
-                            Apply for finance
-                          </Button>
-                          <Button
-                            variant={"outline"}
-                            className="w-[145px] border-2 text-blue-main border-blue-main text-xs"
-                          >
-                            Apply for Insurance
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              navigate(
-                                "/dashboard/applications/hia-applications"
-                              )
-                            }
-                            className="flex items-center gap-x-2 text-white w-[145px] flex-1 text-xs"
-                          >
-                            <span>Finish Application</span>
-                            <BiChevronRight size={18} />
-                          </Button>
-                        </div>
-                      )}
-                      {Boolean(data.status === "approved") && (
-                        <div className="w-full max-w-[314px] flex justify-between flex-wrap gap-y-4 font-poppins">
-                          <Button
-                            variant={"outline"}
-                            className="w-[145px] border-2 text-blue-main border-blue-main text-xs flex gap-x-2 items-center"
-                          >
-                            <span className="font-normal">Download offer</span>
-                            <BiDownload size={16} />
-                          </Button>
-                          <Button className="flex bg-blue-main items-center gap-x-2 text-white w-[145px] text-xs">
-                            <span>Accept offer</span>
-                            <BiChevronRight size={18} />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-9 flex justify-between gap-4 items-center">
-                      <HIAApplicationStatus status={data.status} />
-                      {Boolean(data.status === "approved/accepted") && (
-                        <Button
-                          variant={"link"}
-                          className="flex items-center gap-2 font-poppins text-sm p-0"
-                        >
-                          <span className="font-normal">Download offer</span>
-                          <BiDownload size={16} />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                {singleHOApp.data?.data.data.map(
+                  (data: HIAAppMeta, i: number) => (
+                    <HIAApplicationCard data={data} key={i} />
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -661,12 +570,10 @@ const ApplyToHIA = (_: Props) => {
                     label="Select country of residence"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select country"
-                    value={addressFormState.country}
-                    countryChange={(value) => {
-                      setAddressFormState((prev) => ({
-                        ...prev,
-                        country: value,
-                      }));
+                    disabled
+                    value={{
+                      label: singleHOApp.data?.data.data.address.country,
+                      value: singleHOApp.data?.data.data.address.country,
                     }}
                   />
                 </div>
@@ -684,13 +591,11 @@ const ApplyToHIA = (_: Props) => {
                     label=" Select city/state/province"
                     wrapperClassName="bg-gray-100 w-full font-poppins"
                     placeholder="Select city/state/province"
-                    value={addressFormState.cityOrProvince}
-                    cityChange={(value) =>
-                      setAddressFormState((prev) => ({
-                        ...prev,
-                        cityOrProvince: value,
-                      }))
-                    }
+                    disabled
+                    value={{
+                      label: singleHOApp.data?.data.data.address.cityOrProvince,
+                      value: singleHOApp.data?.data.data.address.cityOrProvince,
+                    }}
                   />
                 </div>
                 <div className="mt-6">
@@ -700,13 +605,8 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter address"
-                    value={addressFormState.firstLineAddress}
-                    onChange={(e) =>
-                      setAddressFormState((prev) => ({
-                        ...prev,
-                        firstLineAddress: e.target.value,
-                      }))
-                    }
+                    readOnly
+                    value={singleHOApp.data?.data.data.address.firstLineAddress}
                   />
                 </div>
                 <div className="mt-6">
@@ -717,13 +617,8 @@ const ApplyToHIA = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Enter post/zip code"
-                    value={addressFormState.zipcode}
-                    onChange={(e) =>
-                      setAddressFormState((prev) => ({
-                        ...prev,
-                        zipcode: e.target.value,
-                      }))
-                    }
+                    readOnly
+                    value={singleHOApp.data?.data.data.address.zipcode}
                   />
                 </div>
                 <div className="mt-8">

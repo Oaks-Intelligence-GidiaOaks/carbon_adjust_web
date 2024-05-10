@@ -56,6 +56,7 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
                 placeholder="Select aggregator type"
                 value={specialization}
                 onOptionChange={(value) => setSpecialization!(value)}
+                addPortal
               />
             </div>
 

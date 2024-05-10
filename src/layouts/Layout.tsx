@@ -57,7 +57,7 @@ const Layout = (props: Props) => {
       if (userData.data.data.data.roles[0] === "HIA") {
         return navigate("/hia");
       }
-      if (userData.data.data.data.roles[0] === "FINANCE") {
+      if (userData.data.data.data.roles[0] === "FINANCIAL_INSTITUTION") {
         return navigate("/finance");
       }
       if (userData.data.data.data.roles[0] === "INSURANCE") {
@@ -68,7 +68,7 @@ const Layout = (props: Props) => {
   }, [userData.isSuccess]);
 
   return (
-    <div className="flex max-h-screen max-w-screen overflow-hidden">
+    <div className="flex max-h-screen max-w-screen overflow-hidden overflow-y-scroll">
       <Sidebar
         accountType={props.sidebarType}
         mobileMenuIsOpen={mobileMenuIsOpen}
@@ -91,8 +91,8 @@ const Layout = (props: Props) => {
             <div className="w-full h-full flex justify-center pt-20">
               <Oval
                 visible={userData.isLoading}
-                height="20"
-                width="20"
+                height="40"
+                width="40"
                 color="#ffffff"
                 ariaLabel="oval-loading"
                 wrapperStyle={{}}

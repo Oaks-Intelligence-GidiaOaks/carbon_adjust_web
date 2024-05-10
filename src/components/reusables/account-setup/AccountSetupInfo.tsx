@@ -49,7 +49,7 @@ const AccountSetupInfo = ({
             </p>
             <p className="text-scheme-white text-xs mt-2 font-poppins">
               {figureStepBasedOnAccountType(currentStep ?? 1)} out of{" "}
-              {accountType !== "HOME_OCCUPANT" ? 3 : 4}
+              {accountType !== "home-occupant" ? 3 : 4}
             </p>
           </div>
         </div>

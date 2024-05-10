@@ -50,3 +50,58 @@ export function uniqueObjectsByIdType<T extends ObjectType>(arr: T[]): T[] {
   // Return the values of the map as an array
   return Array.from(idTypeValuesMap.values());
 }
+
+export function downloadFile(fileUrl: string, fileName: string) {
+  fetch(fileUrl)
+    .then((response) => {
+      // Check if response is successful
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      // Convert response to blob
+      return response.blob();
+    })
+    .then((blob) => {
+      // Create a new URL for the blob
+      const blobUrl = window.URL.createObjectURL(blob);
+      // Create a new anchor element
+      const link = document.createElement("a");
+      // Set the href attribute to the blob URL
+      link.href = blobUrl;
+      // Set the download attribute to the file name
+      link.download = fileName;
+      // Simulate click on the anchor element
+      link.click();
+      // Clean up by revoking the blob URL
+      window.URL.revokeObjectURL(blobUrl);
+    })
+    .catch((error) => {
+      console.error("There was a problem with your fetch operation:", error);
+    });
+}
+
+export function convertImageToDataURL(file: File) {
+  return new Promise((resolve, reject) => {
+    // Check if the file is an image
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("File is not an image"));
+      return;
+    }
+
+    // Check if the file size is greater than 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      reject(new Error("File size exceeds 2MB"));
+      return;
+    }
+
+    // Read the file as a data URL
+    const reader = new FileReader();
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+    reader.onerror = () => {
+      reject(new Error("Error reading the file"));
+    };
+    reader.readAsDataURL(file);
+  });
+}
