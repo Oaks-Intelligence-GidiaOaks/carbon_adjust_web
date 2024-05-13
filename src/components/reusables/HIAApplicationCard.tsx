@@ -46,6 +46,8 @@ const HIAApplicationCard = ({ data }: Props) => {
     },
   });
 
+  console.log(data);
+
   const acceptOfferMutation = useMutation({
     mutationKey: ["accept-hia-offer"],
     mutationFn: (data: {

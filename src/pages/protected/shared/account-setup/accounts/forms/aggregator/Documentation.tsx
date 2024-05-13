@@ -24,6 +24,8 @@ const Documentation = ({ formState, setFormState }: Props) => {
     useSelector((state: RootState) => state.user?.user?.doc ?? null)
   );
 
+  const userData = useSelector((state: RootState) => state.user?.user);
+
   const setContactDoc = useMutation({
     mutationFn: (docData: FormData) =>
       axiosInstance.post(`/users/upload/doc`, docData, {
@@ -60,6 +62,27 @@ const Documentation = ({ formState, setFormState }: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
+      dispatch(setUserDocs(data.data.data.doc));
+      // navigate("/dashboard");
+    },
+  });
+
+  const setLetterOfAuth = useMutation({
+    mutationFn: (docData: FormData) =>
+      axiosInstance.post(`/users/org/upload/doc`, docData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    mutationKey: ["letter-of-auth-submission"],
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.data.message}`, {
+        duration: 10000,
+      });
+
       dispatch(setUserDocs(data.data.data.doc));
       // navigate("/dashboard");
     },
@@ -120,6 +143,18 @@ const Documentation = ({ formState, setFormState }: Props) => {
     if (formState.certOfAuth !== null) {
       formData.append("idType", "Certificate of Authorization");
       formData.append("file", formState.certOfAuth[0]);
+    }
+    setCertOfAuth.mutate(formData);
+  };
+  const handleLetterOfAuthSubmission = () => {
+    const formData = new FormData();
+
+    if (formState.letterOfAuth === null) {
+      return;
+    }
+    if (formState.letterOfAuth !== null) {
+      formData.append("idType", "Letter of Authorization");
+      formData.append("file", formState.letterOfAuth[0]);
     }
     setCertOfAuth.mutate(formData);
   };
@@ -277,10 +312,70 @@ const Documentation = ({ formState, setFormState }: Props) => {
             </div>
           </div>
 
+          {/* Letter of auth */}
+          {(userData?.roles[0] === "INSURANCE" ||
+            userData?.roles[0] === "FINANCIAL_INSTITUTION") && (
+            <div>
+              <p className="text-black">
+                Letter of authorization to open account *
+              </p>
+              {!Boolean(
+                (doc as any[]).filter(
+                  (doc) => doc.idType === "Letter of Authorization"
+                ).length
+              ) && (
+                <DropBox
+                  value={formState.letterOfAuth}
+                  setFiles={setFormState}
+                  docName="letterOfAuth"
+                />
+              )}
+              <div className="mt-2 flex justify-start">
+                {Boolean(
+                  (doc as any[]).filter(
+                    (doc) => doc.idType === "Letter of Authorization"
+                  ).length
+                ) ? (
+                  <Button
+                    disabled={setLetterOfAuth.isPending}
+                    variant={"outline"}
+                    className="text-white bg-green-500"
+                  >
+                    <span>Submitted</span>
+                  </Button>
+                ) : (
+                  <>
+                    {Boolean(formState.letterOfAuth !== null) && (
+                      <Button
+                        disabled={setLetterOfAuth.isPending}
+                        className="text-white"
+                        onClick={handleLetterOfAuthSubmission}
+                      >
+                        {setLetterOfAuth.isPending ? (
+                          <Oval
+                            visible={setLetterOfAuth.isPending}
+                            height="20"
+                            width="20"
+                            color="#ffffff"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        ) : (
+                          <span>Upload</span>
+                        )}
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Cert of auth */}
           <div>
             <p className="text-black">
-              Letter of authorization to open account *
+              Certificate of authorization to open account *
             </p>
             {!Boolean(
               (doc as any[]).filter(

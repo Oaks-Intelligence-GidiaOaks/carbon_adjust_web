@@ -85,6 +85,7 @@ InputProps) => {
           )}
           tileClassName={cn("font-sans text-[white_!important] rounded-md")}
           clearIcon={false}
+          maxDate={new Date()}
         />
         {/* {appendIcon} */}
       </div>

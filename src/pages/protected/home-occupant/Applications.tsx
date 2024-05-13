@@ -87,7 +87,17 @@ const Applications = () => {
           "/dashboard/applications/hia?state=pending-applications"
         );
       }
-      if (getApplicationStatus.data?.data.data.currentAppStage === 3) {
+      if (
+        getApplicationStatus.data?.data.data.currentAppStage === 3 &&
+        getApplicationStatus.data?.data.data.hasApp &&
+        getApplicationStatus.data?.data.data.currentAppStatus === "Approved"
+      ) {
+        return navigate("/dashboard/applications/finance-applications");
+      }
+      if (
+        getApplicationStatus.data?.data.data.currentAppStage === 3 &&
+        getApplicationStatus.data?.data.data.hasApp
+      ) {
         return navigate("/dashboard/applications/finance");
       }
       if (getApplicationStatus.data?.data.data.currentAppStage === 4) {

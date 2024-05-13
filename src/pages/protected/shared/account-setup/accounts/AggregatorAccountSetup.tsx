@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 // import AccountSetUpForm from "./AccountSetUpForm";
 import { Button } from "@/components/ui";
 import ScrollToTop from "@/components/reusables/ScrollToTop";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import { useMutation } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { persistor, RootState } from "@/app/store";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 import { VerifyPhoneNumber } from "@/components/dialogs";
@@ -15,11 +15,15 @@ import { Oval } from "react-loader-spinner";
 import { OrgDocInfoForm } from "@/types/general";
 import OrganizationSetupForm from "./OrganizationSetUpForm";
 import { uniqueObjectsByIdType } from "@/utils";
+import { setUser } from "@/features/userSlice";
+import { getMe } from "@/services/homeOccupant";
 
 type Props = {};
 
 const AggregatorAccountSetup = (_: Props) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userData = useSelector((state: RootState) => state.user.user);
 
@@ -34,9 +38,35 @@ const AggregatorAccountSetup = (_: Props) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [verifyPhoneNumber, setVerifyPhoneNumber] = useState(false);
 
-  const logOut = () => {
-    navigate("/");
+  const logOut = async () => {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+    window.location.assign("/");
   };
+
+  const freshUserData = useQuery({
+    queryKey: ["user-data", currentStep],
+    queryFn: getMe,
+  });
+
+  console.log(freshUserData.data?.data.data);
+  useEffect(() => {
+    if (freshUserData.isSuccess) {
+      const data = freshUserData.data.data.data;
+
+      dispatch(setUser(data));
+
+      if (data.step) {
+        setCurrentStep(data.step + 1);
+      } else {
+        setCurrentStep(1);
+      }
+    }
+  }, [freshUserData.isSuccess]);
+
+  queryClient.getQueryCache().find({ queryKey: ["user-data"] });
 
   const setAggBioData = useMutation({
     mutationFn: (bioData: {
@@ -55,6 +85,8 @@ const AggregatorAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}. Please verify your phone number`, {
         duration: 10000,
       });
+      setUser(data.data.data);
+
       setVerifyPhoneNumber(true);
     },
   });
@@ -76,6 +108,7 @@ const AggregatorAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
+      setUser(data.data.data);
       setCurrentStep(3);
     },
   });
@@ -95,6 +128,7 @@ const AggregatorAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
+      setUser(data.data.data);
       navigate("/dashboard");
     },
   });
@@ -114,6 +148,7 @@ const AggregatorAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
+      setUser(data.data.data);
       navigate("/dashboard");
     },
   });
@@ -133,6 +168,7 @@ const AggregatorAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
+      setUser(data.data.data);
       navigate("/dashboard");
     },
   });
@@ -178,7 +214,7 @@ const AggregatorAccountSetup = (_: Props) => {
   const [formState, setFormState] = useState({
     entityName: userData?.name ?? "",
     contactEmail: userData?.contactEmail ?? "",
-    contactName: userData?.name ?? "",
+    contactName: userData?.contactName ?? "",
     dateOfFormation: userData?.dateFormed ?? "",
     phoneNumber: userData?.phoneNos ?? "",
     bio: userData?.bio ?? "",
@@ -205,6 +241,7 @@ const AggregatorAccountSetup = (_: Props) => {
     contactDoc: null,
     certOfInc: null,
     certOfAuth: null,
+    letterOfAuth: null,
   });
 
   const doc = uniqueObjectsByIdType(
@@ -212,6 +249,8 @@ const AggregatorAccountSetup = (_: Props) => {
   );
 
   const goToNext = async () => {
+    console.log(currentStep);
+
     switch (currentStep) {
       case 1:
         setAggBioData.mutate({
@@ -235,7 +274,39 @@ const AggregatorAccountSetup = (_: Props) => {
         break;
       case 3:
         // handleDocSubmission();
-        if (doc.length === 3) {
+        if (
+          (userData?.roles[0] === "INSURANCE" ||
+            userData?.roles[0] === "FINANCIAL_INSTITUTION") &&
+          doc.length === 4
+        ) {
+          navigate("/pending-verification");
+        } else if (doc.length === 3) {
+          navigate("/pending-verification");
+        }
+        return;
+      // Same as case 3 because the data returning is not constant for organizations
+      case 4:
+        // handleDocSubmission();
+        if (
+          (userData?.roles[0] === "INSURANCE" ||
+            userData?.roles[0] === "FINANCIAL_INSTITUTION") &&
+          doc.length === 4
+        ) {
+          navigate("/pending-verification");
+        } else if (doc.length === 3) {
+          navigate("/pending-verification");
+        }
+        return;
+      // Same as case 3 and 4 because the data returning is not constant for organizations
+      case 5:
+        // handleDocSubmission();
+        if (
+          (userData?.roles[0] === "INSURANCE" ||
+            userData?.roles[0] === "FINANCIAL_INSTITUTION") &&
+          doc.length === 4
+        ) {
+          navigate("/pending-verification");
+        } else if (doc.length === 3) {
           navigate("/pending-verification");
         }
         return;
@@ -283,7 +354,30 @@ const AggregatorAccountSetup = (_: Props) => {
           />
           <Button
             disabled={
-              setAggBioData.isPending || setAggAddress.isPending
+              (() => {
+                if (currentStep && currentStep >= 3) {
+                  if (
+                    userData?.roles[0] !== "AGGREGATOR" &&
+                    userData?.roles[0] !== "HIA"
+                  ) {
+                    if (
+                      uniqueObjectsByIdType(userData?.doc as object[]).length <
+                      4
+                    ) {
+                      return true;
+                    } else return false;
+                  } else {
+                    if (
+                      uniqueObjectsByIdType(userData?.doc as object[]).length <
+                      3
+                    ) {
+                      return true;
+                    } else return false;
+                  }
+                } else {
+                  return setAggBioData.isPending || setAggAddress.isPending;
+                }
+              })()
               // setUserDoc.isPending
             }
             onClick={goToNext}

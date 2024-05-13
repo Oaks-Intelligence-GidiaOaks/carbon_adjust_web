@@ -5,19 +5,22 @@ import { useNavigate } from "react-router-dom";
 import AccountSetUpForm from "./AccountSetUpForm";
 import { Button } from "@/components/ui";
 import ScrollToTop from "@/components/reusables/ScrollToTop";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import { useMutation } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { persistor, RootState } from "@/app/store";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 import { VerifyPhoneNumber } from "@/components/dialogs";
 import { Oval } from "react-loader-spinner";
 import { AccountSetupForm, DocInfoForm } from "@/types/general";
+import { getMe } from "@/services/homeOccupant";
+import { setUser } from "@/features/userSlice";
 
 type Props = {};
 
 const HomeOwnerAccountSetup = (_: Props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userData = useSelector((state: RootState) => state.user.user);
 
@@ -25,9 +28,32 @@ const HomeOwnerAccountSetup = (_: Props) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [verifyPhoneNumber, setVerifyPhoneNumber] = useState(false);
 
-  const logOut = () => {
-    navigate("/");
+  const logOut = async () => {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+    window.location.assign("/");
   };
+
+  const freshUserData = useQuery({
+    queryKey: ["user-data", currentStep],
+    queryFn: getMe,
+  });
+
+  useEffect(() => {
+    if (freshUserData.isSuccess) {
+      const data = freshUserData.data.data.data;
+
+      dispatch(setUser(data));
+
+      if (data.step) {
+        setCurrentStep(data.step + 1);
+      } else {
+        setCurrentStep(1);
+      }
+    }
+  }, [freshUserData.isSuccess]);
 
   const setUserBioData = useMutation({
     mutationFn: (bioData: {
@@ -109,7 +135,7 @@ const HomeOwnerAccountSetup = (_: Props) => {
       toast.success(`${data.data.message}`, {
         duration: 10000,
       });
-      navigate("/dashboard");
+      navigate("/pending-verification");
     },
   });
 

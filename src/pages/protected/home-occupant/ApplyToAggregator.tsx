@@ -358,7 +358,7 @@ const ApplyToAggregator = (_: Props) => {
               <div className="flex flex-col w-48 items-center">
                 <Button
                   variant="default"
-                  // disabled
+                  disabled
                   className="bg-white h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins mt-6 w-full"
                   onClick={() =>
                     navigate({

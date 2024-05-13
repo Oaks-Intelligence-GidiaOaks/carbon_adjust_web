@@ -1,3 +1,4 @@
+import { persistor } from "@/app/store";
 import { Logo } from "@/assets/icons";
 import {
   adminSideBarItems,
@@ -71,7 +72,7 @@ const Sidebar = ({
         <div className="flex flex-col gap-y-4 mt-8">
           {identifyUserSideBar(accountType).map((item, i) => {
             const Icon = item.icon;
-            return (
+            return item.title !== "Logout" ? (
               <Link
                 key={i}
                 to={`${item.href}`}
@@ -96,6 +97,38 @@ const Sidebar = ({
                   {item.title}
                 </span>
               </Link>
+            ) : (
+              <div
+                key={i}
+                role="button"
+                className={cn(
+                  "flex gap-4 py-3 px-2 pl-4 items-center font-manrope rounded-full",
+                  pathname === `${item.href}`
+                    ? "bg-gradient-to-r from-blue-secondary to-blue-main"
+                    : "hover:bg-[#D6F2DE]"
+                )}
+                onClick={() => {
+                  persistor.pause();
+                  persistor.flush().then(() => {
+                    return persistor.purge();
+                  });
+                  window.location.assign("/");
+                }}
+              >
+                <Icon
+                  className={cn(
+                    pathname === `${item.href}` ? "invert brightness-0" : ""
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-sm",
+                    pathname === `${item.href}` ? "text-white" : ""
+                  )}
+                >
+                  {item.title}
+                </span>
+              </div>
             );
           })}
         </div>
@@ -129,7 +162,7 @@ const Sidebar = ({
         <div className="flex flex-col gap-y-4 mt-10 overflow-y-scroll">
           {identifyUserSideBar(accountType).map((item, i) => {
             const Icon = item.icon;
-            return (
+            return item.title !== "Logout" ? (
               <Link
                 key={i}
                 to={`${item.href}`}
@@ -154,6 +187,38 @@ const Sidebar = ({
                   {item.title}
                 </span>
               </Link>
+            ) : (
+              <div
+                key={i}
+                role="button"
+                className={cn(
+                  "flex gap-4 cursor-pointer py-3 px-2 pl-4 items-center font-manrope rounded-full",
+                  pathname === `${item.href}`
+                    ? "bg-gradient-to-r from-blue-secondary to-blue-main"
+                    : "hover:bg-[#D6F2DE]"
+                )}
+                onClick={() => {
+                  persistor.pause();
+                  persistor.flush().then(() => {
+                    return persistor.purge();
+                  });
+                  window.location.assign("/");
+                }}
+              >
+                <Icon
+                  className={cn(
+                    pathname === `${item.href}` ? "invert brightness-0" : ""
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-sm",
+                    pathname === `${item.href}` ? "text-white" : ""
+                  )}
+                >
+                  {item.title}
+                </span>
+              </div>
             );
           })}
         </div>

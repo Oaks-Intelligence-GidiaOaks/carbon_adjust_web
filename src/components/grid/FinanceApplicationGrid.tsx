@@ -10,7 +10,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 // import Modal from "../../reuseable/RegistrationRejectionModal";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+// import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 // import {
 //   Loading,
 // //   PaginationButton,
@@ -19,40 +19,49 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 // import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { formatDate } from "../../lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { BsThreeDotsVertical } from "react-icons/bs";
 // import axios from "axios";
 // import { FaDownload, FaList } from "react-icons/fa";
 import TablePagination from "../reusables/TablePagination";
-// import TableFilter from "../reusables/TableFilter";
-// import { TbSortAscending, TbSortDescending } from "react-icons/tb";
 import LoadingModal from "../reusables/LoadingModal";
-// import { MdDownloadDone, MdOutlineDeleteOutline } from "react-icons/md";
 // import { CiWarning } from "react-icons/ci";
-// import { BiMessage } from "react-icons/bi";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import file_icon from "../../../assets/icons/file_icon.png";
-// import { PiWarningBold } from "react-icons/pi";
 // import DeleteAccount from "../../modals/DeleteAccount";
 // import ResponseAlert from "../../reuseable/ResponseAlert";
 import { useOutsideCloser } from "../../hooks/useOutsideCloser";
-// import { FaDownload } from "react-icons/fa";
-import { DocumentIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { IoDownloadOutline } from "react-icons/io5";
-import { cn } from "@/utils";
+// import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
+import { BsPeople, BsThreeDotsVertical } from "react-icons/bs";
+import {
+  // MdCancel,
+  MdDone,
+  // MdDownloadDone,
+  // MdOutlineDeleteOutline,
+} from "react-icons/md";
+// import { PiWarningBold } from "react-icons/pi";
+// import { BiMessage } from "react-icons/bi";
+import { PDFIcon } from "@/assets/icons";
+import { GrClose } from "react-icons/gr";
 
-const AdminAggregatorRegistrationGrid = ({
+const FinanceApplicationGrid = ({
   data,
-}: // isUpdating,
-{
+}: {
   data: any[];
   isUpdating: boolean;
 }) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  // const [currentRowId, setCurrentRowId] = useState(null);
-  const [expandedRows, setExpandedRows] = useState([]);
+  const [currentRowId, setCurrentRowId] = useState(null);
+  const [currentRowData, setCurrentRowData] = useState({
+    packageId: "",
+    appId: "",
+  });
+  // const [expandedRows, setExpandedRows] = useState([]);
+
+  // const [file, setFile] = useState<File | null>();
   const queryClient = useQueryClient();
   // const [declineRowId, setDeclineRowId] = useState(null);
   // const [showDeclineModal, setShowDeclineModal] = useState(false);
@@ -64,98 +73,125 @@ const AdminAggregatorRegistrationGrid = ({
 
   const actionButtonsRef = useRef<HTMLDivElement>(null);
 
-  const getTextColor = (value: null | string) => {
-    if (value === null) {
-      return "#139EEC";
-    } else if (value === "completed") {
-      return "#8AC926";
-    } else if (value === "suspended") {
-      return "#C9C126";
-    } else {
-      return "#FF595E";
-    }
-  };
-
-  // const handleModalAction = async (action: any) => {
-  //   try {
-  //     setShowModal(false);
-  //     if (action === "Approve") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "completed" });
-  //     } else if (action === "Reject") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "rejected" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating verification status:", error);
-  //   }
-  // };
-
-  //   const handleApprovalRejection = async (id: any, action: any) => {
-  //     try {
-  //       if (action === "Approve") {
-  //         await mutation.mutateAsync({ id, verified: "completed" });
-  //       } else if (action === "Decline") {
-  //         setDeclineRowId(id);
-  //         setShowDeclineModal(true);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating verification status:", error);
-  //     }
-  //   };
-
-  // const handleModalReject = async (id: any, reason: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "rejected", message: reason });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const handleSuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "suspended" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const handleUnsuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "completed" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const ViewsCount = ({ info }: { info: any }) => {
-  //   console.log(info.getValue());
-
-  //   let count = info.getValue().length;
-
-  //   return <div className="px-4 w-[50px] mx-auto">{count}</div>;
-  // };
-
-  // const handleActionClick = (id: any) => {
-  //   if (currentRowId === id) {
-  //     setShowModal((prevState) => !prevState);
-  //   } else {
-  //     setCurrentRowId(id);
-  //     setShowModal(true);
-  //   }
-  // };
-
-  const toggleRowExpansion = (rowId: any) => {
-    setExpandedRows((prevExpandedRows: any) => {
-      if (prevExpandedRows.includes(rowId)) {
-        return prevExpandedRows.filter((id: string) => id !== rowId);
-      } else {
-        return [...prevExpandedRows, rowId];
-      }
+  const handleActionClick = (id: any, rowData: any) => {
+    setCurrentRowData({
+      appId: rowData._id,
+      packageId: rowData.packageId,
     });
+    if (currentRowId === id) {
+      setShowModal((prevState) => !prevState);
+    } else {
+      setCurrentRowId(id);
+      setShowModal(true);
+    }
   };
 
   const columnHelper = createColumnHelper();
 
-  console.log(data);
+  const approvalInputRef = useRef<HTMLInputElement>(null);
+  const declineInputRef = useRef<HTMLInputElement>(null);
+
+  const declineMutation = useMutation({
+    mutationKey: ["decline application"],
+    mutationFn: (ids: { appId: string; packageId: string; file: File }) => {
+      const formData = new FormData();
+
+      if (!ids.file) {
+        toast.error("Attach document");
+      }
+      if (ids.file) {
+        formData.append("file", ids.file);
+      }
+      formData.append("status", "false");
+      formData.append("packageId", ids.packageId);
+
+      return axiosInstance.patch(
+        `applications/${ids.appId}/fin/review`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
+    onSuccess: () => {
+      toast.success("Application declined");
+      queryClient.invalidateQueries({
+        queryKey: ["get-hia-applications"],
+      });
+    },
+    onError: () => {
+      toast.error("Error approving contractor");
+    },
+  });
+
+  const approvedMutation = useMutation({
+    mutationKey: ["approve application"],
+    mutationFn: (ids: { appId: string; packageId: string; file: File }) => {
+      const formData = new FormData();
+
+      if (!ids.file) {
+        toast.error("Attach document");
+      }
+      if (ids.file) {
+        formData.append("file", ids.file);
+      }
+      formData.append("status", "true");
+      formData.append("packageId", ids.packageId);
+
+      return axiosInstance.patch(
+        `applications/${ids.appId}/fin/review`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
+    onSuccess: () => {
+      toast.success("Application approved");
+      queryClient.invalidateQueries({
+        queryKey: ["get-hia-applications"],
+      });
+    },
+    onError: () => {
+      toast.error("Error approving application");
+    },
+  });
+
+  const handleApprovalMutation = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    appId: string,
+    packageId: string
+  ) => {
+    const newFile = event.target.files?.[0]; // Get the selected file
+    if (newFile) {
+      // Perform your request here
+      approvedMutation.mutate({
+        appId: appId,
+        packageId: packageId,
+        file: newFile,
+      });
+    }
+  };
+
+  const handleDeclineMutation = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    appId: string,
+    packageId: string
+  ) => {
+    const newFile = event.target.files?.[0]; // Get the selected file
+    if (newFile) {
+      // Perform your request here
+      declineMutation.mutate({
+        appId: appId,
+        packageId: packageId,
+        file: newFile,
+      });
+    }
+  };
 
   const columns = [
     columnHelper.accessor((_, rowIndex) => ({ serialNumber: rowIndex + 1 }), {
@@ -168,7 +204,17 @@ const AdminAggregatorRegistrationGrid = ({
       ),
       header: () => <div className="w-14 px-1 text-center">S/N</div>,
     }),
-    columnHelper.accessor((row: any) => row?.createdAt, {
+    columnHelper.accessor((row: any) => row?.appRef, {
+      id: "appRef",
+      cell: (info) => (
+        <div className="w-30 mx-auto text-left">
+          {" "}
+          {(info.row.original as any).appRef}
+        </div>
+      ),
+      header: () => <div className="w-36 text-left">Application ID</div>,
+    }),
+    columnHelper.accessor((row: any) => row?.fin.createdAt, {
       id: "createdAt",
       cell: (info) => (
         <div className="w-24 mx-auto text-left">
@@ -176,71 +222,60 @@ const AdminAggregatorRegistrationGrid = ({
           {formatDate(info.getValue())}{" "}
         </div>
       ),
-      header: () => <div className="w-36 text-left">Registration date</div>,
+      header: () => <div className="w-36 text-left">Date</div>,
     }),
-    columnHelper.accessor((row: any) => row?.name, {
-      id: "name",
+    columnHelper.accessor((row: any) => row?.fin.packageId, {
+      id: "packageId",
       cell: (info) => (
-        <div className="w-44 mx-auto text-left">{info.getValue()}</div>
-      ),
-      header: () => <div className="w-44 text-left">Name</div>,
-    }),
-
-    columnHelper.accessor((row: any) => row?.email, {
-      id: "email",
-      cell: (info) => (
-        <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60">
-          <span className="">
-            {/* {console.log(info.row.original.email)} */}
-            {(info.row.original as any).email}
-          </span>
+        <div className="w-80 mx-auto text-left">
+          {" "}
+          {(info.row.original as any).fin.packageId.name}
         </div>
       ),
-      header: () => <div className="w-60 text-left">Email</div>,
+      header: () => <div className="w-80 text-left">Package name</div>,
     }),
-    columnHelper.accessor((row: any) => row?.phoneNos, {
-      id: "phoneNos",
+    columnHelper.accessor((row: any) => row?.fin.media, {
+      id: "Summary report",
       cell: (info) => (
-        <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60">
-          <span className="">
-            {Boolean((info.row.original as any).phoneNos)
-              ? (info.row.original as any).phoneNos
-              : "---------------"}
-          </span>
+        <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60 items-center">
+          <PDFIcon className="text-base size-4 text-red-500" />
+          <div className="pl-2">PDF</div>
+          <div className="pl-4">
+            <a
+              href={
+                (info.row.original as any).fin.media.filter(
+                  (m: any) => m.fileType === "HO_APP_TO_FIN_PDF"
+                )[0]?.url
+              }
+              className="poppins-4 text-main text-xs hover:underline flex gap-x-2 items-center"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View
+              <IoDownloadOutline className="size-4" />
+            </a>
+          </div>
         </div>
       ),
-      header: () => <div className="w-44 text-left">Phone</div>,
+      header: () => <div className="w-44 text-left">Summary report</div>,
     }),
-    columnHelper.accessor((row: any) => row?.carbonCredit, {
-      id: "email",
-      cell: () => <div className="w-fit px-4 text-left">-----------------</div>,
-      header: () => <div className="w-44 px-1 text-left">Carbon Credit</div>,
-    }),
-
-    columnHelper.accessor((row: any) => row?.verified, {
-      id: "status",
+    columnHelper.accessor((row: any) => row?.currentState, {
+      id: "currentState",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).status === "pending" ? (
+          {(info.row.original as any).fin.status === "APPLIED" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Pending
+              Applied
             </span>
-          ) : (info.row.original as any).status === "completed" ? (
+          ) : (info.row.original as any).fin.status === "APPROVED" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
-            </span>
-          ) : (info.row.original as any).status === "suspended" ? (
-            <span
-              style={{ color: "#c9c126", background: "#8AC92630" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
-            >
-              Suspended
             </span>
           ) : (
             <span
@@ -254,89 +289,123 @@ const AdminAggregatorRegistrationGrid = ({
       ),
       header: () => <div className="w-32 whitespace-nowrap">Status</div>,
     }),
-    columnHelper.accessor((row: any) => row?.status, {
-      id: "status",
-      cell: (info: any) => (
-        <div className="w-16 relative flex items-center">
-          {/* Toggle icon */}
-          <div
-            className="absolute right-[16px] cursor-pointer"
-            onClick={() => toggleRowExpansion(info.row.original._id)}
-            style={{ color: getTextColor(info.getValue()) }}
-          >
-            {(expandedRows as any).includes(info.row.original._id) ? (
-              <IoIosArrowDown className="text-ca-blue" />
-            ) : (
-              <IoIosArrowUp className="text-ca-blue" />
+    columnHelper.accessor((row: any) => row._id, {
+      id: "_id",
+      cell: (info: any) => {
+        return (
+          <div className="relative px-4 z-10">
+            {/* Hamburger menu icon */}
+            <div
+              key={info.getValue()}
+              className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
+              onClick={() =>
+                handleActionClick(info.getValue(), info.row.original)
+              }
+            >
+              <BsThreeDotsVertical size={20} className="" />
+            </div>
+            <input
+              ref={approvalInputRef}
+              type="file"
+              name="image"
+              id="approval-file"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files) {
+                  handleApprovalMutation(
+                    e,
+                    currentRowData.appId,
+                    currentRowData.packageId
+                  );
+                }
+              }}
+            />
+            <input
+              ref={declineInputRef}
+              type="file"
+              name="image"
+              id="rejection-file"
+              className="hidden"
+              onChange={(e) => {
+                alert("Hello");
+                handleDeclineMutation(
+                  e,
+                  currentRowData.appId,
+                  currentRowData.packageId
+                );
+              }}
+            />
+            {/* Modal */}
+
+            {showModal && currentRowId === info.getValue() && (
+              <div
+                key={info.getValue()}
+                ref={actionButtonsRef}
+                onClick={() => setShowModal(true)}
+                className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
+              >
+                <div
+                  className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
+                  // onClick={() => {
+                  //   setUserToDelete(info.row.original);
+                  //   setShowDeleteModal(true);
+                  // }}
+                >
+                  <div className="rounded-full bg-ca-blue p-1">
+                    <BsPeople className="text-white text-base size-3" />
+                  </div>
+                  <span>Assign</span>
+                </div>
+                {info.row.original.currentStatus !== "APPLIED" && (
+                  <>
+                    <label
+                      // htmlFor="approval-file"
+                      className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
+                      onClick={() => {
+                        if (approvalInputRef.current) {
+                          approvalInputRef.current.click();
+                        }
+                      }}
+                    >
+                      <div className="rounded-full bg-green-500 p-1">
+                        <MdDone className="text-white text-base size-3" />
+                      </div>
+                      <span>Approve </span>
+                    </label>
+                    <label
+                      // htmlFor="rejection-file"
+                      className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
+                      onClick={() => {
+                        if (declineInputRef.current) {
+                          declineInputRef.current.click();
+                        }
+                      }}
+                    >
+                      <div className="rounded-full bg-red-500 p-1">
+                        <GrClose className="text-white text-base size-3" />
+                      </div>
+                      <span>Decline </span>
+                    </label>
+                  </>
+                )}
+                <div
+                  className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
+                  onClick={() =>
+                    navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
+                  }
+                >
+                  <div className="rounded-full bg-yellow-500 p-1">
+                    <EnvelopeIcon className="text-white text-base size-3" />
+                  </div>
+                  <span> Send a message</span>
+                </div>
+              </div>
             )}
           </div>
-        </div>
-      ),
-      header: () => <div className="w-16 whitespace-nowrap">More</div>,
+        );
+      },
+      header: () => <div className="">Action</div>,
     }),
-
-    // columnHelper.accessor((row: any) => row._id, {
-    //   id: "_id",
-    //   cell: (info: any) => (
-    //     <div className="relative px-4">
-    //       {/* Hamburger menu icon */}
-    //       <div
-    //         className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
-    //         onClick={() => handleActionClick(info.getValue())}
-    //       >
-    //         <BsThreeDotsVertical size={20} className="" />
-    //       </div>
-
-    //       {/* Modal */}
-
-    //       {showModal && currentRowId === info.getValue() && (
-    //         <div
-    //           ref={actionButtonsRef}
-    //           onClick={() => setShowModal(!showModal)}
-    //           className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
-    //         >
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
-    //             onClick={() => {
-    //               setUserToDelete(info.row.original);
-    //               setShowDeleteModal(true);
-    //             }}
-    //           >
-    //             <MdOutlineDeleteOutline />
-    //             <span>Delete account</span>
-    //           </div>
-    //           {info.row.original.verified !== "suspended" ? (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleSuspension(info.row.original._id)}
-    //             >
-    //               <PiWarningBold />
-    //               <span>Suspend account</span>
-    //             </div>
-    //           ) : (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleUnsuspension(info.row.original._id)}
-    //             >
-    //               <MdDownloadDone />
-    //               <span>Unsuspend account</span>
-    //             </div>
-    //           )}
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
-    //             onClick={() =>
-    //               navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
-    //             }
-    //           >
-    //             <BiMessage />
-    //             <span> Send a message</span>
-    //           </div>
-    //         </div>
-    //       )}
-    //     </div>
-    //   ),
-    //   header: () => <div className="">Action</div>,
-    // }),
   ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -369,38 +438,6 @@ const AdminAggregatorRegistrationGrid = ({
   //   };
 
   useOutsideCloser(actionButtonsRef, showModal, setShowModal);
-
-  const approvedMutation = useMutation({
-    mutationKey: ["approve-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "confirmed",
-      }),
-    onSuccess: () => {
-      toast.success("User verified succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error verifying user");
-    },
-  });
-
-  const declineMutation = useMutation({
-    mutationKey: ["decline-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "declined",
-      }),
-    onSuccess: () => {
-      toast.success("User declined succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error declining user");
-    },
-  });
 
   return (
     <div className="">
@@ -479,7 +516,7 @@ const AdminAggregatorRegistrationGrid = ({
                     </tr>
 
                     {/* Collapsible row */}
-                    <tr>
+                    {/* <tr>
                       <td colSpan={columns.length}>
                         {(expandedRows as any).includes(
                           (row as any).original._id
@@ -570,7 +607,7 @@ const AdminAggregatorRegistrationGrid = ({
                           </div>
                         )}
                       </td>
-                    </tr>
+                    </tr> */}
                   </React.Fragment>
                 ))}
               </tbody>
@@ -579,7 +616,10 @@ const AdminAggregatorRegistrationGrid = ({
         </div>
       </div>
       {(declineMutation.isPending || approvedMutation.isPending) && (
-        <LoadingModal text={"Updating registration status"} />
+        <LoadingModal
+          key={Math.random() * 354546576}
+          text={"Updating application status"}
+        />
       )}
       {/* {showDeclineModal && (
         <Modal
@@ -597,4 +637,4 @@ const AdminAggregatorRegistrationGrid = ({
   );
 };
 
-export default AdminAggregatorRegistrationGrid;
+export default FinanceApplicationGrid;

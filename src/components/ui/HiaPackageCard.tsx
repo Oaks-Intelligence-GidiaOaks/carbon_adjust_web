@@ -127,7 +127,7 @@ const HiaPackageCard = ({
                 </span>
               ))}
             </div> */}
-            <div className="col-span-1 flex items-end justify-end">
+            <div className="col-span-1 flex items-end justify-end absolute right-4">
               {data?.status === "unpublish" ? (
                 <Button
                   onClick={() => publishMutation.mutate(data._id)}

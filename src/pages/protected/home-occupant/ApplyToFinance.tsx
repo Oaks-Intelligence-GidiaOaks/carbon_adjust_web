@@ -573,7 +573,7 @@ const ApplyToFinance = (_: Props) => {
       <DialogComponent
         isOpen={showMainFinanceApplicationSuccessDialog}
         onOpenChange={() =>
-          navigate("/dashboard/applications/hia-applications")
+          navigate("/dashboard/applications/finance-applications")
         }
       >
         <MainFinanceApplicationSuccess

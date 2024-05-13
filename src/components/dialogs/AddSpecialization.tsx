@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { GrClose } from "react-icons/gr";
 import { FormEvent, useState } from "react";
 import { retrofittingServices } from "@/constants";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { addSpecializationService } from "@/services/hiaService";
@@ -13,6 +13,7 @@ type Props = {
 };
 
 const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
+  const queryClient = useQueryClient();
   const [specialization, setSpecialization] = useState({
     label: "",
     value: "",
@@ -23,6 +24,7 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
     mutationFn: () => addSpecializationService(specialization.value),
     onSuccess: () => {
       toast.success("Specialization added successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-hia-specializations"] });
 
       setShowAddSpecializationDialog(false);
     },
@@ -56,7 +58,6 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
                 placeholder="Select aggregator type"
                 value={specialization}
                 onOptionChange={(value) => setSpecialization!(value)}
-                addPortal
               />
             </div>
 

@@ -105,3 +105,10 @@ export function convertImageToDataURL(file: File) {
     reader.readAsDataURL(file);
   });
 }
+
+export const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+  event.preventDefault(); // Prevent the default behavior of scrolling
+
+  // Blur the input to prevent it from being focused and scrolled
+  event.currentTarget.blur();
+};

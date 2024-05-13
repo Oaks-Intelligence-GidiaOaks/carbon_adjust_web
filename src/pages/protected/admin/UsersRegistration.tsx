@@ -6,22 +6,23 @@
 import { useState } from "react";
 // import agg_app from "../../../dummy/agg_app.json";
 // import assigned_app from "../../../dummy/assigned_app.json";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchUsersRegistration } from "@/services/adminService";
 import {
   // accountTypes,
   aggregatorTypes,
   userRegistrationAccountTypes,
 } from "@/constants";
-import { Button, Dropdown } from "@/components/ui";
+import { Dropdown } from "@/components/ui";
 import { cn } from "@/utils";
-import PlaceholderActionCard from "@/components/reusables/PlaceholderActionCard";
-import axiosInstance from "@/api/axiosInstance";
-import toast from "react-hot-toast";
-import { Oval } from "react-loader-spinner";
+// import PlaceholderActionCard from "@/components/reusables/PlaceholderActionCard";
+// import axiosInstance from "@/api/axiosInstance";
+// import toast from "react-hot-toast";
+// import { Oval } from "react-loader-spinner";
+import AdminAggregatorRegistrationGrid from "@/components/grid/CollapsibleGrid";
 
 const UsersRegistration = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   // const adminTabs = [
   //   "HIA",
   //   "Financial Institutions",
@@ -47,21 +48,21 @@ const UsersRegistration = () => {
   //   Aggregators: <Grid data={assigned_app} pageSize={20} tableStyles="" />,
   // };
 
-  const approvedMutation = useMutation({
-    mutationKey: ["approve-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "confirmed",
-      }),
-    onSuccess: () => {
-      toast.success("User verified succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error verifying user");
-    },
-  });
+  // const approvedMutation = useMutation({
+  //   mutationKey: ["approve-user"],
+  //   mutationFn: (id: string) =>
+  //     axiosInstance.patch(`/users/review/profile`, {
+  //       userId: id,
+  //       status: "confirmed",
+  //     }),
+  //   onSuccess: () => {
+  //     toast.success("User verified succesfully");
+  //     queryClient.invalidateQueries({ queryKey: ["users-registration"] });
+  //   },
+  //   onError: () => {
+  //     toast.error("Error verifying user");
+  //   },
+  // });
 
   const userRegistrations = useQuery({
     queryKey: ["users-registration", currentTab],
@@ -98,6 +99,7 @@ const UsersRegistration = () => {
           <div className="border h-[56px] bg-[#F2F4F7] flex-center w-fit py-[6px] px-[17px] rounded-lg gap-2 ">
             <Dropdown
               name="AggregatorType"
+              addPortal
               labelClassName="m-0 h-0 overflow-hidden"
               optionClassName="font-poppins text-black-main"
               optionsContainerClassName="-translate-y-8"
@@ -138,67 +140,73 @@ const UsersRegistration = () => {
       {/* table */}
       {/* <div>{getCurrentTData[activeTab]}</div> */}
       <div>{/* <DataTable columns={columns} data={data} /> */}</div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 flex-wrap gap-4 mt-10">
-        {userRegistrations.isSuccess &&
-          userRegistrations.data?.data.data.users.length > 1 &&
-          userRegistrations.data?.data.data.users.map((hs: any, i: number) => (
-            <PlaceholderActionCard key={i}>
-              <p>Name: {hs.name}</p>
-              <p>Email: {hs.email}</p>
-              <p>Status: {hs.status}</p>
-              {/* <p>
-                      Specializations:{" "}
-                      {hs.specializations.map((item: any, i: number) => (
-                        <span key={i}>{item.name}</span>
-                      ))}
-                    </p> */}
-              {hs.status === "pending" && (
-                <div className="mt-4 flex flex-col gap-3">
-                  {/* <Button
-                          variant={"ghost"}
-                          onClick={() => declineMutation.mutate(hs._id)}
-                          disabled={declineMutation.isPending}
-                          className="bg-red-500 w-full text-white"
-                        >
-                          {declineMutation.isPending ? (
-                            <Oval
-                              visible={declineMutation.isPending}
-                              height="20"
-                              width="20"
-                              color="#ffffff"
-                              ariaLabel="oval-loading"
-                              wrapperStyle={{}}
-                              wrapperClass=""
-                            />
-                          ) : (
-                            <span>Decline</span>
-                          )}
-                        </Button> */}
-                  <Button
-                    variant={"ghost"}
-                    disabled={approvedMutation.isPending}
-                    onClick={() => approvedMutation.mutate(hs._id)}
-                    className="bg-green-500 w-full text-white"
-                  >
-                    {approvedMutation.isPending ? (
-                      <Oval
-                        visible={approvedMutation.isPending}
-                        height="20"
-                        width="20"
-                        color="#ffffff"
-                        ariaLabel="oval-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                      />
-                    ) : (
-                      <span>Approve</span>
-                    )}
-                  </Button>
-                </div>
-              )}
-            </PlaceholderActionCard>
-          ))}
-      </div>
+
+      {userRegistrations.isSuccess &&
+        userRegistrations.data?.data.data.users.length > 1 && (
+          // userRegistrations.data?.data.data.users.map((hs: any, i: number) => (
+          //   <PlaceholderActionCard key={i}>
+          //     <p>Name: {hs.name}</p>
+          //     <p>Email: {hs.email}</p>
+          //     <p>Status: {hs.status}</p>
+          //     {/* <p>
+          //             Specializations:{" "}
+          //             {hs.specializations.map((item: any, i: number) => (
+          //               <span key={i}>{item.name}</span>
+          //             ))}
+          //           </p> */}
+          //     {hs.status === "pending" && (
+          //       <div className="mt-4 flex flex-col gap-3">
+          //         {/* <Button
+          //                 variant={"ghost"}
+          //                 onClick={() => declineMutation.mutate(hs._id)}
+          //                 disabled={declineMutation.isPending}
+          //                 className="bg-red-500 w-full text-white"
+          //               >
+          //                 {declineMutation.isPending ? (
+          //                   <Oval
+          //                     visible={declineMutation.isPending}
+          //                     height="20"
+          //                     width="20"
+          //                     color="#ffffff"
+          //                     ariaLabel="oval-loading"
+          //                     wrapperStyle={{}}
+          //                     wrapperClass=""
+          //                   />
+          //                 ) : (
+          //                   <span>Decline</span>
+          //                 )}
+          //               </Button> */}
+          //         <Button
+          //           variant={"ghost"}
+          //           disabled={approvedMutation.isPending}
+          //           onClick={() => approvedMutation.mutate(hs._id)}
+          //           className="bg-green-500 w-full text-white"
+          //         >
+          //           {approvedMutation.isPending ? (
+          //             <Oval
+          //               visible={approvedMutation.isPending}
+          //               height="20"
+          //               width="20"
+          //               color="#ffffff"
+          //               ariaLabel="oval-loading"
+          //               wrapperStyle={{}}
+          //               wrapperClass=""
+          //             />
+          //           ) : (
+          //             <span>Approve</span>
+          //           )}
+          //         </Button>
+          //       </div>
+          //     )}
+          //   </PlaceholderActionCard>
+          // ))
+          <AdminAggregatorRegistrationGrid
+            isUpdating={
+              userRegistrations.isLoading || userRegistrations.isFetching
+            }
+            data={userRegistrations.data?.data.data.users}
+          />
+        )}
     </div>
   );
 };
