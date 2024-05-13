@@ -113,7 +113,10 @@ const ApplyToHIA = (_: Props) => {
   });
 
   const HIAPackages = useQuery({
-    queryKey: ["fetch-HIA-packages"],
+    queryKey: [
+      "fetch-HIA-packages",
+      (currentApplicationDetails as any)?.data?.data.appId,
+    ],
     queryFn: () =>
       fetchHIAPackages((currentApplicationDetails as any)?.data?.data.appId),
     enabled: tab === "packages",
@@ -531,6 +534,7 @@ const ApplyToHIA = (_: Props) => {
                   Application Status
                 </p>
               </div>
+
               <div className="flex flex-col gap-y-6 mt-8">
                 {singleHOApp.data?.data.data.map(
                   (data: HIAAppMeta, i: number) => (

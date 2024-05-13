@@ -27,7 +27,9 @@ const AccountActionHeader = ({
         }}
       />
       <Button
-        onClick={action}
+        onClick={() => {
+          action && action();
+        }}
         variant="tab"
         className="rounded-none px-8 text-blue-main hover:bg-gray-200"
       >

@@ -19,48 +19,40 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 // import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { formatDate } from "../../lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { BsThreeDotsVertical } from "react-icons/bs";
 // import axios from "axios";
 // import { FaDownload, FaList } from "react-icons/fa";
 import TablePagination from "../reusables/TablePagination";
-// import TableFilter from "../reusables/TableFilter";
-// import { TbSortAscending, TbSortDescending } from "react-icons/tb";
 import LoadingModal from "../reusables/LoadingModal";
-// import { MdDownloadDone, MdOutlineDeleteOutline } from "react-icons/md";
 // import { CiWarning } from "react-icons/ci";
-// import { BiMessage } from "react-icons/bi";
 // import { useNavigate } from "react-router-dom";
 // import file_icon from "../../../assets/icons/file_icon.png";
-// import { PiWarningBold } from "react-icons/pi";
 // import DeleteAccount from "../../modals/DeleteAccount";
 // import ResponseAlert from "../../reuseable/ResponseAlert";
 import { useOutsideCloser } from "../../hooks/useOutsideCloser";
-// import { FaDownload } from "react-icons/fa";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import { IoDownloadOutline } from "react-icons/io5";
 import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 
-const AdminAggregatorRegistrationGrid = ({
+const SubcontractorRegistrationGrid = ({
   data,
-}: // isUpdating,
-{
+}: {
   data: any[];
   isUpdating: boolean;
 }) => {
-  // const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  // const [currentRowId, setCurrentRowId] = useState(null);
+  //   const [currentRowId, setCurrentRowId] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
   const queryClient = useQueryClient();
   // const [declineRowId, setDeclineRowId] = useState(null);
   // const [showDeclineModal, setShowDeclineModal] = useState(false);
-  // const [, setShowDeleteModal] = useState(false);
+  //   const [, setShowDeleteModal] = useState(false);
   // const [showResponseAlert, setShowResponseAlert] = useState(false);
   // const [responseStatus, setResponseStatus] = useState(false);
   // const [responseMessage, setResponseMessage] = useState(null);
-  // const [, setUserToDelete] = useState(null);
+  //   const [, setUserToDelete] = useState(null);
 
   const actionButtonsRef = useRef<HTMLDivElement>(null);
 
@@ -107,39 +99,6 @@ const AdminAggregatorRegistrationGrid = ({
   //     await mutation.mutateAsync({ id, verified: "rejected", message: reason });
   //   } catch (error) {
   //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const handleSuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "suspended" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const handleUnsuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "completed" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const ViewsCount = ({ info }: { info: any }) => {
-  //   console.log(info.getValue());
-
-  //   let count = info.getValue().length;
-
-  //   return <div className="px-4 w-[50px] mx-auto">{count}</div>;
-  // };
-
-  // const handleActionClick = (id: any) => {
-  //   if (currentRowId === id) {
-  //     setShowModal((prevState) => !prevState);
-  //   } else {
-  //     setCurrentRowId(id);
-  //     setShowModal(true);
   //   }
   // };
 
@@ -370,35 +329,35 @@ const AdminAggregatorRegistrationGrid = ({
 
   useOutsideCloser(actionButtonsRef, showModal, setShowModal);
 
-  const approvedMutation = useMutation({
-    mutationKey: ["approve-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "confirmed",
-      }),
-    onSuccess: () => {
-      toast.success("User verified succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error verifying user");
-    },
-  });
-
   const declineMutation = useMutation({
-    mutationKey: ["decline-user"],
+    mutationKey: ["decline contractor"],
     mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
+      axiosInstance.patch(`/users/subcontractor/profile/review`, {
         userId: id,
         status: "declined",
       }),
     onSuccess: () => {
-      toast.success("User declined succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
+      toast.success("Contractor declined successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-hia-subcontractors"] });
     },
     onError: () => {
-      toast.error("Error declining user");
+      toast.error("Error declining contractor");
+    },
+  });
+
+  const approvedMutation = useMutation({
+    mutationKey: ["decline contractor"],
+    mutationFn: (id: string) =>
+      axiosInstance.patch(`/users/subcontractor/profile/review`, {
+        userId: id,
+        status: "confirmed",
+      }),
+    onSuccess: () => {
+      toast.success("Contractor approved successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-hia-subcontractors"] });
+    },
+    onError: () => {
+      toast.error("Error approving contractor");
     },
   });
 
@@ -408,7 +367,7 @@ const AdminAggregatorRegistrationGrid = ({
       {/* main table */}
 
       <div className="mb-4 flex overflow-x-auto">
-        <div className="w-0 flex-1 overflow-visible">
+        <div className="w-auto flex-1 overflow-visible">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 flex-wrap gap-4 mt-10">
             <table className="text-center w-full font-poppins">
               <thead className="bg-[#E8F3FC] rounded-2xl">
@@ -597,4 +556,4 @@ const AdminAggregatorRegistrationGrid = ({
   );
 };
 
-export default AdminAggregatorRegistrationGrid;
+export default SubcontractorRegistrationGrid;

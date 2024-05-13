@@ -20,6 +20,7 @@ export type DropdownProps = {
   searchable?: boolean;
   disabled?: boolean;
   addPortal?: boolean;
+  addAnchor?: boolean;
   value?: any;
   onOptionChange?: (value: any) => void;
   countryChange?: (value: any) => void;
@@ -112,6 +113,7 @@ export type OrgDocInfoForm = {
   };
   contactDoc: File[] | null;
   certOfInc: File[] | null;
+  letterOfAuth: File[] | null;
   certOfAuth: File[] | null;
 };
 

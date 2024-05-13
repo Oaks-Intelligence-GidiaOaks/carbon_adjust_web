@@ -1,5 +1,5 @@
 import userService from "@/api/services/user";
-import { RootState } from "@/app/store";
+import { persistor, RootState } from "@/app/store";
 // import {
 //   AccountSetupScribbleLeft,
 //   AccountSetupScribbleRight,
@@ -22,8 +22,12 @@ const PendingVerification = (_: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.user.user);
-  const logOut = () => {
-    navigate("/");
+  const logOut = async () => {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+    window.location.assign("/");
   };
 
   const [verify, setVerify] = useState<boolean>(false);

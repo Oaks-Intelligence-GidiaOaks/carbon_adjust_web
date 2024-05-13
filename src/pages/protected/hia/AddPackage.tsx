@@ -15,6 +15,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import { cn, convertImageToDataURL } from "@/utils";
 
 const AddPackage = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const AddPackage = () => {
       value: "",
     },
     file: null as File | null,
+    imageDataUrl: "",
   });
 
   let inputClassName = ` bg-[#E4E7E863] bg-opacity-30 text-xs !text-[#9C9C9C] !font-[400] `;
@@ -110,6 +112,41 @@ const AddPackage = () => {
     addPackage.mutate(formData);
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (!file) {
+      return; // No file selected
+    }
+
+    // Check if the file is an image
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      e.target.files = null; // Reset file input
+      return;
+    }
+
+    // Check if the file size exceeds 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Please select an image file smaller than 2MB.");
+      e.target.files = null; // Reset file input
+      return;
+    }
+    if (file) {
+      const imageDataUrl = await convertImageToDataURL(file);
+      setPackageState((prev) => ({
+        ...prev,
+        file: file,
+        imageDataUrl: imageDataUrl as string, // Ensure you have imageDataUrl in your state
+      }));
+    } else {
+      setPackageState((prev) => ({
+        ...prev,
+        file: null,
+        imageDataUrl: "/assets/icons/img-icon.svg",
+      }));
+    }
+  };
+
   return (
     <div className="font-poppins">
       <h2 className="page-header"> Create package</h2>
@@ -126,20 +163,38 @@ const AddPackage = () => {
             name="image"
             id="image"
             className="hidden"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+          {/* <input
+            type="file"
+            name="image"
+            id="image"
+            className="hidden"
             onChange={(e) =>
               setPackageState((prev) => ({
                 ...prev,
                 file: e.target?.files !== null ? e.target?.files[0] : null,
               }))
             }
-          />
+          /> */}
           <span className="text-xs mb-3">Click to insert logo</span>
           <label
             htmlFor="image"
             className="h-[100px] w-[100px] relative rounded-full border bg-[#F2F2F2] grid place-items-center"
           >
-            <img src="/assets/icons/img-icon.svg" alt="icon" className="" />
-
+            <img
+              src={
+                packageState.file
+                  ? packageState.imageDataUrl
+                  : "/assets/icons/img-icon.svg"
+              }
+              alt="icon"
+              className={cn(
+                packageState.imageDataUrl &&
+                  "w-full h-full object-cover rounded-full"
+              )}
+            />
             <img
               src="/assets/icons/pen-icon.svg"
               alt="icon"

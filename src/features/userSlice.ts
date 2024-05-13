@@ -36,10 +36,19 @@ const userSlice = createSlice({
         state.user.doc = action.payload;
       }
     },
+    // logOutUser(state) {
+    //   state = initialState;
+    // },
   },
 });
 
-export const { setUser, setLoading, setError, setToken, setUserDocs } =
-  userSlice.actions;
+export const {
+  setUser,
+  setLoading,
+  setError,
+  setToken,
+  setUserDocs,
+  // logOutUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

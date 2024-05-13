@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BiArrowBack } from "react-icons/bi";
 import CheckBox from "@/components/ui/CheckBox";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   getHIASpecializations,
   getHIASubcontractors,
@@ -17,11 +17,12 @@ import {
 } from "@/services/hiaService";
 import { Oval } from "react-loader-spinner";
 import toast from "react-hot-toast";
-import PlaceholderActionCard from "@/components/reusables/PlaceholderActionCard";
-import axiosInstance from "@/api/axiosInstance";
+// import PlaceholderActionCard from "@/components/reusables/PlaceholderActionCard";
+// import axiosInstance from "@/api/axiosInstance";
+import SubcontractorRegistrationGrid from "@/components/grid/SubcontractorGrid";
 
 const Registration = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const [showAddSubcontractorForm, setShowAddSubcontractorForm] =
     useState(false);
@@ -39,38 +40,6 @@ const Registration = () => {
   const [selectedSpecializations, setSelectedSpecializations] = useState<
     string[]
   >([]);
-
-  const declineMutation = useMutation({
-    mutationKey: ["decline contractor"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/subcontractor/profile/review`, {
-        userId: id,
-        status: "declined",
-      }),
-    onSuccess: () => {
-      toast.success("Contractor declined");
-      queryClient.invalidateQueries({ queryKey: ["get-hia-subcontractors"] });
-    },
-    onError: () => {
-      toast.error("Error declining contractor");
-    },
-  });
-
-  const approvedMutation = useMutation({
-    mutationKey: ["decline contractor"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/subcontractor/profile/review`, {
-        userId: id,
-        status: "confirmed",
-      }),
-    onSuccess: () => {
-      toast.success("Contractor approved");
-      queryClient.invalidateQueries({ queryKey: ["get-hia-subcontractors"] });
-    },
-    onError: () => {
-      toast.error("Error approving contractor");
-    },
-  });
 
   useEffect(() => {
     console.log(Object.values(subcontractorFormState));
@@ -185,67 +154,15 @@ const Registration = () => {
               </Button>
             </div>
           </div>
-          <div className="w-full flex flex-wrap gap-x-4 mt-10">
+          <div className="w-full flex flex-wrap gap-x-4 mt-0">
             {hiaSubcontractors.isSuccess &&
-              hiaSubcontractors.data?.data.data.contractors.length > 1 &&
-              hiaSubcontractors.data?.data.data.contractors.map(
-                (hs: any, i: number) => (
-                  <PlaceholderActionCard key={i}>
-                    <p>Name: {hs.name}</p>
-                    <p>Email: {hs.email}</p>
-                    <p>Status: {hs.status}</p>
-                    <p>
-                      Specializations:{" "}
-                      {hs.specializations.map((item: any, i: number) => (
-                        <span key={i}>{item.name}</span>
-                      ))}
-                    </p>
-                    {hs.status === "pending" && (
-                      <div className="mt-4 flex flex-col gap-3">
-                        <Button
-                          variant={"ghost"}
-                          onClick={() => declineMutation.mutate(hs._id)}
-                          disabled={declineMutation.isPending}
-                          className="bg-red-500 w-full text-white"
-                        >
-                          {declineMutation.isPending ? (
-                            <Oval
-                              visible={declineMutation.isPending}
-                              height="20"
-                              width="20"
-                              color="#ffffff"
-                              ariaLabel="oval-loading"
-                              wrapperStyle={{}}
-                              wrapperClass=""
-                            />
-                          ) : (
-                            <span>Decline</span>
-                          )}
-                        </Button>
-                        <Button
-                          variant={"ghost"}
-                          disabled={approvedMutation.isPending}
-                          onClick={() => approvedMutation.mutate(hs._id)}
-                          className="bg-green-500 w-full text-white"
-                        >
-                          {approvedMutation.isPending ? (
-                            <Oval
-                              visible={approvedMutation.isPending}
-                              height="20"
-                              width="20"
-                              color="#ffffff"
-                              ariaLabel="oval-loading"
-                              wrapperStyle={{}}
-                              wrapperClass=""
-                            />
-                          ) : (
-                            <span>Approved</span>
-                          )}
-                        </Button>
-                      </div>
-                    )}
-                  </PlaceholderActionCard>
-                )
+              hiaSubcontractors.data?.data.data.contractors.length > 1 && (
+                <SubcontractorRegistrationGrid
+                  isUpdating={
+                    hiaSubcontractors.isLoading || hiaSubcontractors.isFetching
+                  }
+                  data={hiaSubcontractors.data?.data.data.contractors}
+                />
               )}
           </div>
 

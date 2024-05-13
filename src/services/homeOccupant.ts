@@ -1,5 +1,9 @@
 import axiosInstance from "@/api/axiosInstance";
 
+export const getMe = async () => {
+  return axiosInstance.get("/users/me");
+};
+
 export const fetchRetrofittingOptions = async () => {
   return axiosInstance.get("/applications/metadata");
 };

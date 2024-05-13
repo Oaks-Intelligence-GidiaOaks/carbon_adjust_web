@@ -2,6 +2,7 @@ import userService from "@/api/services/user";
 import { Dropdown, Input } from "@/components/ui";
 import Datepicker from "@/components/ui/DatePicker";
 import { HomeInfoForm } from "@/types/general";
+import { handleWheel } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Oval } from "react-loader-spinner";
 
@@ -96,14 +97,17 @@ const HomeInformation = ({ formState, setFormState }: Props) => {
             label="Number of rooms"
             labelClassName="mb-4"
             inputClassName="bg-gray-100"
-            type="number"
             placeholder=""
+            onWheel={handleWheel}
             value={formState!.nosOfRoom}
             onChange={(e) =>
-              setFormState!((prev) => ({
-                ...prev,
-                nosOfRoom: e.target.value,
-              }))
+              setFormState!((prev) => {
+                const newValue = e.target.value.replace(/[^0-9]/g, "");
+                return {
+                  ...prev,
+                  nosOfRoom: newValue,
+                };
+              })
             }
           />
           <Input
@@ -111,33 +115,39 @@ const HomeInformation = ({ formState, setFormState }: Props) => {
             label="Number of Occupants (Adults 16+)"
             labelClassName="mb-4"
             inputClassName="bg-gray-100"
-            type="number"
+            onWheel={handleWheel}
             value={formState!.nosOfOccupant.adult}
             onChange={(e) =>
-              setFormState!((prev) => ({
-                ...prev,
-                nosOfOccupant: {
-                  ...prev.nosOfOccupant,
-                  adult: e.target.value,
-                },
-              }))
+              setFormState!((prev) => {
+                const newValue = e.target.value.replace(/[^0-9]/g, "");
+                return {
+                  ...prev,
+                  nosOfOccupant: {
+                    ...prev.nosOfOccupant,
+                    adult: newValue,
+                  },
+                };
+              })
             }
           />
           <Input
             name="noOfchildren"
             label="Number of Occupants (Children 0-15)"
-            type="number"
+            onWheel={handleWheel}
             labelClassName="mb-4"
             inputClassName="bg-gray-100"
             value={formState!.nosOfOccupant.children}
             onChange={(e) =>
-              setFormState!((prev) => ({
-                ...prev,
-                nosOfOccupant: {
-                  ...prev.nosOfOccupant,
-                  children: e.target.value,
-                },
-              }))
+              setFormState!((prev) => {
+                const newValue = e.target.value.replace(/[^0-9]/g, "");
+                return {
+                  ...prev,
+                  nosOfOccupant: {
+                    ...prev.nosOfOccupant,
+                    children: newValue,
+                  },
+                };
+              })
             }
           />
         </div>

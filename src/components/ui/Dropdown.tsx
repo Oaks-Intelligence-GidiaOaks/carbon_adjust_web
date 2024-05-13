@@ -31,6 +31,7 @@ const Dropdown = ({
   countryChange,
   onOptionChange,
   cityChange,
+  addPortal = false,
 }: // addPortal,
 DropdownProps) => {
   const [selectedOption, setSelectedOption] = useState<DropdownOption | null>(
@@ -205,53 +206,101 @@ DropdownProps) => {
             )}
           />
         </ListboxButton>
-        <ListboxOptions
-          // portal={true}
-          // anchor={{ to: "bottom start" }}
-          className={cn(
-            "border-none max-h-[240px] overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg mt-10 absolute top-11 shadow-lg w-[var(--button-width)]",
-            optionsContainerClassName
-          )}
-        >
-          {searchable ? (
-            <Input
-              type="search"
-              name="search"
-              placeholder="Search..."
-              wrapperClassName="bg-gray-100 p-2 sticky top-0"
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-          ) : null}
-          {!isLoading ? (
-            options
-              .filter((option) =>
-                option.label.toLowerCase().includes(searchValue.toLowerCase())
-              )
-              .map((option, i) => (
-                <ListboxOption
-                  key={i}
-                  value={option}
-                  disabled={disabled}
-                  className={cn(
-                    "flex justify-between gap-2 py-2 cursor-pointer hover:bg-hover-color px-3",
-                    optionClassName
-                  )}
-                  onClick={() => {
-                    setSelectedOption(option);
-                  }}
-                >
-                  <div className="flex gap-4 items-center">
-                    <span>{option.label}</span>
-                  </div>
-                </ListboxOption>
-              ))
-          ) : (
-            <div className="flex gap-x-3 items-center">
-              <LoadingSpinner />
-              <p>{loadingText}</p>
-            </div>
-          )}
-        </ListboxOptions>
+        {addPortal ? (
+          <ListboxOptions
+            portal={addPortal}
+            anchor={{ gap: 0, offset: 0 }}
+            className={cn(
+              "border-none max-h-[240px] overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg mt-10 absolute top-11 shadow-lg w-[var(--button-width)]",
+              optionsContainerClassName
+            )}
+          >
+            {searchable ? (
+              <Input
+                type="search"
+                name="search"
+                placeholder="Search..."
+                wrapperClassName="bg-gray-100 p-2 sticky top-0"
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            ) : null}
+            {!isLoading ? (
+              options
+                .filter((option) =>
+                  option.label.toLowerCase().includes(searchValue.toLowerCase())
+                )
+                .map((option, i) => (
+                  <ListboxOption
+                    key={i}
+                    value={option}
+                    disabled={disabled}
+                    className={cn(
+                      "flex justify-between gap-2 py-2 cursor-pointer hover:bg-hover-color px-3",
+                      optionClassName
+                    )}
+                    onClick={() => {
+                      setSelectedOption(option);
+                    }}
+                  >
+                    <div className="flex gap-4 items-center">
+                      <span>{option.label}</span>
+                    </div>
+                  </ListboxOption>
+                ))
+            ) : (
+              <div className="flex gap-x-3 items-center">
+                <LoadingSpinner />
+                <p>{loadingText}</p>
+              </div>
+            )}
+          </ListboxOptions>
+        ) : (
+          <ListboxOptions
+            className={cn(
+              "border-none max-h-[240px] overflow-scroll text-sm z-[10000000000000000000] bg-white rounded-lg mt-10 absolute top-11 shadow-lg w-[var(--button-width)]",
+              optionsContainerClassName
+            )}
+          >
+            {searchable ? (
+              <Input
+                type="search"
+                name="search"
+                placeholder="Search..."
+                wrapperClassName="bg-gray-100 p-2 sticky top-0"
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            ) : null}
+            {!isLoading ? (
+              options
+                .filter((option) =>
+                  option.label.toLowerCase().includes(searchValue.toLowerCase())
+                )
+                .map((option, i) => (
+                  <ListboxOption
+                    key={i}
+                    value={option}
+                    disabled={disabled}
+                    className={cn(
+                      "flex justify-between gap-2 py-2 cursor-pointer hover:bg-hover-color px-3",
+                      optionClassName
+                    )}
+                    onClick={() => {
+                      setSelectedOption(option);
+                    }}
+                  >
+                    <div className="flex gap-4 items-center">
+                      <span>{option.label}</span>
+                    </div>
+                  </ListboxOption>
+                ))
+            ) : (
+              <div className="flex gap-x-3 items-center">
+                <LoadingSpinner />
+                <p>{loadingText}</p>
+              </div>
+            )}
+          </ListboxOptions>
+        )}
       </div>
     </Listbox>
   );

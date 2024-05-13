@@ -42,25 +42,25 @@ import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 
-const AdminAggregatorRegistrationGrid = ({
+const HOFinanceGrid = ({
   data,
-}: // isUpdating,
+}: //   isUpdating,
 {
   data: any[];
   isUpdating: boolean;
 }) => {
-  // const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  // const [currentRowId, setCurrentRowId] = useState(null);
+  //   const [currentRowId, setCurrentRowId] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
   const queryClient = useQueryClient();
   // const [declineRowId, setDeclineRowId] = useState(null);
   // const [showDeclineModal, setShowDeclineModal] = useState(false);
-  // const [, setShowDeleteModal] = useState(false);
+  //   const [, setShowDeleteModal] = useState(false);
   // const [showResponseAlert, setShowResponseAlert] = useState(false);
   // const [responseStatus, setResponseStatus] = useState(false);
   // const [responseMessage, setResponseMessage] = useState(null);
-  // const [, setUserToDelete] = useState(null);
+  //   const [, setUserToDelete] = useState(null);
 
   const actionButtonsRef = useRef<HTMLDivElement>(null);
 
@@ -110,39 +110,6 @@ const AdminAggregatorRegistrationGrid = ({
   //   }
   // };
 
-  // const handleSuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "suspended" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const handleUnsuspension = async (id: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "completed" });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  // const ViewsCount = ({ info }: { info: any }) => {
-  //   console.log(info.getValue());
-
-  //   let count = info.getValue().length;
-
-  //   return <div className="px-4 w-[50px] mx-auto">{count}</div>;
-  // };
-
-  // const handleActionClick = (id: any) => {
-  //   if (currentRowId === id) {
-  //     setShowModal((prevState) => !prevState);
-  //   } else {
-  //     setCurrentRowId(id);
-  //     setShowModal(true);
-  //   }
-  // };
-
   const toggleRowExpansion = (rowId: any) => {
     setExpandedRows((prevExpandedRows: any) => {
       if (prevExpandedRows.includes(rowId)) {
@@ -168,6 +135,13 @@ const AdminAggregatorRegistrationGrid = ({
       ),
       header: () => <div className="w-14 px-1 text-center">S/N</div>,
     }),
+    columnHelper.accessor((row: any) => row?.appRef, {
+      id: "appRef",
+      cell: (info) => (
+        <div className="w-24 mx-auto text-left"> {info.getValue()} </div>
+      ),
+      header: () => <div className="w-36 text-left">Application No</div>,
+    }),
     columnHelper.accessor((row: any) => row?.createdAt, {
       id: "createdAt",
       cell: (info) => (
@@ -178,38 +152,22 @@ const AdminAggregatorRegistrationGrid = ({
       ),
       header: () => <div className="w-36 text-left">Registration date</div>,
     }),
-    columnHelper.accessor((row: any) => row?.name, {
-      id: "name",
-      cell: (info) => (
-        <div className="w-44 mx-auto text-left">{info.getValue()}</div>
-      ),
-      header: () => <div className="w-44 text-left">Name</div>,
-    }),
+    // columnHelper.accessor((row: any) => row?.aggregator.name, {
+    //   id: "aggregator",
+    //   cell: (info) => (
+    //     <div className="w-44 mx-auto text-left">{info.getValue()}</div>
+    //   ),
+    //   header: () => <div className="w-44 text-left">Aggregators</div>,
+    // }),
 
-    columnHelper.accessor((row: any) => row?.email, {
-      id: "email",
-      cell: (info) => (
+    columnHelper.accessor((row: any) => row?.projectCode, {
+      id: "project-code",
+      cell: () => (
         <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60">
-          <span className="">
-            {/* {console.log(info.row.original.email)} */}
-            {(info.row.original as any).email}
-          </span>
+          <span className="">---------------</span>
         </div>
       ),
-      header: () => <div className="w-60 text-left">Email</div>,
-    }),
-    columnHelper.accessor((row: any) => row?.phoneNos, {
-      id: "phoneNos",
-      cell: (info) => (
-        <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60">
-          <span className="">
-            {Boolean((info.row.original as any).phoneNos)
-              ? (info.row.original as any).phoneNos
-              : "---------------"}
-          </span>
-        </div>
-      ),
-      header: () => <div className="w-44 text-left">Phone</div>,
+      header: () => <div className="w-44 text-left">Project Code</div>,
     }),
     columnHelper.accessor((row: any) => row?.carbonCredit, {
       id: "email",
@@ -408,7 +366,7 @@ const AdminAggregatorRegistrationGrid = ({
       {/* main table */}
 
       <div className="mb-4 flex overflow-x-auto">
-        <div className="w-0 flex-1 overflow-visible">
+        <div className="w-auto flex-1 overflow-visible">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 flex-wrap gap-4 mt-10">
             <table className="text-center w-full font-poppins">
               <thead className="bg-[#E8F3FC] rounded-2xl">
@@ -486,12 +444,11 @@ const AdminAggregatorRegistrationGrid = ({
                         ) && (
                           <div className="p-4 bg-[#F8F9FA] border-y border-gray-200">
                             <div className="flex items-center justify-between">
-                              {console.log((row as any).original.doc)}
-                              {(row as any).original.doc.map(
+                              {(row as any).original.media.map(
                                 (
-                                  doc: { idType: string; url: string },
+                                  doc: { fileType: string; url: string },
                                   i: number,
-                                  arr: { idType: string; url: string }[]
+                                  arr: { fileType: string; url: string }[]
                                 ) => (
                                   <div
                                     key={i}
@@ -502,7 +459,7 @@ const AdminAggregatorRegistrationGrid = ({
                                   >
                                     <div className="">
                                       <span className="poppins-4 text-main text-xs font-medium whitespace-nowrap">
-                                        {doc.idType}
+                                        {doc.fileType}
 
                                         <div className="flex items-start mt-4 gap-x-2">
                                           <img
@@ -597,4 +554,4 @@ const AdminAggregatorRegistrationGrid = ({
   );
 };
 
-export default AdminAggregatorRegistrationGrid;
+export default HOFinanceGrid;
