@@ -58,8 +58,17 @@ import SubContractorCard from "@/components/reusables/SubContractorCard";
 import { Dropdown } from "@/components/ui";
 import { VerticalBarChart } from "@/components/charts/VerticalBarChart";
 import { DashboardDoughnutChart } from "@/components/charts/DashboardDoughnutChart";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
 
 const Dashboard = () => {
+  const dashboardData = useQuery({
+    queryKey: ["get-dashboard-data"],
+    queryFn: () => axiosInstance.get("/users/ho/home"),
+  });
+
+  console.log(dashboardData);
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
