@@ -98,6 +98,7 @@ import {
   InsuranceMorePage,
   SubContractorMorePage,
 } from "@/components/sub-pages/dashboard/home-occupant";
+import ApplyToInsurance from "@/pages/protected/home-occupant/ApplyToInsurance";
 
 const Router = createBrowserRouter([
   {
@@ -188,7 +189,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "insurance",
-            element: <ApplyToAggregator />,
+            element: <ApplyToInsurance />,
           },
           {
             path: "insurance-applications",

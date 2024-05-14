@@ -24,7 +24,7 @@ const FinanceApplicationSuccess = ({
               />
             </div>
             <p className="text-green-500 font-poppins text-center">
-              Application to Finance is successful
+              Application to Insurance is successful
             </p>
             <p className="text-black-main mt-4 font-poppins text-center">
               your application will be reviewed and you will receive feedback
@@ -33,7 +33,7 @@ const FinanceApplicationSuccess = ({
               <Button
                 onClick={() => {
                   setShowApplicationSuccessDialog(false);
-                  navigate("/dashboard/applications/finance-applications");
+                  navigate("/dashboard/applications/insurance");
                 }}
                 className="w-full text-white font-poppins h-12"
               >

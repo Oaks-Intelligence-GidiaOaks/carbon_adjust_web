@@ -12,7 +12,8 @@ const HIAApplicationStatus = ({ status }: Props) => {
         className={cn(
           "absolute h-full bg-green-500 top-0 left-0",
           status === "APPLIED" && "w-0",
-          status === "under-review" && "w-1/2",
+          status === "APPLIED" && "w-1/2",
+          status === "APPROVED" && "w-full",
           status === "APPROVED" && "w-full",
           status === "approved/accepted" && "w-full"
         )}
@@ -44,14 +45,20 @@ const HIAApplicationStatus = ({ status }: Props) => {
             Under review
           </p>
           <CheckBox
-            checked={["under-review", "APPROVED", "approved/accepted"].includes(
-              status
-            )}
+            checked={[
+              "under-review",
+              "APPLIED",
+              "APPROVED",
+              "approved/accepted",
+            ].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
-              ["under-review", "APPROVED", "approved/accepted"].includes(
-                status
-              ) && "bg-green-500 border-green-500"
+              [
+                "under-review",
+                "APPLIED",
+                "APPROVED",
+                "approved/accepted",
+              ].includes(status) && "bg-green-500 border-green-500"
             )}
             iconStyle="text-white"
           />

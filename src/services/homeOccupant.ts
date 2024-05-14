@@ -30,6 +30,10 @@ export const fetchFinancePackages = async (id: string) => {
   return axiosInstance.get(`/applications/${id}/fin/packages`);
 };
 
+export const fetchInsurancePackages = async (id: string) => {
+  return axiosInstance.get(`/applications/${id}/ins/packages`);
+};
+
 export const getRetrofittingActivities = async () => {
   return axiosInstance.get(`/applications/metadata`);
 };
@@ -57,4 +61,7 @@ export const applyToHIA = async (data: any, id: string) => {
 
 export const applyToFinance = async (data: any, id: string) => {
   return axiosInstance.post(`/applications/ho/${id}/fin/apply`, data);
+};
+export const applyToInsurance = async (data: any, id: string) => {
+  return axiosInstance.post(`/applications/ho/${id}/ins/apply`, data);
 };

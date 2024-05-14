@@ -193,6 +193,13 @@ const HOHIAGrid = ({
             >
               Approved
             </span>
+          ) : (info.row.original as any).currentStatus === "DISABLED" ? (
+            <span
+              style={{ color: "#DEDBAA", background: "#FEDCBA10" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Disabled
+            </span>
           ) : (
             <span
               style={{ color: "#FF595E", background: "#FF595E30" }}
@@ -210,7 +217,14 @@ const HOHIAGrid = ({
       id: "offerStatus",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).offerStatus === "ISSUED" ? (
+          {(info.row.original as any).currentStatus === "DISABLED" ? (
+            <span
+              style={{ color: "#DEDBAA", background: "#FEDCBA10" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Disabled
+            </span>
+          ) : (info.row.original as any).offerStatus === "ISSUED" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
@@ -223,6 +237,13 @@ const HOHIAGrid = ({
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
+            </span>
+          ) : (info.row.original as any)?.offerStatus === undefined ? (
+            <span
+              style={{ color: "#000000", background: "#00000030" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Applied
             </span>
           ) : (
             <span
@@ -244,10 +265,10 @@ const HOHIAGrid = ({
           {/* Toggle icon */}
           <div
             className="absolute right-[16px] cursor-pointer"
-            onClick={() => toggleRowExpansion(info.row.original._id)}
+            onClick={() => toggleRowExpansion(info.row.id)}
             style={{ color: getTextColor(info.getValue()) }}
           >
-            {(expandedRows as any).includes(info.row.original._id) ? (
+            {(expandedRows as any).includes(info.row.id) ? (
               <IoIosArrowDown className="text-ca-blue" />
             ) : (
               <IoIosArrowUp className="text-ca-blue" />
@@ -464,9 +485,7 @@ const HOHIAGrid = ({
                     {/* Collapsible row */}
                     <tr>
                       <td colSpan={columns.length}>
-                        {(expandedRows as any).includes(
-                          (row as any).original._id
-                        ) && (
+                        {(expandedRows as any).includes((row as any).id) && (
                           <div className="p-4 bg-[#F8F9FA] border-y border-gray-200">
                             <div className="flex items-center justify-between">
                               {(row as any).original.media.map(

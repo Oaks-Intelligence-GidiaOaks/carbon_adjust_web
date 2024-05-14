@@ -289,19 +289,18 @@ const HIAApplicationsGrid = ({
       ),
       header: () => <div className="w-32 whitespace-nowrap">Status</div>,
     }),
-    columnHelper.accessor((row: any) => row?.offerId, {
-      id: "offerId",
+    columnHelper.accessor((row: any) => row?.appId, {
+      id: "appId",
       cell: (info: any) => {
+        const generatedKey =
+          info.getValue() + "-" + info.row.original.packageId;
         return (
           <div className="relative px-4 z-10">
             {/* Hamburger menu icon */}
-            {/* {console.log(info.row.original)} */}
             <div
-              key={info.getValue()}
+              key={generatedKey}
               className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
-              onClick={() =>
-                handleActionClick(info.getValue(), info.row.original)
-              }
+              onClick={() => handleActionClick(generatedKey, info.row.original)}
             >
               <BsThreeDotsVertical size={20} className="" />
             </div>
@@ -328,7 +327,6 @@ const HIAApplicationsGrid = ({
               id="rejection-file"
               className="hidden"
               onChange={(e) => {
-                alert("Hello");
                 handleDeclineMutation(
                   e,
                   currentRowData.appId,
@@ -338,70 +336,72 @@ const HIAApplicationsGrid = ({
             />
             {/* Modal */}
 
-            {showModal && currentRowId === info.getValue() && (
-              <div
-                key={info.getValue()}
-                ref={actionButtonsRef}
-                onClick={() => setShowModal(true)}
-                className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
-              >
+            {showModal &&
+              currentRowId ===
+                info.getValue() + "-" + info.row.original.packageId && (
                 <div
-                  className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
-                  // onClick={() => {
-                  //   setUserToDelete(info.row.original);
-                  //   setShowDeleteModal(true);
-                  // }}
+                  key={info.getValue()}
+                  ref={actionButtonsRef}
+                  onClick={() => setShowModal(true)}
+                  className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
                 >
-                  <div className="rounded-full bg-ca-blue p-1">
-                    <BsPeople className="text-white text-base size-3" />
+                  <div
+                    className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
+                    // onClick={() => {
+                    //   setUserToDelete(info.row.original);
+                    //   setShowDeleteModal(true);
+                    // }}
+                  >
+                    <div className="rounded-full bg-ca-blue p-1">
+                      <BsPeople className="text-white text-base size-3" />
+                    </div>
+                    <span>Assign</span>
                   </div>
-                  <span>Assign</span>
-                </div>
-                {info.row.original.currentStatus === "APPLIED" && (
-                  <>
-                    <label
-                      // htmlFor="approval-file"
-                      className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
-                      onClick={() => {
-                        if (approvalInputRef.current) {
-                          approvalInputRef.current.click();
-                        }
-                      }}
-                    >
-                      <div className="rounded-full bg-green-500 p-1">
-                        <MdDone className="text-white text-base size-3" />
-                      </div>
-                      <span>Approve </span>
-                    </label>
-                    <label
-                      // htmlFor="rejection-file"
-                      className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
-                      onClick={() => {
-                        if (declineInputRef.current) {
-                          declineInputRef.current.click();
-                        }
-                      }}
-                    >
-                      <div className="rounded-full bg-red-500 p-1">
-                        <GrClose className="text-white text-base size-3" />
-                      </div>
-                      <span>Decline </span>
-                    </label>
-                  </>
-                )}
-                <div
-                  className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
-                  onClick={() =>
-                    navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
-                  }
-                >
-                  <div className="rounded-full bg-yellow-500 p-1">
-                    <EnvelopeIcon className="text-white text-base size-3" />
+                  {info.row.original.currentStatus === "APPLIED" && (
+                    <>
+                      <label
+                        // htmlFor="approval-file"
+                        className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
+                        onClick={() => {
+                          if (approvalInputRef.current) {
+                            approvalInputRef.current.click();
+                          }
+                        }}
+                      >
+                        <div className="rounded-full bg-green-500 p-1">
+                          <MdDone className="text-white text-base size-3" />
+                        </div>
+                        <span>Approve </span>
+                      </label>
+                      <label
+                        // htmlFor="rejection-file"
+                        className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
+                        onClick={() => {
+                          if (declineInputRef.current) {
+                            declineInputRef.current.click();
+                          }
+                        }}
+                      >
+                        <div className="rounded-full bg-red-500 p-1">
+                          <GrClose className="text-white text-base size-3" />
+                        </div>
+                        <span>Decline </span>
+                      </label>
+                    </>
+                  )}
+                  <div
+                    className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
+                    onClick={() =>
+                      navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
+                    }
+                  >
+                    <div className="rounded-full bg-yellow-500 p-1">
+                      <EnvelopeIcon className="text-white text-base size-3" />
+                    </div>
+                    <span> Send a message</span>
                   </div>
-                  <span> Send a message</span>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         );
       },

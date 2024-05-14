@@ -348,7 +348,7 @@ const ApplyToFinance = (_: Props) => {
                   <div className="mt-6 flex flex-col gap-y-4">
                     {insuranceOptions.map((insurance, i) => (
                       <InsuranceCard
-                        data={insurance}
+                        data={insurance as any}
                         key={i}
                         setShowSheet={setShowSheet}
                       />

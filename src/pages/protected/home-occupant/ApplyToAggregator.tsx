@@ -293,6 +293,20 @@ const ApplyToAggregator = (_: Props) => {
                       const data = queryClient.getQueryData([
                         "application-status",
                       ]);
+                      if (
+                        (data as any).data.data.currentAppStatus === "Approved"
+                      ) {
+                        navigate(
+                          "/dashboard/applications/aggregator?state=application-approved"
+                        );
+                      }
+                      if (
+                        (data as any).data.data.currentAppStatus === "Declined"
+                      ) {
+                        navigate(
+                          "/dashboard/applications/aggregator?state=application-rejected"
+                        );
+                      }
                       console.log(data);
                     })
                 }

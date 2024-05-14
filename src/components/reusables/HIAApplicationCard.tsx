@@ -39,7 +39,9 @@ const HIAApplicationCard = ({ data }: Props) => {
     },
     onSuccess: () => {
       toast.success("Offer rejected successfully");
-      queryClient.invalidateQueries({ queryKey: ["fetch-HIA-apps"] });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-single-HO-app-details"],
+      });
     },
     onError: () => {
       toast.error("Error rejecting offer");
@@ -176,6 +178,18 @@ const HIAApplicationCard = ({ data }: Props) => {
               </Button>
             </div>
           )}
+        {Boolean(data.currentStatus === "DISABLED") && (
+          <div className="w-full max-w-[314px] grayscale flex justify-between flex-wrap gap-y-4 font-poppins">
+            {/* <Button
+            variant={"outline"}
+            className="w-[145px] border-2 text-blue-main border-blue-main text-xs flex gap-x-2 items-center"
+          >
+            <span className="font-normal">Download offer</span>
+            <BiDownload size={16} />
+          </Button> */}
+          </div>
+        )}
+        {/* {console.log(data)} */}
         {Boolean(data.currentStatus === "APPROVED") &&
           Boolean(data?.offerStatus !== "ACCEPTED") && (
             <div className="w-full max-w-[314px] flex justify-between flex-wrap gap-y-4 font-poppins">
@@ -190,7 +204,7 @@ const HIAApplicationCard = ({ data }: Props) => {
                 variant={"outline"}
                 className="flex bg-white border-red-500 text-red-500 items-center gap-x-2 w-[145px] text-xs"
                 onClick={() =>
-                  acceptOfferMutation.mutate({
+                  rejectOfferMutation.mutate({
                     packageId: data.packageId,
                     offerId: data.offerId,
                     status: false,

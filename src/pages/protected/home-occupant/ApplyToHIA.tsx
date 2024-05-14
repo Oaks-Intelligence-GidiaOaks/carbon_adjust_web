@@ -103,7 +103,7 @@ const ApplyToHIA = (_: Props) => {
     onSuccess: () => {
       toast.success("Application to HIA successful");
       queryClient.invalidateQueries({
-        queryKey: ["fetch-single-HO-app-details"],
+        queryKey: ["fetch-single-HO-app-details", "application-status"],
       });
       setShowApplicationSuccessDialog(true);
     },
@@ -126,6 +126,8 @@ const ApplyToHIA = (_: Props) => {
     queryKey: ["fetch-single-HO-app-details"],
     queryFn: () =>
       getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
+    refetchOnMount: "always",
+    refetchOnWindowFocus: "always",
   });
 
   console.log(singleHOApp.data?.data.data);
