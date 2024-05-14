@@ -24,6 +24,7 @@ const MainFinanceApplicationSuccess = ({
   const currentApplicationDetails = queryClient.getQueryData([
     "application-status",
   ]);
+  console.log(currentApplicationDetails);
 
   const endApplication = useMutation({
     mutationKey: ["end-app"],
@@ -39,6 +40,7 @@ const MainFinanceApplicationSuccess = ({
     },
     onError: () => {
       toast.error("Error completing application");
+      navigate("/dashboard/applications/finance-applications");
     },
   });
 

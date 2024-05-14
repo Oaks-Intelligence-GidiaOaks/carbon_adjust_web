@@ -445,7 +445,7 @@ const FinanceApplicationGrid = ({
       {/* main table */}
 
       <div className="mb-4 flex overflow-x-auto">
-        <div className="w-0 flex-1 overflow-visible">
+        <div className="w-auto flex-1 overflow-visible">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 flex-wrap gap-4 mt-10">
             <table className="text-center w-full font-poppins">
               <thead className="bg-[#E8F3FC] rounded-2xl">
