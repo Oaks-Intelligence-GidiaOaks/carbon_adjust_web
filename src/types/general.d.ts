@@ -236,3 +236,8 @@ export type Finance = {
   loanTerm: string;
   MaxLoanAmount: string;
 };
+
+export interface YearData {
+  label: string;
+  value: number;
+}

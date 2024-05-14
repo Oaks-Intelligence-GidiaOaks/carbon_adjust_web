@@ -112,3 +112,95 @@ export const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
   // Blur the input to prevent it from being focused and scrolled
   event.currentTarget.blur();
 };
+
+export function formatLargeNumber(num: number): string {
+  const suffixes: string[] = ["", "K", "M", "B"];
+  const suffixNum: number = Math.floor(("" + num).length / 3);
+  let shortNum: number = parseFloat(
+    (suffixNum !== 0 ? num / Math.pow(1000, suffixNum) : num).toPrecision(2)
+  );
+  if (shortNum % 1 !== 0) {
+    shortNum = Number(shortNum.toFixed(1));
+  }
+  return shortNum + suffixes[suffixNum];
+}
+
+export function getLastFiveYears(): {
+  label: string;
+  value: string;
+  id?: string | number | undefined;
+}[] {
+  const currentYear = new Date().getFullYear();
+  const yearsData: {
+    label: string;
+    value: string;
+    id?: string | number | undefined;
+  }[] = [];
+
+  for (let i = 0; i < 5; i++) {
+    const year = currentYear - i;
+    yearsData.push({ label: year.toString(), value: year.toString() });
+  }
+
+  return yearsData;
+}
+
+export function getLastTwelveMonths(): {
+  label: string;
+  value: string;
+  id?: string | number | undefined;
+}[] {
+  const currentMonth = new Date().getMonth(); // getMonth() returns zero-based index
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthsData: {
+    label: string;
+    value: string;
+    id?: string | number | undefined;
+  }[] = [];
+
+  for (let i = 0; i < 12; i++) {
+    let monthIndex = (currentMonth - i) % 12;
+    if (monthIndex < 0) {
+      monthIndex += 12;
+    }
+    const monthName = monthNames[monthIndex];
+    monthsData.unshift({
+      label: `${monthName}`,
+      value: (monthIndex + 1).toString(),
+    });
+  }
+
+  return monthsData;
+}
+
+export function getCurrentMonthAbbreviation(): string {
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const currentMonthIndex = new Date().getMonth();
+  return monthNames[currentMonthIndex];
+}

@@ -1,106 +1,114 @@
-import { FC } from "react";
-import { BarChart, LineChart } from "@/components/charts";
-import { Grid } from "@/components/grid";
-// import { DoughnutCard } from "@/components/ui";
-import { barChartOptions, lineChartOptionss } from "@/constants";
-import dummy from "@/dummy/aggregator.json";
+import { FC, useState } from "react";
+import OrgDashboardDetailsCard from "@/components/reusables/OrgDashboardDetailsCard";
+import { formatLargeNumber, getLastFiveYears } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
+import MainActionSubHeader from "@/components/reusables/MainActionSubHeader";
+import { StackedLineChart } from "@/components/charts/StackedLineChart";
+import HIAApplicationsGrid from "@/components/grid/HIAApplicationsGrid";
+import { Dropdown } from "@/components/ui";
 
 const Dashboard: FC = () => {
-  // component variables
-  let labels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const hiaApplications = useQuery({
+    queryKey: ["get-applications"],
+    queryFn: () => axiosInstance.get(`/applications/hia`),
+  });
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Received",
-        data: labels.map(() => Math.random()),
-        backgroundColor: `#2196F3`,
-      },
-      {
-        label: "Declined",
-        data: labels.map(() => Math.random()),
-        backgroundColor: `#EF1E1E`,
-      },
-    ],
-  };
-
-  const dataa = {
-    labels,
-    datasets: [
-      {
-        label: "Received",
-        data: labels.map(() => Math.random()),
-        lineTension: 0.5,
-        pointRadius: 0,
-        borderColor: "rgba(52, 122, 226, 0.8)",
-        backgroundColor: "rgba(52, 122, 226, 0.2)",
-      },
-      // {
-      //   label: "Declined",
-      //   data: labels.map(() => Math.random()),
-      //   backgroundColor: `#EF1E1E`,
-      // },
-    ],
-  };
+  const [yearSelector, setYearSelector] = useState({
+    label: new Date().getFullYear(),
+    value: new Date().getFullYear(),
+  });
 
   return (
     <div className="w-full px-3">
-      {/* dougnuts section */}
-      <div>
-        <h2>Applications Received</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-6">
+        <OrgDashboardDetailsCard
+          title="Applications"
+          value={formatLargeNumber(3500)}
+          viewAllUrl="/aggregator/database"
+          percentageValue={-3}
+          icon={
+            <div className="size-7 flex justify-center items-center bg-yellow-100 rounded-lg">
+              <img src="/assets/icons/org-dashboard/doc.svg" />
+            </div>
+          }
+        />
+        <OrgDashboardDetailsCard
+          title="Packages Created"
+          value={formatLargeNumber(500)}
+          viewAllUrl="/aggregator/projects"
+          percentageValue={1}
+          icon={
+            <div className="size-7 flex justify-center items-center bg-purple-100 rounded-lg">
+              <img src="/assets/icons/org-dashboard/project.svg" />
+            </div>
+          }
+        />
+        <OrgDashboardDetailsCard
+          title="Subcontractors"
+          value={formatLargeNumber(300)}
+          viewAllUrl="/aggregator/devices"
+          percentageValue={2}
+          icon={
+            <div className="size-7 flex justify-center items-center bg-green-100 rounded-lg">
+              <img src="/assets/icons/org-dashboard/devices.svg" />
+            </div>
+          }
+        />
+        <OrgDashboardDetailsCard
+          title="Staff"
+          value={formatLargeNumber(20)}
+          viewAllUrl="/aggregator/staff"
+          percentageValue={1}
+          icon={
+            <div className="size-7 flex justify-center items-center bg-green-100 rounded-lg">
+              <img src="/assets/icons/org-dashboard/staff.svg" />
+            </div>
+          }
+        />
+      </div>
+      {/* Chart */}
 
-        <div className="w-full h-[250px]">
-          {/* {labels.map((it, i) => (
-            <DoughnutCard
-              key={i}
-              title={`${it} 2023`}
-              countOne={20}
-              countTwo={70}
-            />
-          ))} */}
-
-          <LineChart data={dataa} options={lineChartOptionss} />
+      <div className="my-10">
+        <div className="flex justify-between">
+          <p className="font-poppins font-bold pb-8 text-main text-xl">
+            Applications
+          </p>
+          <Dropdown
+            name="yearSelector"
+            wrapperClassName={"w-20 border border-gray-500 shadow-lg"}
+            value={yearSelector}
+            onOptionChange={(value) => setYearSelector(value)}
+            options={getLastFiveYears()}
+          />
         </div>
+        <StackedLineChart />
+        <div className="mt-6 flex justify-center gap-x-3 items-center"></div>
       </div>
 
-      {/* charts section*/}
-      <div className="w-full mt-[34px]">
-        <h2>Application Received vs Declined </h2>
-        <div className="  w-full">
-          {/* <div className="flex items-center gap-x-[18px]">
-            <span>Showing Data</span>
-
-            <YearDropdown
-              endYear={2026}
-              onChange={() => {}}
-              selectedYear={2023}
-              startYear={2023}
-            />
-          </div> */}
-
-          <div className="h-[319px] bg-[#F8F9FA] px-4 border py-5 rounded-[5px]">
-            <BarChart data={data} options={barChartOptions} />
-          </div>
-        </div>
-      </div>
-
+      {/* Subheader */}
+      <MainActionSubHeader
+        title="Create a package"
+        buttonText="Create Package"
+        subTitle="Create packages to allow users see and apply to your services"
+        actionUrl="/hia/packages/add"
+      />
       {/* table section */}
-      <div className="w-full mt-[31px]">
-        <Grid data={dummy} pageSize={30} tableStyles={` h-[300px] w-full`} />
+      <div className="flex gap-4 flex-wrap">
+        {
+          hiaApplications.isSuccess &&
+            hiaApplications.data?.data.data.applications.length >= 1 && (
+              <HIAApplicationsGrid
+                data={hiaApplications.data?.data.data.applications}
+                isUpdating={
+                  hiaApplications.isLoading || hiaApplications.isFetching
+                }
+              />
+            )
+          // aggApplications.data?.data.data.applications.map(
+          //   (app: any, i: number) => <AggAppCard app={app} key={i} />
+          // )
+        }
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import {
   PNGIcon,
   ProfileIcon,
   UsersIcon,
-  ProjectIcon,
+  // ProjectIcon,
 } from "@/assets/icons";
 import { Finance, Payment } from "@/types/general";
 import { ColumnDef } from "@tanstack/react-table";
@@ -808,11 +808,11 @@ export const adminSideBarItems = [
     title: "Applications",
     href: "/admin/applications",
   },
-  {
-    icon: ProjectIcon,
-    title: "Projects",
-    href: "/admin/projects",
-  },
+  // {
+  //   icon: ProjectIcon,
+  //   title: "Projects",
+  //   href: "/admin/projects",
+  // },
   {
     icon: DevicesIcon,
     title: "Staff",
@@ -838,11 +838,11 @@ export const adminSideBarItems = [
     title: "Contact Us",
     href: "/admin/contact",
   },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/admin/profile",
-  },
+  // {
+  //   icon: ProfileIcon,
+  //   title: "Profile",
+  //   href: "/admin/profile",
+  // },
   {
     icon: LogoutIcon,
     title: "Logout",

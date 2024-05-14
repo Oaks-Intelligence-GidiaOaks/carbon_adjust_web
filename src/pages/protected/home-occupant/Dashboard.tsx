@@ -47,9 +47,17 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { cn } from "@/utils";
+import {
+  cn,
+  getCurrentMonthAbbreviation,
+  getLastFiveYears,
+  getLastTwelveMonths,
+} from "@/utils";
 import InsuranceCard from "@/components/reusables/InsuranceCard";
 import SubContractorCard from "@/components/reusables/SubContractorCard";
+import { Dropdown } from "@/components/ui";
+import { VerticalBarChart } from "@/components/charts/VerticalBarChart";
+import { DashboardDoughnutChart } from "@/components/charts/DashboardDoughnutChart";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -60,6 +68,15 @@ const Dashboard = () => {
   const tab = searchParams.get("view");
 
   const [_, setCurrentTab] = useState(tab);
+
+  const [yearSelector, setYearSelector] = useState({
+    label: new Date().getFullYear(),
+    value: new Date().getFullYear(),
+  });
+  const [monthSelector, setMonthSelector] = useState({
+    label: getCurrentMonthAbbreviation(),
+    value: getCurrentMonthAbbreviation(),
+  });
   // const get_hia_packages = useQuery({
   //   queryKey: ["get_hia_packagess"],
   //   queryFn: () => axios.get("package/hia").then((res) => res.data),
@@ -130,17 +147,53 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="pt-6 px-6 pb-20 bg-white">
+    <div className="pt-6 px-0 sm:px-6  pb-20 bg-white">
       {/* New bar chart */}
-      <div className="rounded-lg border border-grey-swatch-300 p-5 mb-6">
-        <p className="text-lg font-medium font-poppins text-sub-header">
-          Retrofitting distribution
-        </p>
-        <div className="min-h-[320px] w-full flex justify-center items-center">
-          <p className="font-poppins">New bar chart goes here</p>
+      <div className="rounded-lg mb-6">
+        <div className="flex justify-between flex-col min-[1440px]:flex-row gap-6">
+          <div className="flex-[0.6] w-full rounded-lg shadow-lg p-4 border border-grey-swatch-300">
+            <div className="flex justify-between">
+              <div>
+                <p className="text-grey-swatch-90000 font-thin">Activity</p>
+                <p className="font-bold text-xl">Retrofitting Analytics</p>
+              </div>
+              <div className="flex gap-x-4">
+                <Dropdown
+                  name="yearSelector"
+                  wrapperClassName={"w-20 border border-gray-500 shadow-lg"}
+                  value={yearSelector}
+                  onOptionChange={(value) => setYearSelector(value)}
+                  options={getLastFiveYears()}
+                />
+                <Dropdown
+                  name="monthSelector"
+                  wrapperClassName={"w-20 border border-gray-500 shadow-lg"}
+                  value={monthSelector}
+                  onOptionChange={(value) => setMonthSelector(value)}
+                  options={getLastTwelveMonths()}
+                />
+              </div>
+            </div>
+            <div className="mt-6">
+              <VerticalBarChart />
+            </div>
+          </div>
+          <div className="flex-[0.4] w-full rounded-lg shadow-lg p-4 border border-grey-swatch-300">
+            <div>
+              <span className="font-bold text-lg">Top Activity </span>
+              <span className="text-grey-swatch-90000 font-thin text-sm">
+                last month
+              </span>
+            </div>
+            <div className="mt-6 px-10">
+              <DashboardDoughnutChart />
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* <div className="w-auto overflow-scroll">
+        <div className="w-0 overflow-visible"> */}
       {/* categories section */}
       <div className="h-[167px] flex flex-nowrap gap-x-6 rounded-lg border border-grey-swatch-300 mb-10">
         {/* Finance */}
@@ -521,8 +574,10 @@ const Dashboard = () => {
           </Link>
         </div>
       )}
+      {/* </div>
+      </div> */}
 
-      <div className="grid grid-cols-5 mt-10">
+      <div className="flex flex-col md:grid grid-cols-5 mt-10">
         <div className="col-span-3 flex flex-col h-full">
           {/* <span className="text-[18px] flex-1 leading-[20px] font-medium font-poppins text-sub-header ">
             EPC Performance Rating
@@ -559,7 +614,7 @@ const Dashboard = () => {
                 className="block w-[200%]"
               /> */}
               <>
-                <div className="flex-[0.7] flex justify-center">
+                <div className="flex-[0.7] flex justify-center bg-white">
                   <EpcRatingChart />
                 </div>
                 <div className="w-full flex items-end min-[510px]:w-[clamp(100px,10%,160px)]">
@@ -626,87 +681,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className="mt-12">
-        <div className="flex justify-between text-center gap-4">
-          <div className="flex items-center gap-4">
-            <span className="text-[18px] leading-[20px] font-medium font-poppins text-sub-header">
-              Top Aggregators
-            </span>
-
-            <div className="flex items-center gap-2">
-              <span className="text-[14px] leading-[20px] font-poppins text-main font-normal">
-                {" "}
-                Filter By{" "}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex">
-            <button className="flex justify-end text-[14px] leading-[12px] font-normal font-poppins text-[#2196F3]">
-              See More
-            </button>
-          </div>
-        </div>
-        <div className="">
-          <div className="flex gap-4 overflow-scroll">
-            <div className="flex gap-4 mt-4 w-0 overflow-visible">
-              <Card
-                title={"Cambridgeshire and Peterborough"}
-                subtitle="London, England"
-              />
-              <Card title={"Cornwall and Devon"} subtitle="Clifford, England" />
-              <Card
-                title={"Dorset and Somerset"}
-                subtitle="Liverpool, Merseyside"
-              />
-              <Card
-                title={"West Midlands and Staffordshire"}
-                subtitle="Dublin, Ireland"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-12">
-        <h1 className="text-[18px] leading-[20px] font-medium font-poppins text-sub-header py-2">
-          Financial Institutions
-        </h1>
-        <div className="grid grid-cols-4 gap-4 ">
-          <div className="col-span-3 w-full">
-            <DataTable<Finance, any>
-              columns={financeColumns}
-              data={tableData}
-            />
-          </div>
-          <div className="w-full py-8 px-6  border-[1px] border-[#E1E1E1] rounded-[10px]">
-            <h1 className="text-[20px] leading-[20px] font-medium font-poppins text-main mb-2">
-              Start an application{" "}
-            </h1>
-
-            <span className="text-[14px] text-inherit/70 leading-[20px] font-normal font-poppins text-main">
-              to get access to acquire Carbon Credit, get access to financial
-              aid to reduce the Carbon offsets in your home
-            </span>
-
-            <div className="mt-4">
-              <h1 className="text-sm font-manrope font-medium text-main">
-                Application progress
-              </h1>
-
-              <ProgressBar
-                percentage={23}
-                wrapperClassName="h-3 bg-white border border-gray-200 bg-gray-50 w-full mt-2 rounded"
-                contentClassName="bg-[#1BAF9E] rounded"
-              />
-
-              <button className=" rounded-md py-2 bg-[#1BAF9E] font-poppins text-main px-6 mt-10">
-                Start Application
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };
