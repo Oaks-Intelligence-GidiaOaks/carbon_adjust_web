@@ -16,18 +16,17 @@ type Props = {
 
 const MainFinanceApplicationSuccess = ({
   setShowApplicationSuccessDialog,
-  setShowInsuranceSheet,
-}: Props) => {
+}: // setShowInsuranceSheet,
+Props) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const currentApplicationDetails = queryClient.getQueryData([
     "application-status",
   ]);
-  console.log(currentApplicationDetails);
 
   const endApplication = useMutation({
-    mutationKey: ["end-app"],
+    mutationKey: ["complete-app"],
     mutationFn: () =>
       axiosInstance.patch(
         `/applications/${
@@ -40,7 +39,7 @@ const MainFinanceApplicationSuccess = ({
     },
     onError: () => {
       toast.error("Error completing application");
-      navigate("/dashboard/applications/finance-applications");
+      // navigate("/dashboard/applications/finance-applications");
     },
   });
 
@@ -86,9 +85,9 @@ const MainFinanceApplicationSuccess = ({
               </Button>
               <Button
                 onClick={() => {
-                  setShowInsuranceSheet(true);
-                  setShowApplicationSuccessDialog(false);
-                  navigate("/dashboard/applications/finance?state=packages");
+                  // setShowInsuranceSheet(true);
+                  // setShowApplicationSuccessDialog(false);
+                  navigate("/dashboard/applications/insurance");
                 }}
                 variant={"outline"}
                 className="w-full text-white font-poppins h-12 bg-[#2879C5]"

@@ -505,7 +505,7 @@ const Dashboard = () => {
               <div className="max-w-[50vw] flex gap-x-3">
                 {insuranceOptions.map((insurance, i) => (
                   <InsuranceCard
-                    data={insurance}
+                    data={insurance as any}
                     key={i}
                     hideCheckBox={true}
                     // setShowSheet={setShowSheet}

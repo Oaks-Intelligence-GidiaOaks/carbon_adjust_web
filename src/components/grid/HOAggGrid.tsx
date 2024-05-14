@@ -179,21 +179,21 @@ const HOAggGrid = ({
       id: "status",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).status === "pending" ? (
+          {(info.row.original as any).currentState === "Initiated" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Pending
+              {(info.row.original as any).currentState}
             </span>
-          ) : (info.row.original as any).status === "completed" ? (
+          ) : (info.row.original as any).currentState === "completed" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
             </span>
-          ) : (info.row.original as any).status === "suspended" ? (
+          ) : (info.row.original as any).currentState === "suspended" ? (
             <span
               style={{ color: "#c9c126", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"

@@ -6,9 +6,13 @@ import {
 } from "@/assets/icons";
 import gridIcon from "@/assets/icons/grid-icon.svg";
 import { cn } from "@/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ApplicationsHeader = ({}: { currentStage: number }) => {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -35,6 +39,278 @@ const ApplicationsHeader = ({}: { currentStage: number }) => {
     "/dashboard/applications/insurance-applications"
   );
 
+  const currentApplicationDetails = queryClient.getQueryData([
+    "application-status",
+  ]);
+
+  // console.log(currentApplicationDetails?.data?.data);
+
+  const handleHIATabClick = () => {
+    if ((currentApplicationDetails as any).data.data.hasApp === false) {
+      return toast.error(
+        "You cannot apply to HIA at this stage. There is no approved application made to an Aggregator yet."
+      );
+    }
+    // if (
+    //   (currentApplicationDetails as any).data.data.hasApp &&
+    //   (currentApplicationDetails as any).data.data.currentAppStage === 1 &&
+    //   (currentApplicationDetails as any).data.data.currentAppStatus ===
+    //     "Initiated"
+    // ) {
+    //   return toast.error(
+    //     "You cannot apply to HIA at this stage. There is no approved application made to an Aggregator yet."
+    //   );
+    // }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 1 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      return toast.error(
+        "You cannot apply to HIA at this stage. There is no approved application made to an Aggregator yet."
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 1 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Approved"
+    ) {
+      return navigate("/dashboard/applications/hia");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      return navigate("/dashboard/applications/hia?state=pending-applications");
+    }
+
+    if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      navigate("/dashboard/applications/hia?state=pending-applications");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      navigate("/dashboard/applications/hia?state=pending-applications");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Approved"
+    ) {
+      navigate("/dashboard/applications/hia?state=pending-applications");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Declined"
+    ) {
+      navigate("/dashboard/applications/hia?state=pending-applications");
+    } else {
+      navigate("/dashboard/applications/hia");
+    }
+  };
+  const handleAggregatorTabClick = () => {
+    if (!(currentApplicationDetails as any)?.data?.data.hasApp) {
+      navigate("/dashboard/applications/aggregator?state=aggregator-form");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStage === 1 &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      navigate("/dashboard/applications/aggregator?state=pending-application");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStage === 1 &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Approved"
+    ) {
+      navigate("/dashboard/applications/aggregator?state=application-approved");
+    } else if (
+      (currentApplicationDetails as any)?.data?.data.hasApp &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStage === 1 &&
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Declined"
+    ) {
+      navigate("/dashboard/applications/aggregator?state=application-rejected");
+    } else if (
+      (currentApplicationDetails as any)?.data.data.currentAppStage > 1 ||
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Initiated" ||
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Approved" ||
+      (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+        "Declined"
+    ) {
+      return toast.error(
+        "Application cannot be made to an aggregator, You have an ongoing application"
+      );
+    } else {
+      navigate("/dashboard/applications/aggregator");
+    }
+  };
+  const handleFinanceTabClick = () => {
+    if (!(currentApplicationDetails as any)?.data?.data.hasApp) {
+      navigate("/dashboard/applications/aggregator?state=aggregator-form");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage < 2
+    ) {
+      return toast.error(
+        "You cannot apply to a Financial Institution at this stage. There is no approved application made to an HIA yet."
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus !==
+        "Approved"
+    ) {
+      return toast.error(
+        "You cannot apply to a Financial Institution at this stage. There is no approved application made to an HIA yet."
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Approved"
+    ) {
+      return navigate("/dashboard/applications/finance");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Declined"
+    ) {
+      return navigate("/dashboard/applications/finance");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Approved"
+    ) {
+      return toast.error(
+        "You cannot apply to a Financial Institution again at this stage. You already have an approved application"
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      return toast.error(
+        "You cannot apply to a Financial Institution again at this stage. You already have an approved application"
+      );
+    }
+    // navigate("/dashboard/applications/aggregator");
+    return toast.error("You cannot apply to Financial at this stage.");
+  };
+  const handleInsuranceTabClick = () => {
+    if (!(currentApplicationDetails as any)?.data?.data.hasApp) {
+      navigate("/dashboard/applications/aggregator?state=aggregator-form");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage < 2
+    ) {
+      return toast.error(
+        "You cannot apply for Insurance at this stage. There is no approved application made to an HIA yet."
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus !==
+        "Approved"
+    ) {
+      return toast.error(
+        "You cannot apply for Insurance at this stage. There is no approved application made to an HIA yet."
+      );
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 2 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Approved"
+    ) {
+      return navigate("/dashboard/applications/insurance");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Declined"
+    ) {
+      return navigate("/dashboard/applications/insurance");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Approved"
+    ) {
+      return navigate("/dashboard/applications/insurance");
+    }
+    if (
+      (currentApplicationDetails as any).data.data.hasApp &&
+      (currentApplicationDetails as any).data.data.currentAppStage === 3 &&
+      (currentApplicationDetails as any).data.data.currentAppStatus ===
+        "Initiated"
+    ) {
+      return navigate("/dashboard/applications/insurance");
+    }
+    // navigate("/dashboard/applications/aggregator");
+    return toast.error("You cannot apply to Financial at this stage.");
+  };
+
+  // const isAggregatorDisabled =
+  //   (currentApplicationDetails as any)?.data?.data.hasApp ||
+  //   (currentApplicationDetails as any)?.data?.data.currentAppStatus !== 1;
+
+  // const isHiaDisabled =
+  //   // no app to agg yet
+  //   !(currentApplicationDetails as any)?.data?.data.hasApp ||
+  //   // current app stage is 1 and is not yet approved
+  //   ((currentApplicationDetails as any)?.data?.data.currentAppStage === 1 &&
+  //     !(
+  //       (currentApplicationDetails as any)?.data?.data.currentAppStatus ===
+  //       "Approved"
+  //     )) ||
+  //   // current app stage is not 2
+  //   (currentApplicationDetails as any)?.data?.data.currentAppStage !== 2;
+
+  // console.log((currentApplicationDetails as any)?.data?.data);
+  // console.log(
+  //   !(
+  //     (currentApplicationDetails as any)?.data?.data.currentAppStatus !==
+  //     "Approved"
+  //   )
+  // );
+  // const isFinanceDisabled =
+  //   !(currentApplicationDetails as any)?.data?.data.hasApp ||
+  //   // current app stage is 2 and is not yet approved
+  //   ((currentApplicationDetails as any)?.data?.data.currentAppStage === 2 &&
+  //     (currentApplicationDetails as any)?.data?.data.currentAppStatus !==
+  //       "Approved");
+  // // // current app stage is not 3
+  // // !((currentApplicationDetails as any)?.data?.data.currentAppStage !== 3);
+
+  // const isInsuranceDisabled = !(currentApplicationDetails as any)?.data?.data
+  //   .hasApp;
+
   return (
     <div className="bg-[#F8FBFC] pl-2 sm:pl-6 pt-6 border-b border-[#DDD7D7] shadow-md">
       <p className="font-bold font-poppins text-lg">Applications</p>
@@ -43,11 +319,14 @@ const ApplicationsHeader = ({}: { currentStage: number }) => {
           <div className="flex pb-10 pt-3">
             <div className="w-[285px] min-w-[285px]">
               <button
-                // disabled={isDisabled}
+                // disabled={isAggregatorDisabled}
                 onClick={() => {
-                  navigate("/dashboard/applications/aggregator");
+                  handleAggregatorTabClick();
                 }}
-                className={`w-[100%] pointer-outer-start bg-[#E5F2FA] drop-shadow-sm cursor-pointer`}
+                className={cn(
+                  `w-[100%] pointer-outer-start bg-[#E5F2FA] drop-shadow-sm cursor-pointer`
+                  // isAggregatorDisabled && "opacity-50 grayscale"
+                )}
               >
                 <div className={`w-[100%] pointer-inner-start drop-shadow-sm`}>
                   <div
@@ -106,10 +385,14 @@ const ApplicationsHeader = ({}: { currentStage: number }) => {
             </div>
             <div className="w-[285px] min-w-[285px] -translate-x-[3%]">
               <button
+                // disabled={isHiaDisabled}
                 onClick={() => {
-                  navigate("/dashboard/applications/hia");
+                  handleHIATabClick();
                 }}
-                className={`w-[100%] pointer-outer bg-[#E5F2FA] drop-shadow-sm cursor-pointer`}
+                className={cn(
+                  `w-[100%] pointer-outer bg-[#E5F2FA] drop-shadow-sm cursor-pointer`
+                  // isHiaDisabled && "opacity-50 grayscale"
+                )}
               >
                 <div className="w-[100%] pointer-inner drop-shadow-sm">
                   <div
@@ -164,10 +447,14 @@ const ApplicationsHeader = ({}: { currentStage: number }) => {
             </div>
             <div className="w-[285px] min-w-[285px] -translate-x-[6%]">
               <button
+                // disabled={isFinanceDisabled}
                 onClick={() => {
-                  navigate("/dashboard/applications/finance");
+                  handleFinanceTabClick();
                 }}
-                className={`w-[100%] pointer-outer bg-ca-cyan drop-shadow-sm cursor-pointer -translate-x-[24%]`}
+                className={cn(
+                  `w-[100%] pointer-outer bg-ca-cyan drop-shadow-sm cursor-pointer -translate-x-[24%]`
+                  // isFinanceDisabled && "opacity-50 grayscale"
+                )}
               >
                 <div className="w-[100%] pointer-inner drop-shadow-sm">
                   <div
@@ -226,9 +513,13 @@ const ApplicationsHeader = ({}: { currentStage: number }) => {
               <button
                 // disabled={isInsuranceDisabled}
                 onClick={() => {
-                  navigate("/dashboard/applications/insurance");
+                  // navigate("/dashboard/applications/insurance");
+                  handleInsuranceTabClick();
                 }}
-                className={`w-[100%] pointer-outer bg-ca-cyan drop-shadow-sm cursor-pointer -translate-x-[36%]`}
+                className={cn(
+                  `w-[100%] pointer-outer bg-ca-cyan drop-shadow-sm cursor-pointer -translate-x-[36%]`
+                  // isInsuranceDisabled && "opacity-50 grayscale"
+                )}
               >
                 <div className="w-[100%] pointer-inner drop-shadow-sm">
                   <div
