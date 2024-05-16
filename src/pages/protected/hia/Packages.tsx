@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import { Oval } from "react-loader-spinner";
+import HIAPackageGrid from "@/components/grid/packages/HIAPackageGrid";
 // import { HiaPackages } from ".";
 
 const Packages = () => {
@@ -41,17 +42,6 @@ const Packages = () => {
             Here are your recently created packages
           </p>
         </div>
-
-        <Link to="/hia/packages/add">
-          <Button className=" text-white flex-center gap-3">
-            <span className="text-white">Create package</span>
-            <img
-              src="/assets/icons/plus-circle.svg"
-              className=""
-              alt="carbon adjust icon"
-            />
-          </Button>
-        </Link>
       </div>
 
       {/* cards */}
@@ -74,18 +64,37 @@ const Packages = () => {
         {HIAPackages.isSuccess &&
           HIAPackages.data.data.data.packages.length >= 1 && (
             <div className="w-0 overflow-visible flex gap-4">
-              {HIAPackages.data.data.data.packages.map((p: any, i: number) => (
-                <HiaPackageCard key={i} data={p} isPlaceholder={false} />
-              ))}
+              {HIAPackages.data.data.data.packages
+                .slice(0, 5)
+                .map((p: any, i: number) => (
+                  <HiaPackageCard key={i} data={p} isPlaceholder={false} />
+                ))}
             </div>
           )}
       </div>
 
+      <Link to="/hia/packages/add" className="mt-8 block">
+        <Button className=" text-white flex-center gap-3">
+          <span className="text-white">Create package</span>
+          <img
+            src="/assets/icons/plus-circle.svg"
+            className=""
+            alt="carbon adjust icon"
+          />
+        </Button>
+      </Link>
+
       {/* table */}
-      <div className="mt-[40px]">
-        {/* <Grid data={pkgsData} tableStyles={` `} pageSize={40} /> */}
-        <div className="w-full flex flex-wrap gap-x-4"></div>
-      </div>
+      {HIAPackages.isSuccess &&
+        HIAPackages.data.data.data.packages.length >= 1 && (
+          <div className="">
+            <HIAPackageGrid
+              data={(HIAPackages as any).data.data.data.packages}
+              isUpdating={HIAPackages.isLoading}
+            />
+            <div className="w-full flex flex-wrap gap-x-4"></div>
+          </div>
+        )}
     </div>
   );
 };

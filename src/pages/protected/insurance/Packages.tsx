@@ -1,6 +1,7 @@
 // import React from "react";
 
 import axiosInstance from "@/api/axiosInstance";
+import InsurancePackageGrid from "@/components/grid/packages/InsurancePackageGrid";
 // import InsuranceCard from "@/components/reusables/InsuranceCard";
 import InsurancePackage from "@/components/reusables/InsurancePackage";
 import NoPackages from "@/components/reusables/NoPackages";
@@ -81,6 +82,18 @@ const Packages = () => {
                 </div>
               </Button>
             </div>
+          </div>
+        )}
+
+      {/* table */}
+      {insurancePackages.isSuccess &&
+        insurancePackages.data.data.data.packages.length >= 1 && (
+          <div className="">
+            <InsurancePackageGrid
+              data={(insurancePackages as any).data.data.data.packages}
+              isUpdating={insurancePackages.isLoading}
+            />
+            <div className="w-full flex flex-wrap gap-x-4"></div>
           </div>
         )}
     </div>

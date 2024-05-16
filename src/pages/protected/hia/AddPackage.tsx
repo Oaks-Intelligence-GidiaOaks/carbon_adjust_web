@@ -8,7 +8,7 @@ import {
   Input,
 } from "@/components/ui";
 import RadioGroupComponent from "@/components/ui/RadioGroup";
-import { Country } from "country-state-city";
+import { Country, ICountry, State } from "country-state-city";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 // import { addSpecializationService } from "@/services/hiaService";
@@ -16,12 +16,38 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { cn, convertImageToDataURL } from "@/utils";
+import Select, { MultiValue } from "react-select";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 const AddPackage = () => {
   const navigate = useNavigate();
   let countryData = Country.getAllCountries();
+  const { user } = useSelector((state: RootState) => state.user);
+
+  const country = Country.getAllCountries().filter(
+    (c: ICountry) => c.name === user?.address.country
+  )[0];
 
   const addPackage = useMutation({
+    mutationKey: ["add-package"],
+    mutationFn: (data: any) =>
+      axiosInstance.post(`/packages`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Package added successfully");
+
+      navigate("/hia/packages");
+    },
+    onError: () => {
+      toast.error("Error adding package");
+    },
+  });
+
+  const addRegionalPackage = useMutation({
     mutationKey: ["add-package"],
     mutationFn: (data: any) =>
       axiosInstance.post(`/packages`, data, {
@@ -58,6 +84,8 @@ const AddPackage = () => {
     },
     file: null as File | null,
     imageDataUrl: "",
+    packageVisibility: "",
+    regions: [] as MultiValue<any>,
   });
 
   let inputClassName = ` bg-[#E4E7E863] bg-opacity-30 text-xs !text-[#9C9C9C] !font-[400] `;
@@ -101,12 +129,22 @@ const AddPackage = () => {
       JSON.stringify([packageState.subcontractors.value])
     );
     formData.append("country", packageState.country.label);
-    formData.append("locationType", packageState.locationType);
+    formData.append("locationType", packageState.packageVisibility);
     if (packageState.file === null) {
       return toast.error("Please select image for your package");
     }
     if (packageState.file) {
       formData.append("file", packageState.file);
+    }
+
+    if (packageState.packageVisibility.toLowerCase() === "regional") {
+      alert(packageState.packageVisibility);
+      formData.append(
+        "regions",
+        JSON.stringify(packageState.regions.map((region) => region.label))
+      );
+      console.log(formData);
+      return addRegionalPackage.mutate(formData);
     }
 
     addPackage.mutate(formData);
@@ -154,7 +192,7 @@ const AddPackage = () => {
       <form
         action=" "
         onSubmit={handleSubmit}
-        className=" md:w-1/2 mx-auto space-y-4"
+        className=" md:w-1/2 mx-auto space-y-4 mb-80 mt-10"
       >
         {/* avatar */}
         <div>
@@ -192,7 +230,7 @@ const AddPackage = () => {
               alt="icon"
               className={cn(
                 packageState.imageDataUrl &&
-                  "w-full h-full object-cover rounded-full"
+                  "h-[100px] w-[100px] object-cover rounded-full"
               )}
             />
             <img
@@ -304,23 +342,46 @@ const AddPackage = () => {
 
         <p className={labelStyle}>Package Visibility</p>
         <RadioGroupComponent
-          value={packageState.locationType}
+          size="size-5"
+          value={packageState.packageVisibility}
           setValue={(value: string) =>
             setPackageState((prev) => ({
               ...prev,
-              locationType: value,
+              packageVisibility: value,
             }))
           }
-          options={["Regional", "National"]}
+          options={["National", "Regional"]}
         />
 
+        {packageState.packageVisibility === "Regional" && (
+          <Select
+            isMulti
+            name="colors"
+            options={State.getStatesOfCountry(country.isoCode).map((state) => ({
+              label: state.name,
+              value: state.isoCode,
+            }))}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            value={packageState.regions}
+            // isDisabled={formData.regions.length >= 5}
+            onChange={(value) => {
+              if (value.length > 5) return;
+              setPackageState((prev) => ({
+                ...prev,
+                regions: value,
+              }));
+            }}
+          />
+        )}
+
         <Button
-          disabled={addPackage.isPending}
-          className="rounded-lg text-white mt-4 w-full h-11"
+          disabled={addPackage.isPending || addRegionalPackage.isPending}
+          className="rounded-lg text-white mt-10 w-full h-11 translate-y-6"
         >
-          {addPackage.isPending ? (
+          {addPackage.isPending || addRegionalPackage.isPending ? (
             <Oval
-              visible={addPackage.isPending}
+              visible={addPackage.isPending || addRegionalPackage.isPending}
               height="20"
               width="20"
               color="#ffffff"

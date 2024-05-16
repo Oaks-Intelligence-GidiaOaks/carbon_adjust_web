@@ -1,10 +1,10 @@
-import HomeOccupant from "@/components/sub-pages/profile/HomeOccupant";
+import UserProfile from "@/components/sub-pages/user/Profile";
 import { ProfileProps } from "@/types/general";
 
 const Profile = ({ accountType }: ProfileProps) => {
   switch (accountType) {
     case "home-occupant":
-      return <HomeOccupant />;
+      return <UserProfile />;
     default:
       break;
   }

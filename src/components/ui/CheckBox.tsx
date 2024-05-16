@@ -10,6 +10,7 @@ const CheckBox = ({
   setIsChecked,
   customSetIsChecked,
   iconStyle,
+  checkIcon,
 }: CheckboxProps) => {
   return (
     <Checkbox.Root
@@ -29,7 +30,11 @@ const CheckBox = ({
       }}
     >
       <Checkbox.Indicator className="text-blue-main">
-        <CheckIcon width={14} className={cn("text-blue-main", iconStyle)} />
+        {checkIcon ? (
+          checkIcon
+        ) : (
+          <CheckIcon width={14} className={cn("text-blue-main", iconStyle)} />
+        )}
       </Checkbox.Indicator>
     </Checkbox.Root>
   );

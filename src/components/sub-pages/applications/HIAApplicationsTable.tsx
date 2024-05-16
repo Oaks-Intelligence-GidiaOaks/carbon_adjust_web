@@ -8,7 +8,7 @@ const HIAApplicationsTable = (_: Props) => {
   const hiaApplications = useQuery({
     queryKey: ["get-hia-apps-history"],
     queryFn: () =>
-      axiosInstance.get(`/applications/ho?limit=1&page=1&type=HIA`),
+      axiosInstance.get(`/applications/ho?limit=10000&page=1&type=HIA`),
   });
   console.log(hiaApplications.data?.data.data.applications);
   return (

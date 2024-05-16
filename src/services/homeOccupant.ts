@@ -18,8 +18,12 @@ export const fetchAggregators = async (
   );
 };
 
-export const fetchHIAPackages = async (id: string) => {
-  return axiosInstance.get(`/applications/${id}/hia/packages`);
+export const fetchHIAPackages = async (id: string, currentAppStage: number) => {
+  if (currentAppStage === 2) {
+    return axiosInstance.get(`/applications/${id}/hia/packages?reApply=true`);
+  } else {
+    return axiosInstance.get(`/applications/${id}/hia/packages`);
+  }
 };
 
 export const getSingleHOApp = async (id: string) => {
@@ -43,7 +47,7 @@ export const fetchHIAApps = async () => {
 };
 
 export const applyToAgg = async (data: {
-  retrofittingType: string;
+  retrofittingType: string[];
   aggId: string;
   address: {
     country: string;
@@ -63,5 +67,8 @@ export const applyToFinance = async (data: any, id: string) => {
   return axiosInstance.post(`/applications/ho/${id}/fin/apply`, data);
 };
 export const applyToInsurance = async (data: any, id: string) => {
+  return axiosInstance.post(`/applications/ho/${id}/ins/apply`, data);
+};
+export const applyToInsuranceFromHIA = async (data: any, id: string) => {
   return axiosInstance.post(`/applications/ho/${id}/ins/apply`, data);
 };

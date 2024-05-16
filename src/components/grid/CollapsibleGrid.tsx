@@ -555,6 +555,7 @@ const AdminAggregatorRegistrationGrid = ({
                                     Approve
                                   </button>
                                   <button
+                                    disabled
                                     onClick={() =>
                                       declineMutation.mutate(
                                         (row as any).original._id

@@ -1,5 +1,6 @@
 import { cn } from "@/utils";
 import CheckBox from "../ui/CheckBox";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   status: string;
@@ -13,29 +14,28 @@ const HIAApplicationStatus = ({ status }: Props) => {
           "absolute h-full bg-green-500 top-0 left-0",
           status === "APPLIED" && "w-0",
           status === "APPLIED" && "w-1/2",
-          status === "APPROVED" && "w-full",
-          status === "APPROVED" && "w-full",
-          status === "approved/accepted" && "w-full"
+          status === "DECLINED" && "w-1/2",
+          status === "APPROVED" && "w-full"
         )}
       ></div>
+      {/* for declined */}
+      <div
+        className={cn(
+          "absolute h-full bg-red-500 top-0 right-0",
+          status === "DECLINED" && "w-1/2"
+        )}
+      ></div>
+
       <div className="absolute -top-[7px] w-full h-full left-0 flex justify-between">
         <div className="relative">
           <p className="absolute -top-5 left-0 text-xs font-poppins">Applied</p>
           <CheckBox
-            checked={[
-              "APPLIED",
-              "under-review",
-              "APPROVED",
-              "approved/accepted",
-            ].includes(status)}
+            checked={["APPLIED", "APPROVED", "DECLINED"].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
-              [
-                "APPLIED",
-                "under-review",
-                "APPROVED",
-                "approved/accepted",
-              ].includes(status) && "bg-green-500 border-green-500"
+              ["APPLIED", "APPROVED", "DECLINED"].includes(status) &&
+                "bg-green-500 border-green-500"
+              // ["DECLINED"].includes(status) && "bg-red-500 border-red-500"
             )}
             iconStyle="text-white"
           />
@@ -45,39 +45,33 @@ const HIAApplicationStatus = ({ status }: Props) => {
             Under review
           </p>
           <CheckBox
-            checked={[
-              "under-review",
-              "APPLIED",
-              "APPROVED",
-              "approved/accepted",
-            ].includes(status)}
+            checked={["APPLIED", "APPROVED", "DECLINED"].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
-              [
-                "under-review",
-                "APPLIED",
-                "APPROVED",
-                "approved/accepted",
-              ].includes(status) && "bg-green-500 border-green-500"
+              ["APPLIED", "APPROVED", "DECLINED"].includes(status) &&
+                "bg-green-500 border-green-500"
+              // ["DECLINED"].includes(status) && "bg-red-500 border-red-500"
             )}
             iconStyle="text-white"
           />
         </div>
         <div className="relative">
           <p className="absolute -top-5 right-0 text-xs font-poppins">
-            Approved
+            {status === "APPROVED" ? "Approved" : "Declined"}
           </p>
           <CheckBox
-            checked={[
-              "APPROVED",
-              "approved/accepted",
-              "approved/accepted",
-            ].includes(status)}
+            checked={["APPROVED", "DECLINED"].includes(status)}
             className={cn(
               "border-2 border-grey-swatch-500 rounded-full",
               ["APPROVED", "approved/accepted"].includes(status) &&
-                "bg-green-500 border-green-500"
+                "bg-green-500 border-green-500",
+              ["DECLINED"].includes(status) && "bg-red-500 border-red-500"
             )}
+            checkIcon={
+              status === "DECLINED" && (
+                <XMarkIcon width={14} className={cn("text-white")} />
+              )
+            }
             iconStyle="text-white"
           />
         </div>

@@ -136,7 +136,7 @@ const Sidebar = ({
       {/* mobile sidebar */}
       <div
         className={cn(
-          "w-[20%] min-w-[260px] max-w-[302px] h-screen px-4 pt-10 sm:sticky bg-white z-[100] border-r border-[hsla(110,49%,88%,1)] fixed left-0 top-0 sm:hidden",
+          "w-[20%] min-w-[260px] max-w-[302px] overflow-y-scroll h-screen px-4 pt-10 sm:sticky bg-white z-[100] border-r border-[hsla(110,49%,88%,1)] fixed left-0 top-0 sm:hidden",
           mobileMenuIsOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

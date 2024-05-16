@@ -4,7 +4,8 @@ import FlyoutSidebar from "@/components/reusables/FlyoutSidebar";
 import InsuranceCard from "@/components/reusables/InsuranceCard";
 // import SelectedPackagesSummaryCard from "@/components/reusables/SelectedPackagesSummaryCard";
 // import SubContractorCard from "@/components/reusables/SubContractorCard";
-import { Button, Input } from "@/components/ui";
+import { Button, Dropdown, Input, Label } from "@/components/ui";
+import * as Slider from "@radix-ui/react-slider";
 // import {
 //   insuranceOptions,
 //   placeholderHIAPackages,
@@ -13,9 +14,11 @@ import { Button, Input } from "@/components/ui";
 import {
   //   applyToFinance,
   applyToInsurance,
+  applyToInsuranceFromHIA,
   //   fetchFinancePackages,
   fetchInsurancePackages,
 } from "@/services/homeOccupant";
+import { cn } from "@/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -27,6 +30,8 @@ import {
   useNavigate,
   //   useSearchParams,
 } from "react-router-dom";
+import { maximumRepaymentOptions } from "@/constants";
+import Loading from "@/components/reusables/Loading";
 
 type Props = {};
 
@@ -62,6 +67,36 @@ const ApplyToInsurance = (_: Props) => {
   console.log((currentApplicationDetails as any)?.data?.data);
   console.log((insurancePackages as any)?.data?.data);
 
+  const hiaInsuranceMutation = useMutation({
+    mutationKey: ["apply-to-insurance"],
+    mutationFn: () =>
+      applyToInsuranceFromHIA(
+        {
+          packageId: selectedPackage,
+          carbonCredit: parseInt(details.carbonCredit),
+          loanAmt: parseInt(details.loanAmount),
+          durationOfCC: parseInt(details.durationOfCC.value),
+          percentOfIns: parseInt(details.percentageOfInsurance[0].toString()),
+          appStage: (currentApplicationDetails as any)?.data?.data
+            .currentAppStage,
+          annHouseholdIncome: parseInt(details.houseHoldIncome),
+          otherIncome: parseInt(details.otherIncome),
+          moHouseholdExp: parseInt(details.houseHoldMonthlyExpenses),
+          othMonthlyExp: parseInt(details.otherMonthlyExpense),
+          dependants: parseInt(details.noOfDependents),
+        },
+        (currentApplicationDetails as any)?.data?.data.appId
+      ),
+    onSuccess: () => {
+      toast.success("Application to Insurance Institution successful");
+      queryClient.invalidateQueries({ type: "all" });
+      setShowApplicationSuccessDialog(true);
+      navigate("/dashboard/applications/insurance-applications");
+    },
+    onError: () => {
+      toast.error("Error sending application to Insurance Institution");
+    },
+  });
   const insuranceMutation = useMutation({
     mutationKey: ["apply-to-insurance"],
     mutationFn: () =>
@@ -70,8 +105,8 @@ const ApplyToInsurance = (_: Props) => {
           packageId: selectedPackage,
           carbonCredit: parseInt(details.carbonCredit),
           loanAmt: parseInt(details.loanAmount),
-          durationOfCC: parseInt(details.durationOfCC),
-          percentOfIns: parseInt(details.percentageOfInsurance),
+          durationOfCC: parseInt(details.durationOfCC.value),
+          percentOfIns: parseInt(details.percentageOfInsurance[0].toString()),
           appStage: (currentApplicationDetails as any)?.data?.data
             .currentAppStage,
         },
@@ -79,6 +114,7 @@ const ApplyToInsurance = (_: Props) => {
       ),
     onSuccess: () => {
       toast.success("Application to Insurance Institution successful");
+      queryClient.invalidateQueries({ type: "all" });
       setShowApplicationSuccessDialog(true);
       navigate("/dashboard/applications/insurance-applications");
     },
@@ -98,8 +134,11 @@ const ApplyToInsurance = (_: Props) => {
     houseHoldMonthlyExpenses: "",
     otherMonthlyExpense: "",
     noOfDependents: "",
-    percentageOfInsurance: "",
-    durationOfCC: "",
+    percentageOfInsurance: [20],
+    durationOfCC: {
+      label: "",
+      value: "",
+    },
   });
 
   //   const identifyInsuranceApplicationState = () => {
@@ -227,7 +266,10 @@ const ApplyToInsurance = (_: Props) => {
         {/* Show insurance form*/}
         <FlyoutSidebar
           isOpen={showInsuranceSheet}
-          onOpenChange={setShowInsuranceSheet}
+          onOpenChange={(value) => {
+            setShowInsuranceSheet(value);
+            navigate("/dashboard/applications/insurance-applications");
+          }}
         >
           <div className="font-poppins relative h-full">
             <div className="px-2 sm:px-6">
@@ -236,20 +278,24 @@ const ApplyToInsurance = (_: Props) => {
                   Apply for Insurance
                 </p>
               </div>
-              <form className="mt-10">
+              <form className="mt-10 min-h-screen">
                 <div className="mt-6">
                   <Input
-                    name="firstLineOfAddress"
+                    name="valueOfCarbonCredit"
                     label="Value of Carbon Credit"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Value of Carbon Credit that will be generated"
-                    value={details.carbonCredit}
+                    appendIcon={<p className="font-medium pl-2">tCo2e</p>}
+                    value={details!.carbonCredit}
                     onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        carbonCredit: e.target.value,
-                      }))
+                      setDetails!((prev) => {
+                        const newValue = e.target.value.replace(/[^0-9]/g, "");
+                        return {
+                          ...prev,
+                          carbonCredit: newValue,
+                        };
+                      })
                     }
                   />
                 </div>
@@ -260,33 +306,63 @@ const ApplyToInsurance = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="How much loan are you requesting for ?"
-                    value={details.loanAmount}
+                    prependIcon={<p className="font-medium pr-2">£</p>}
+                    value={details!.loanAmount}
                     onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        loanAmount: e.target.value,
-                      }))
+                      setDetails!((prev) => {
+                        const newValue = e.target.value.replace(/[^0-9]/g, "");
+                        return {
+                          ...prev,
+                          loanAmount: newValue,
+                        };
+                      })
                     }
                   />
                 </div>
                 <div className="mt-6">
-                  <Input
-                    name="percentageOfInsurance"
-                    label="Percentage of Insurance"
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="How long will the Carbon Credit be generated for?"
-                    value={details.percentageOfInsurance}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        percentageOfInsurance: e.target.value,
-                      }))
-                    }
-                  />
+                  <Label
+                    // htmlFor={props.id}
+                    className={cn(
+                      `mb-1 block text-[#888888] group-valid:text-[#171717] group-has-[:valid]:text-[#171717]`,
+                      "mb-1 font-poppins text-black-main"
+                    )}
+                  >
+                    Percentage of Insurance
+                  </Label>
+                  <p className="text-xs text-grey-swatch-600">
+                    What % of the retrofit cost do you want to protect ?
+                  </p>
+                  <div className="flex gap-2">
+                    <Slider.Root
+                      className="relative flex items-center justify-between select-none touch-none w-full h-5 mt-2"
+                      value={details!.percentageOfInsurance}
+                      onValueChange={(val) =>
+                        setDetails!((prev) => {
+                          // const newValue = e.target.value.replace(/[^0-9]/g, "");
+                          return {
+                            ...prev,
+                            percentageOfInsurance: val,
+                          };
+                        })
+                      }
+                      max={100}
+                      step={0.1}
+                    >
+                      <Slider.Track className="bg-[#6750A430] relative grow rounded-full h-[5px]">
+                        <Slider.Range className="absolute bg-[#6750A4] rounded-full h-full" />
+                      </Slider.Track>
+                      <Slider.Thumb
+                        className="block w-5 h-5 bg-[#6750A4] shadow-[0_2px_10px] shadow-blackA4 rounded-[10px] hover:bg-violet3 focus:outline-none focus:shadow-[0_0_0_5px] focus:shadow-[#6750A420]"
+                        aria-label="percentage"
+                      />
+                    </Slider.Root>
+                    <p className="px-1 w-16 text-right">
+                      {details.percentageOfInsurance[0]}%
+                    </p>
+                  </div>
                 </div>
-                <div className="mt-6">
-                  <Input
+                <div className="mt-6 w-full">
+                  {/* <Input
                     name="durationOfCarbonCredit"
                     label="Duration of Carbon Credit"
                     labelClassName="mb-4 font-poppins text-black-main"
@@ -299,92 +375,151 @@ const ApplyToInsurance = (_: Props) => {
                         durationOfCC: e.target.value,
                       }))
                     }
-                  />
-                </div>
-                <div className="mt-6">
-                  <Input
-                    name="annualIncome"
-                    label="What is your annual household Income?"
+                  /> */}
+                  <Dropdown
                     labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="Your annual household income"
-                    value={details.houseHoldIncome}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
+                    placeholder={`Select`}
+                    label="Duration of Carbon Credit"
+                    name="durationOfCC"
+                    options={maximumRepaymentOptions}
+                    wrapperClassName={
+                      "bg-[#E4E7E863] bg-opacity-30 text-xs text-black-main !font-[400] w-full " +
+                      `w-full text-sm`
+                    }
+                    optionClassName={``}
+                    value={details.durationOfCC}
+                    onOptionChange={(value) =>
+                      setDetails!((prev) => ({
                         ...prev,
-                        houseHoldIncome: e.target.value,
+                        durationOfCC: value,
                       }))
                     }
                   />
                 </div>
-                <div className="mt-6">
-                  <Input
-                    name="otherIncome"
-                    label="Other income (Spouse, additional employment, etc. *"
-                    required
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="Other income"
-                    value={details.otherIncome}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        otherIncome: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="mt-6">
-                  <Input
-                    name="householdMonthlyExpenses"
-                    label="Household monthly expenses (excluding loans, credit card, etc)"
-                    required
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder=""
-                    value={details.houseHoldMonthlyExpenses}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        houseHoldMonthlyExpenses: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="mt-6">
-                  <Input
-                    name="otherMonthlyExpenses"
-                    label="Other monthly expenses"
-                    required
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="Other monthly expenses"
-                    value={details.otherMonthlyExpense}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        otherMonthlyExpense: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="mt-6">
-                  <Input
-                    name="noOfDeps"
-                    label="Number of dependents"
-                    required
-                    labelClassName="mb-4 font-poppins text-black-main"
-                    inputClassName="bg-gray-100 font-poppins"
-                    placeholder="Number of dependents"
-                    value={details.noOfDependents}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        noOfDependents: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
+
+                {(currentApplicationDetails as any)?.data?.data
+                  .currentAppStage === 2 && (
+                  <>
+                    <div className="mt-6">
+                      <Input
+                        name="annualIncome"
+                        label="What is your annual household Income?"
+                        labelClassName="mb-4 font-poppins text-black-main"
+                        inputClassName="bg-gray-100 font-poppins"
+                        placeholder="Your annual household income"
+                        value={details.houseHoldIncome}
+                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        onChange={(e) =>
+                          setDetails!((prev) => {
+                            const newValue = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            );
+                            return {
+                              ...prev,
+                              houseHoldIncome: newValue,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <Input
+                        name="otherIncome"
+                        label="Other income (Spouse, additional employment, etc. *"
+                        required
+                        labelClassName="mb-4 font-poppins text-black-main"
+                        inputClassName="bg-gray-100 font-poppins"
+                        placeholder="Other income"
+                        value={details.otherIncome}
+                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        onChange={(e) =>
+                          setDetails!((prev) => {
+                            const newValue = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            );
+                            return {
+                              ...prev,
+                              otherIncome: newValue,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <Input
+                        name="householdMonthlyExpenses"
+                        label="Household monthly expenses (excluding loans, credit card, etc)"
+                        required
+                        labelClassName="mb-4 font-poppins text-black-main"
+                        inputClassName="bg-gray-100 font-poppins"
+                        placeholder=""
+                        value={details.houseHoldMonthlyExpenses}
+                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        onChange={(e) =>
+                          setDetails!((prev) => {
+                            const newValue = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            );
+                            return {
+                              ...prev,
+                              houseHoldMonthlyExpenses: newValue,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <Input
+                        name="otherMonthlyExpenses"
+                        label="Other monthly expenses"
+                        required
+                        labelClassName="mb-4 font-poppins text-black-main"
+                        inputClassName="bg-gray-100 font-poppins"
+                        placeholder="Other monthly expenses"
+                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        value={details.otherMonthlyExpense}
+                        onChange={(e) =>
+                          setDetails!((prev) => {
+                            const newValue = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            );
+                            return {
+                              ...prev,
+                              otherMonthlyExpense: newValue,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mt-6">
+                      <Input
+                        name="noOfDeps"
+                        label="Number of dependents"
+                        required
+                        labelClassName="mb-4 font-poppins text-black-main"
+                        inputClassName="bg-gray-100 font-poppins"
+                        placeholder="Number of dependents"
+                        value={details.noOfDependents}
+                        onChange={(e) =>
+                          setDetails!((prev) => {
+                            const newValue = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            );
+                            return {
+                              ...prev,
+                              noOfDependents: newValue,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                  </>
+                )}
               </form>
             </div>
             <div className="sticky bottom-0 mt-20 bg-white left-0 p-4 flex justify-around gap-2 flex-wrap font-poppins border w-full border-t-black-main/50 z-50">
@@ -419,7 +554,7 @@ const ApplyToInsurance = (_: Props) => {
               <BiArrowBack className="text-main" />
               <p className="text-main">Back</p>
             </p>
-            <div className="px-2 sm:px-6">
+            <div className="px-2 sm:px-6 min-h-screen">
               <div>
                 <p className="font-semibold text-2xl text-black-main">
                   Insurance Institutions
@@ -429,6 +564,11 @@ const ApplyToInsurance = (_: Props) => {
                 </p>
               </div>
               <div className="mt-6 flex flex-col gap-y-4">
+                {insurancePackages.isLoading && (
+                  <div className="mt-20">
+                    <Loading message="Finding packages" />
+                  </div>
+                )}
                 {(insurancePackages as any)?.data?.data.data.map(
                   (insurance: any, i: number) => (
                     <InsuranceCard
@@ -445,12 +585,25 @@ const ApplyToInsurance = (_: Props) => {
             </div>
             <div className="sticky bottom-0 mt-20 bg-white left-0 p-4 flex justify-around gap-2 flex-wrap font-poppins border w-full border-t-black-main/50 z-50">
               <Button
-                onClick={() => insuranceMutation.mutate()}
+                onClick={() => {
+                  if (
+                    (currentApplicationDetails as any)?.data?.data
+                      .currentAppStage === 2
+                  ) {
+                    hiaInsuranceMutation.mutate();
+                  } else {
+                    insuranceMutation.mutate();
+                  }
+                }}
                 className="text-white w-full min-w-[120px]"
               >
-                {insuranceMutation.isPending ? (
+                {insuranceMutation.isPending ||
+                hiaInsuranceMutation.isPending ? (
                   <Oval
-                    visible={insuranceMutation.isPending}
+                    visible={
+                      insuranceMutation.isPending ||
+                      hiaInsuranceMutation.isPending
+                    }
                     height="20"
                     width="20"
                     color="#ffffff"

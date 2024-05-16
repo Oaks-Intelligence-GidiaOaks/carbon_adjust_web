@@ -10,8 +10,8 @@ import { Button } from "@/components/ui";
 import { setUser } from "@/features/userSlice";
 import { cn, uniqueObjectsByIdType } from "@/utils";
 import { UserCircleIcon } from "@heroicons/react/20/solid";
-import { useIsFetching, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useIsFetching, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { LuRefreshCcw } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 type Props = {};
 
 const PendingVerification = (_: Props) => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.user.user);
@@ -30,14 +31,13 @@ const PendingVerification = (_: Props) => {
     window.location.assign("/");
   };
 
-  const [verify, setVerify] = useState<boolean>(false);
+  // const [verify, setVerify] = useState<boolean>(false);
 
   const verifyApp = useQuery({
     queryKey: ["fetch-user-info-2"],
     queryFn: userService().fetchUserInfo,
-    enabled: verify,
+    // enabled: verify,
   });
-  console.log(verifyApp.data?.data.data);
 
   const isFetching = useIsFetching({
     queryKey: ["fetch-user-info-2"],
@@ -128,7 +128,8 @@ const PendingVerification = (_: Props) => {
               //     state: "application-approved",
               //   }).toString(),
               // })
-              setVerify(true)
+              // setVerify(true)
+              queryClient.invalidateQueries({ queryKey: ["fetch-user-info-2"] })
             }
           >
             <span className="text-white">Refresh</span>

@@ -8,7 +8,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+// import { faker } from "@faker-js/faker";
 
 ChartJS.register(
   CategoryScale,
@@ -51,30 +51,47 @@ export const options = {
 };
 
 const labels = [
-  "Heating",
-  "Cooling",
+  "Heating/Cooling",
   "SHS",
   "Insulation",
-  "Lighting",
+  "Flexible",
   "Energy Efficiency",
-  "Other",
+  "Undecided",
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(206, 231, 253, 1)",
-      hoverBackgroundColor: "rgba(14, 136, 246, 1)",
-      borderRadius: 10,
-      width: 20,
-      maxBarThickness: 33,
-    },
-  ],
+export type RetrofittingAnalyticsProps = {
+  heating: number;
+  insulation: number;
+  energy_efficieny: number;
+  solar: number;
+  flexible: number;
+  undecided: number;
 };
 
-export function VerticalBarChart() {
+export function VerticalBarChart(chartData: RetrofittingAnalyticsProps) {
+  const rawData = chartData;
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "",
+        data: [
+          rawData.heating,
+          rawData.solar,
+          rawData.insulation,
+          rawData.flexible,
+          rawData.energy_efficieny,
+          rawData.undecided,
+        ],
+        backgroundColor: "rgba(206, 231, 253, 1)",
+        hoverBackgroundColor: "rgba(14, 136, 246, 1)",
+        borderRadius: 10,
+        width: 20,
+        maxBarThickness: 33,
+      },
+    ],
+  };
+
   return <Bar options={options} data={data} />;
 }

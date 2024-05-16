@@ -59,6 +59,8 @@ const AggregatorDatabaseGrid = ({
     packageId: "",
     appId: "",
   });
+
+  console.log(data);
   //   const [expandedRows, setExpandedRows] = useState([]);
 
   // const [file, setFile] = useState<File | null>();
@@ -147,6 +149,7 @@ const AggregatorDatabaseGrid = ({
       queryClient.invalidateQueries({
         queryKey: ["get-applications"],
       });
+      setCurrentRowId(null);
     },
     onError: () => {
       toast.error("Error approving contractor");
@@ -178,6 +181,7 @@ const AggregatorDatabaseGrid = ({
     },
     onSuccess: () => {
       toast.success("Application approved");
+      setCurrentRowId(null);
       queryClient.invalidateQueries({
         queryKey: ["get-applications"],
       });
@@ -249,7 +253,7 @@ const AggregatorDatabaseGrid = ({
       cell: (info) => (
         <div className="w-80 mx-auto text-left">
           {" "}
-          {(info.row.original as any).applicant.name}
+          {(info.row.original as any).applicant?.name}
         </div>
       ),
       header: () => <div className="w-80 text-left">Home owner</div>,
@@ -297,12 +301,26 @@ const AggregatorDatabaseGrid = ({
             >
               Approved
             </span>
-          ) : (
+          ) : (info.row.original as any).currentState === "Completed" ? (
+            <span
+              style={{ color: "#16e000", background: "#16e00030" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Completed
+            </span>
+          ) : (info.row.original as any).currentState === "Declined" ? (
             <span
               style={{ color: "#FF595E", background: "#FF595E30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Rejected
+              Declined
+            </span>
+          ) : (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).currentState.toLowerCase()}
             </span>
           )}
         </div>

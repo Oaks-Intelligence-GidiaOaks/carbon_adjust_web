@@ -18,10 +18,19 @@ import Select from "react-select";
 // import axiosInstance from "@/api/axiosInstance";
 import { cn } from "@/utils";
 import { getRetrofittingActivities } from "@/services/homeOccupant";
+import { DropdownOption } from "@/types/general";
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchRetrofittingOptions } from "@/services/homeOccupant";
 
 type Props = {};
+
+type AddressFormState = {
+  country: { label: string; value: string };
+  cityOrProvince: { label: string; value: string };
+  firstLineAddress: string;
+  zipcode: string;
+  retrofittingActivities: DropdownOption[];
+};
 
 const ApplyToAggregator = (_: Props) => {
   const queryClient = useQueryClient();
@@ -45,7 +54,7 @@ const ApplyToAggregator = (_: Props) => {
   const userData = useSelector((state: RootState) => state.user.user);
   console.log(userData);
 
-  const [addressFormState, setAddressFormState] = useState({
+  const [addressFormState, setAddressFormState] = useState<AddressFormState>({
     country: {
       label: userData?.address.country ?? "",
       value: userData?.address.country ?? "",
@@ -56,10 +65,7 @@ const ApplyToAggregator = (_: Props) => {
     },
     firstLineAddress: userData?.address.firstLineAddress ?? "",
     zipcode: userData?.address.zipcode ?? "",
-    retrofittingActivity: {
-      label: "",
-      value: "",
-    },
+    retrofittingActivities: [],
   });
 
   const tab = searchParams.get("state");
@@ -193,16 +199,16 @@ const ApplyToAggregator = (_: Props) => {
                   </Label>
                   <Select
                     isLoading={retrofittingActivities.isLoading}
-                    name="colors"
+                    name="retrofitting-activities"
+                    isMulti
                     options={
                       retrofittingActivities.data?.data.data.retrofittingTypes
-                        ? Object.values(
-                            retrofittingActivities.data.data.data
-                              .retrofittingTypes
-                          ).map((act: any) => ({
-                            label: act,
-                            value: act,
-                          }))
+                        ? retrofittingActivities.data.data.data.retrofittingTypes.map(
+                            (act: any) => ({
+                              label: Object.values(act)[0],
+                              value: Object.values(act)[0],
+                            })
+                          )
                         : []
                     }
                     className="basic-multi-select"
@@ -222,21 +228,18 @@ const ApplyToAggregator = (_: Props) => {
                         cn(
                           isFocused &&
                             `hover:cursor-pointer 
-                                hover:bg-ca-blue/30 
-                                px-3 py-2 rounded`,
+                            hover:bg-ca-blue/30 
+                            px-3 py-2 rounded`,
                           isSelected && "bg-slate-300",
                           "font-poppins"
                         ),
                     }}
-                    placeholder="Select retrofitting activity"
-                    value={addressFormState.retrofittingActivity}
+                    placeholder="Select retrofitting activities"
+                    value={addressFormState.retrofittingActivities}
                     onChange={(value) =>
                       setAddressFormState((prev) => ({
                         ...prev,
-                        retrofittingActivity: {
-                          label: value?.label ?? "",
-                          value: value?.value ?? "",
-                        },
+                        retrofittingActivities: value as any,
                       }))
                     }
 
@@ -250,7 +253,7 @@ const ApplyToAggregator = (_: Props) => {
                     // }}
                   />
                 </div>
-                <div className="mt-8">
+                <div className="mt-8 mb-20">
                   <Button
                     onClick={() => setShowSelectAggregatorDialog(true)}
                     className="w-full text-white font-poppins h-12"
@@ -300,9 +303,7 @@ const ApplyToAggregator = (_: Props) => {
                           "/dashboard/applications/aggregator?state=application-approved"
                         );
                       }
-                      if (
-                        (data as any).data.data.currentAppStatus === "Declined"
-                      ) {
+                      if ((data as any).data.data.hasApp === false) {
                         navigate(
                           "/dashboard/applications/aggregator?state=application-rejected"
                         );

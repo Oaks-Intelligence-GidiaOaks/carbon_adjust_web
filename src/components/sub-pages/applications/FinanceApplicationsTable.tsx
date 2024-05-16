@@ -10,7 +10,7 @@ const FinanceApplications = (_: Props) => {
     queryKey: ["get-fin-apps-history"],
     queryFn: () =>
       axiosInstance.get(
-        `/applications/ho?limit=1&page=1&type=FINANCIAL_INSTITUTION`
+        `/applications/ho?limit=10000&page=1&type=FINANCIAL_INSTITUTION`
       ),
   });
   // console.log(finApplications.data?.data.data.applications);

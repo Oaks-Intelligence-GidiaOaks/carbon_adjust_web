@@ -72,13 +72,13 @@ const PackageCard = ({
             />
           </div>
           <p className="font-poppins text-black text-lg brightness-0">
-            {data.createdBy?.name}
+            {/* {data?.createdBy?.name} */}
           </p>
         </div>
         <div className="flex items-center gap-x-3 mt-2">
           <div className="flex gap-2 flex-wrap items-center">
             <p className="bg-[#FFE5D3] text-[10px] py-1 px-2 font-poppins rounded">
-              {data.createdBy?.address.country}
+              {data.createdBy?.address?.country}
             </p>
             <div className="flex gap-x-1 items-center">
               <span className="text-xs font-poppins font-bold">
@@ -93,7 +93,7 @@ const PackageCard = ({
           <div className="h-4 w-[1px] bg-[rgba(0,0,0,0.3)]" />
           <div className="flex items-center">
             <p className="bg-[#CDFEE4] text-[10px] py-1 px-2 font-poppins rounded text-green-600">
-              {data.subcontractors.length} Subcontractors
+              {data?.subcontractors?.length} Subcontractors
             </p>
           </div>
           <div></div>
@@ -107,7 +107,7 @@ const PackageCard = ({
                 return prev + curr + ", ";
               }, "")
             : null} */}
-          {data?.service.name}
+          {data?.service?.name}
         </div>
         <div className="mt-1">
           <p className="text-green-500 text-xs font-poppins">

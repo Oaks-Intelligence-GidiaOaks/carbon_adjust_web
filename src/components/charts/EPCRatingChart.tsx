@@ -16,7 +16,23 @@ const colors = {
   G: "#e23122",
 };
 
-const EpcRatingChart = () => {
+const EpcRatingChart = (data: {
+  chart: [
+    { epc: string; percentage: string },
+    { epc: string; percentage: string },
+    { epc: string; percentage: string },
+    { epc: string; percentage: string },
+    { epc: string; percentage: string },
+    { epc: string; percentage: string },
+    { epc: string; percentage: string }
+  ];
+}) => {
+  const epcData: { [key: string]: string } = {};
+
+  data.chart.forEach(
+    (v: { epc: string; percentage: string }) => (epcData[v.epc] = v.percentage)
+  );
+
   const EpcRatings = useMemo(() => {
     return [
       { symbol: "A", range: "92+", color: "#306f1d", value: 15 },
@@ -53,6 +69,7 @@ const EpcRatingChart = () => {
       { symbol: "G", range: "1-20", color: "#e23122", value: 15 },
     ];
   }, []);
+
   const userData = useSelector((state: RootState) => state.user.user);
 
   const id = useId();

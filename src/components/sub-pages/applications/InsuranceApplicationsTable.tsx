@@ -10,7 +10,7 @@ const InsuranceApplications = (_: Props) => {
   const insApplications = useQuery({
     queryKey: ["get-ins-apps-history"],
     queryFn: () =>
-      axiosInstance.get(`/applications/ho?limit=1000&page=1&type=INSURANCE`),
+      axiosInstance.get(`/applications/ho?limit=10000&page=1&type=INSURANCE`),
   });
 
   // console.log(insApplications?.data.data);
