@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import * as _ from "lodash";
 // import FormInput from "../../components/form/FormInput";
 // import TextArea from "../../components/form/TextArea";
@@ -15,11 +15,15 @@ import { Input } from "@/components/ui";
 import useContactMap from "@/hooks/useContactMap";
 import { ContactLocationIcon, ContactMailIcon } from "@/assets/icons";
 import TextArea from "@/components/ui/TextArea";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance from "@/api/axiosInstance";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
-const Contact: FC = () => {
-  const [fullName] = useState("");
-  const [email] = useState("");
-  const [message] = useState("");
+const Contact = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const mapRef = useRef(null);
 
   useContactMap(mapRef.current);
@@ -53,6 +57,25 @@ const Contact: FC = () => {
   //     message,
   //   });
   // };
+
+  const messageMutation = useMutation({
+    mutationKey: ["message admin"],
+    mutationFn: () =>
+      axiosInstance.post("/users/system/contact", {
+        name: fullName,
+        from: email,
+        message: message,
+      }),
+    onSuccess: () => {
+      setFullName("");
+      setEmail("");
+      setMessage("");
+      toast.success("Message sent successfully");
+    },
+    onError: () => {
+      toast.error("Error sending message");
+    },
+  });
 
   const isDisabled = useMemo(() => {
     if (fullName.length < 1) return true;
@@ -88,6 +111,8 @@ const Contact: FC = () => {
             wrapperClassName="mt-6"
             inputClassName="bg-gray-100 rounded-lg"
             placeholder="James Moore"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
           {/* Email */}
           <Input
@@ -97,6 +122,9 @@ const Contact: FC = () => {
             wrapperClassName="mt-6"
             inputClassName="bg-gray-100 rounded-lg"
             placeholder="jamesmoore@example.com"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           {/* Meseage */}
           <TextArea
@@ -108,6 +136,8 @@ const Contact: FC = () => {
             placeholder="Type here..."
             className="resize-none"
             rows={5}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
 
           {/* <ResponseMessage
@@ -117,13 +147,25 @@ const Contact: FC = () => {
             message={sendSupportMessageMutation.data?.message}
           /> */}
           <button
-            disabled={isDisabled}
-            // onClick={handleClick}
-            className={`w-full mt-8 bg-[#2196F3] text-white poppins-4 py-4 rounded-lg text-sm ${
-              isDisabled ? "grayscale" : null
+            disabled={isDisabled || messageMutation.isPending}
+            onClick={() => messageMutation.mutate()}
+            className={`w-full flex justify-center items-center mt-8 bg-[#2196F3] text-white poppins-4 py-4 rounded-lg text-sm ${
+              isDisabled || messageMutation.isPending ? "grayscale" : null
             }`}
           >
-            Send
+            {messageMutation.isPending ? (
+              <Oval
+                visible={messageMutation.isPending}
+                height="20"
+                width="20"
+                color="#ffffff"
+                ariaLabel="oval-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <span>Send</span>
+            )}
           </button>
         </div>
         <div className="relative hidden pt-4 pr-4 max-h-[440px] max-w-[540px] min-[1000px]:flex-[0.5] min-[1000px]:flex flex-col">

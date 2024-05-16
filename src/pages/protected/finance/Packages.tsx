@@ -1,6 +1,7 @@
 // import React from "react";
 
 import axiosInstance from "@/api/axiosInstance";
+import FinancePackageGrid from "@/components/grid/packages/FinancePackageGrid";
 import NoPackages from "@/components/reusables/NoPackages";
 import { Button } from "@/components/ui";
 import FinancePackageCard from "@/components/ui/FinancePackageCard";
@@ -76,6 +77,17 @@ const Packages = () => {
                 </div>
               </Button>
             </div>
+            {/* table */}
+            {financePackages.isSuccess &&
+              financePackages.data.data.data.packages.length >= 1 && (
+                <div className="">
+                  <FinancePackageGrid
+                    data={(financePackages as any).data.data.data.packages}
+                    isUpdating={financePackages.isLoading}
+                  />
+                  <div className="w-full flex flex-wrap gap-x-4"></div>
+                </div>
+              )}
           </div>
         )}
     </div>

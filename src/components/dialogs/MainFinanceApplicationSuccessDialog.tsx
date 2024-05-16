@@ -34,7 +34,9 @@ Props) => {
         }/ho/fulfil`
       ),
     onSuccess: () => {
+      queryClient.invalidateQueries({ type: "all" });
       toast.success("Application completed successfully");
+      setShowApplicationSuccessDialog(false);
       navigate("/dashboard/applications/finance-applications");
     },
     onError: () => {
@@ -63,7 +65,6 @@ Props) => {
             <div className="mt-10 flex gap-x-4">
               <Button
                 onClick={() => {
-                  setShowApplicationSuccessDialog(false);
                   endApplication.mutate();
                 }}
                 variant={"outline"}

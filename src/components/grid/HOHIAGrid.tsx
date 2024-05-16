@@ -41,6 +41,11 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
+// import { getSingleHOApp } from "@/services/homeOccupant";
+import { Button } from "../ui";
+import { BiChevronRight, BiX } from "react-icons/bi";
+import { Oval } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 const HOHIAGrid = ({
   data,
@@ -49,7 +54,7 @@ const HOHIAGrid = ({
   data: any[];
   isUpdating: boolean;
 }) => {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   //   const [currentRowId, setCurrentRowId] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
@@ -200,6 +205,13 @@ const HOHIAGrid = ({
             >
               Disabled
             </span>
+          ) : (info.row.original as any).currentStatus === "DECLINED" ? (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Declined
+            </span>
           ) : (
             <span
               style={{ color: "#FF595E", background: "#FF595E30" }}
@@ -278,69 +290,6 @@ const HOHIAGrid = ({
       ),
       header: () => <div className="w-16 whitespace-nowrap">More</div>,
     }),
-
-    // columnHelper.accessor((row: any) => row._id, {
-    //   id: "_id",
-    //   cell: (info: any) => (
-    //     <div className="relative px-4">
-    //       {/* Hamburger menu icon */}
-    //       <div
-    //         className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
-    //         onClick={() => handleActionClick(info.getValue())}
-    //       >
-    //         <BsThreeDotsVertical size={20} className="" />
-    //       </div>
-
-    //       {/* Modal */}
-
-    //       {showModal && currentRowId === info.getValue() && (
-    //         <div
-    //           ref={actionButtonsRef}
-    //           onClick={() => setShowModal(!showModal)}
-    //           className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
-    //         >
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
-    //             onClick={() => {
-    //               setUserToDelete(info.row.original);
-    //               setShowDeleteModal(true);
-    //             }}
-    //           >
-    //             <MdOutlineDeleteOutline />
-    //             <span>Delete account</span>
-    //           </div>
-    //           {info.row.original.verified !== "suspended" ? (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleSuspension(info.row.original._id)}
-    //             >
-    //               <PiWarningBold />
-    //               <span>Suspend account</span>
-    //             </div>
-    //           ) : (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleUnsuspension(info.row.original._id)}
-    //             >
-    //               <MdDownloadDone />
-    //               <span>Unsuspend account</span>
-    //             </div>
-    //           )}
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
-    //             onClick={() =>
-    //               navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
-    //             }
-    //           >
-    //             <BiMessage />
-    //             <span> Send a message</span>
-    //           </div>
-    //         </div>
-    //       )}
-    //     </div>
-    //   ),
-    //   header: () => <div className="">Action</div>,
-    // }),
   ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -403,6 +352,82 @@ const HOHIAGrid = ({
     },
     onError: () => {
       toast.error("Error declining user");
+    },
+  });
+
+  const currentApplicationDetails = queryClient.getQueryData([
+    "application-status",
+  ]);
+  // const singleHOApp = useQuery({
+  //   queryKey: ["fetch-single-HO-app-details"],
+  //   queryFn: () =>
+  //     getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
+  //   refetchOnMount: "always",
+  //   refetchOnWindowFocus: "always",
+  // });
+
+  const rejectOfferMutation = useMutation({
+    mutationKey: ["reject-hia-offer"],
+    mutationFn: (data: {
+      packageId: string;
+      offerId: string;
+      status: boolean;
+    }) => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/offer/review`,
+        data
+      );
+    },
+    onSuccess: () => {
+      toast.success("Offer rejected successfully");
+      queryClient.invalidateQueries();
+    },
+    onError: () => {
+      toast.error("Error rejecting offer");
+    },
+  });
+
+  const acceptOfferMutation = useMutation({
+    mutationKey: ["accept-hia-offer"],
+    mutationFn: (data: {
+      packageId: string;
+      offerId: string;
+      status: boolean;
+    }) => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/offer/review`,
+        data
+      );
+    },
+    onSuccess: () => {
+      toast.success("Offer accepted successfully");
+      queryClient.invalidateQueries();
+    },
+    onError: () => {
+      toast.error("Error accepting offer");
+    },
+  });
+
+  const finishApplicationMutation = useMutation({
+    mutationKey: ["complete-application-at-hia"],
+    mutationFn: () => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/fulfil`
+      );
+    },
+    onSuccess: () => {
+      toast.success("Application completed successfully");
+      queryClient.invalidateQueries();
+      navigate("/dashboard/applications/hia-applications");
+    },
+    onError: () => {
+      toast.error("Error completingApplication offer");
     },
   });
 
@@ -488,6 +513,11 @@ const HOHIAGrid = ({
                         {(expandedRows as any).includes((row as any).id) && (
                           <div className="p-4 bg-[#F8F9FA] border-y border-gray-200">
                             <div className="flex items-center justify-between">
+                              {console.log((row as any).original)}
+
+                              {console.log(
+                                (currentApplicationDetails as any)?.data?.data
+                              )}
                               {(row as any).original.media.map(
                                 (
                                   doc: { fileType: string; url: string },
@@ -543,30 +573,139 @@ const HOHIAGrid = ({
                                   </div>
                                 )
                               )}
-                              {(row as any).original.status === "pending" && (
-                                <div className="flex flex-col gapy-4 gap-2 px-14">
-                                  <button
-                                    onClick={() =>
-                                      approvedMutation.mutate(
-                                        (row as any).original._id
-                                      )
-                                    }
-                                    className="border border-ca-green text-ca-green rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-green hover:text-white"
-                                  >
-                                    Approve
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      declineMutation.mutate(
-                                        (row as any).original._id
-                                      )
-                                    }
-                                    className="border border-ca-red text-ca-red rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-red hover:text-white"
-                                  >
-                                    Decline
-                                  </button>
-                                </div>
-                              )}
+                              {/* Accept or reject pending offer */}
+                              {(currentApplicationDetails as any)?.data?.data
+                                ?.currentAppStage === 2 &&
+                                (row as any).original?.offerStatus ===
+                                  "ISSUED" && (
+                                  <div className="flex flex-col gapy-4 gap-2 px-14">
+                                    <Button
+                                      onClick={() =>
+                                        acceptOfferMutation.mutate({
+                                          packageId: (row as any).original
+                                            .packageId,
+                                          offerId: (row as any).original
+                                            .offerId,
+                                          status: true,
+                                        })
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-blue text-ca-blue rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-blue hover:text-white"
+                                    >
+                                      {acceptOfferMutation.isPending ? (
+                                        <Oval
+                                          visible={
+                                            acceptOfferMutation.isPending
+                                          }
+                                          height="20"
+                                          width="20"
+                                          color="#ffffff"
+                                          ariaLabel="oval-loading"
+                                          wrapperStyle={{}}
+                                          wrapperClass=""
+                                        />
+                                      ) : (
+                                        <>
+                                          <span>Accept offer</span>
+                                          <BiChevronRight size={18} />
+                                        </>
+                                      )}
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        rejectOfferMutation.mutate({
+                                          packageId: (row as any).original
+                                            .packageId,
+                                          offerId: (row as any).original
+                                            .offerId,
+                                          status: false,
+                                        })
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-red text-ca-red rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-red hover:text-white"
+                                    >
+                                      {rejectOfferMutation.isPending ? (
+                                        <Oval
+                                          visible={
+                                            rejectOfferMutation.isPending
+                                          }
+                                          height="20"
+                                          width="20"
+                                          color="#ffffff"
+                                          ariaLabel="oval-loading"
+                                          wrapperStyle={{}}
+                                          wrapperClass=""
+                                        />
+                                      ) : (
+                                        <>
+                                          <span>Reject offer</span>
+                                          <BiX size={18} />
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
+                              {/* Apply to finance, apply for insurance or complete application*/}
+                              {(currentApplicationDetails as any)?.data?.data
+                                ?.currentAppStage === 2 &&
+                                (row as any).original?.offerStatus ===
+                                  "ACCEPTED" && (
+                                  <div className="flex flex-col gapy-4 gap-2 px-14">
+                                    <Button
+                                      onClick={() =>
+                                        navigate(
+                                          "/dashboard/applications/finance"
+                                        )
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-blue text-ca-blue rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-blue hover:text-white"
+                                    >
+                                      <>
+                                        <span>Apply to Finance</span>
+                                        <BiChevronRight size={18} />
+                                      </>
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        navigate(
+                                          "/dashboard/applications/insurance"
+                                        )
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-blue text-ca-blue rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-blue hover:text-white"
+                                    >
+                                      <>
+                                        <span>Apply for Insurance</span>
+                                        <BiChevronRight size={18} />
+                                      </>
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        finishApplicationMutation.mutate()
+                                      }
+                                      className="text-xs"
+                                    >
+                                      {finishApplicationMutation.isPending ? (
+                                        <Oval
+                                          visible={
+                                            finishApplicationMutation.isPending
+                                          }
+                                          height="20"
+                                          width="20"
+                                          color="#ffffff"
+                                          ariaLabel="oval-loading"
+                                          wrapperStyle={{}}
+                                          wrapperClass=""
+                                        />
+                                      ) : (
+                                        <>
+                                          <span>Finish Application</span>
+                                          <BiChevronRight size={18} />
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
                             </div>
                           </div>
                         )}

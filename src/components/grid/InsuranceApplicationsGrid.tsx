@@ -106,7 +106,7 @@ const InsuranceApplicationsGrid = ({
       formData.append("packageId", ids.packageId);
 
       return axiosInstance.patch(
-        `applications/${ids.appId}/fin/review`,
+        `applications/${ids.appId}/ins/review`,
         formData,
         {
           headers: {
@@ -117,9 +117,7 @@ const InsuranceApplicationsGrid = ({
     },
     onSuccess: () => {
       toast.success("Application declined");
-      queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
-      });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Error approving contractor");
@@ -141,7 +139,7 @@ const InsuranceApplicationsGrid = ({
       formData.append("packageId", ids.packageId);
 
       return axiosInstance.patch(
-        `applications/${ids.appId}/fin/review`,
+        `applications/${ids.appId}/ins/review`,
         formData,
         {
           headers: {
@@ -152,9 +150,7 @@ const InsuranceApplicationsGrid = ({
     },
     onSuccess: () => {
       toast.success("Application approved");
-      queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
-      });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Error approving application");
@@ -193,6 +189,8 @@ const InsuranceApplicationsGrid = ({
     }
   };
 
+  console.log(data);
+
   const columns = [
     columnHelper.accessor((_, rowIndex) => ({ serialNumber: rowIndex + 1 }), {
       id: "serialNumber",
@@ -214,7 +212,7 @@ const InsuranceApplicationsGrid = ({
       ),
       header: () => <div className="w-36 text-left">Application ID</div>,
     }),
-    columnHelper.accessor((row: any) => row?.fin.createdAt, {
+    columnHelper.accessor((row: any) => row?.ins.createdAt, {
       id: "createdAt",
       cell: (info) => (
         <div className="w-24 mx-auto text-left">
@@ -224,17 +222,17 @@ const InsuranceApplicationsGrid = ({
       ),
       header: () => <div className="w-36 text-left">Date</div>,
     }),
-    columnHelper.accessor((row: any) => row?.fin.packageId, {
+    columnHelper.accessor((row: any) => row?.ins.packageId, {
       id: "packageId",
       cell: (info) => (
         <div className="w-80 mx-auto text-left">
           {" "}
-          {(info.row.original as any).fin.packageId.name}
+          {(info.row.original as any).ins.packageId.name}
         </div>
       ),
       header: () => <div className="w-80 text-left">Package name</div>,
     }),
-    columnHelper.accessor((row: any) => row?.fin.media, {
+    columnHelper.accessor((row: any) => row?.ins.media, {
       id: "Summary report",
       cell: (info) => (
         <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60 items-center">
@@ -243,7 +241,7 @@ const InsuranceApplicationsGrid = ({
           <div className="pl-4">
             <a
               href={
-                (info.row.original as any).fin.media.filter(
+                (info.row.original as any).ins.media.filter(
                   (m: any) => m.fileType === "HO_APP_TO_FIN_PDF"
                 )[0]?.url
               }
@@ -259,23 +257,40 @@ const InsuranceApplicationsGrid = ({
       ),
       header: () => <div className="w-44 text-left">Summary report</div>,
     }),
-    columnHelper.accessor((row: any) => row?.currentState, {
-      id: "currentState",
+    columnHelper.accessor((row: any) => row?.ins, {
+      id: "updatedStatus",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).fin.status === "APPLIED" ? (
+          {(info.row.original as any).ins.updatedStatus === "UNDER_REVIEW" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
             >
-              Applied
+              {(info.row.original as any).ins.updatedStatus
+                .toLowerCase()
+                .split("_")
+                .join(" ")}
             </span>
-          ) : (info.row.original as any).fin.status === "APPROVED" ? (
+          ) : (info.row.original as any).ins.updatedStatus === "APPROVED" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
+            </span>
+          ) : (info.row.original as any).ins.updatedStatus === "suspended" ? (
+            <span
+              style={{ color: "#c9c126", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Suspended
+            </span>
+          ) : (info.row.original as any).ins.updatedStatus === "DECLINED" ? (
+            <span
+              style={{ color: "#ff3e00", background: "#ff3e0030" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Suspended
             </span>
           ) : (
             <span
@@ -287,7 +302,44 @@ const InsuranceApplicationsGrid = ({
           )}
         </div>
       ),
-      header: () => <div className="w-32 whitespace-nowrap">Status</div>,
+      header: () => <div className="w-32 whitespace-nowrap">Status(Ins.)</div>,
+    }),
+    columnHelper.accessor((row: any) => row?.ins, {
+      id: "initialStatus",
+      cell: (info: any) => (
+        <div className="w-44 relative flex items-center text-sm">
+          {(info.row.original as any).ins.initialStatus === "APPLIED" ? (
+            <span
+              style={{ color: "#FFA832", background: "#FFA83230" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).ins.initialStatus.toLowerCase()}
+            </span>
+          ) : (info.row.original as any).ins.initialStatus === "completed" ? (
+            <span
+              style={{ color: "#8AC926", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Approved
+            </span>
+          ) : (info.row.original as any).ins.initialStatus === "suspended" ? (
+            <span
+              style={{ color: "#c9c126", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Suspended
+            </span>
+          ) : (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Rejected
+            </span>
+          )}
+        </div>
+      ),
+      header: () => <div className="w-32 whitespace-nowrap">Status(Owner)</div>,
     }),
     columnHelper.accessor((row: any) => row._id, {
       id: "_id",
@@ -356,7 +408,7 @@ const InsuranceApplicationsGrid = ({
                   </div>
                   <span>Assign</span>
                 </div>
-                {info.row.original.currentStatus !== "APPLIED" && (
+                {info.row.original.ins.updatedStatus === "UNDER_REVIEW" && (
                   <>
                     <label
                       // htmlFor="approval-file"

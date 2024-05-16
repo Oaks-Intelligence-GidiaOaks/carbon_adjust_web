@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Country, State } from "country-state-city";
 import { useState } from "react";
-import { BiEdit, BiSearch } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 import Map from "@/components/reusables/Map";
 import {
   image1,
@@ -30,7 +30,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 // import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { BsArrowLeft } from "react-icons/bs";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useIsFetching,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   applyToHIA,
   fetchHIAApps,
@@ -42,6 +47,10 @@ import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { HIAAppMeta } from "@/types/hia";
 import HIAApplicationCard from "@/components/reusables/HIAApplicationCard";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import axiosInstance from "@/api/axiosInstance";
+import { LuRefreshCcw } from "react-icons/lu";
+import { cn } from "@/utils";
 
 type Props = {};
 
@@ -95,6 +104,13 @@ const ApplyToHIA = (_: Props) => {
   const currentApplicationDetails = queryClient.getQueryData([
     "application-status",
   ]);
+  const singleHOApp = useQuery({
+    queryKey: ["fetch-single-HO-app-details", tab],
+    queryFn: () =>
+      getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
+    refetchOnMount: "always",
+    refetchOnWindowFocus: "always",
+  });
 
   const hiaMutation = useMutation({
     mutationKey: ["apply-to-hia"],
@@ -102,9 +118,12 @@ const ApplyToHIA = (_: Props) => {
       applyToHIA(data, (currentApplicationDetails as any)?.data?.data.appId),
     onSuccess: () => {
       toast.success("Application to HIA successful");
+      setPackages([]);
       queryClient.invalidateQueries({
-        queryKey: ["fetch-single-HO-app-details", "application-status"],
+        // queryKey: ["fetch-single-HO-app-details", "application-status"],
+        type: "all",
       });
+      setShowSelectedPackagesSheet(false);
       setShowApplicationSuccessDialog(true);
     },
     onError: () => {
@@ -116,18 +135,14 @@ const ApplyToHIA = (_: Props) => {
     queryKey: [
       "fetch-HIA-packages",
       (currentApplicationDetails as any)?.data?.data.appId,
+      (currentApplicationDetails as any)?.data?.data.currentAppStage,
     ],
     queryFn: () =>
-      fetchHIAPackages((currentApplicationDetails as any)?.data?.data.appId),
+      fetchHIAPackages(
+        (currentApplicationDetails as any)?.data?.data.appId,
+        (currentApplicationDetails as any)?.data?.data.currentAppStage
+      ),
     enabled: tab === "packages",
-  });
-
-  const singleHOApp = useQuery({
-    queryKey: ["fetch-single-HO-app-details"],
-    queryFn: () =>
-      getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
-    refetchOnMount: "always",
-    refetchOnWindowFocus: "always",
   });
 
   console.log(singleHOApp.data?.data.data);
@@ -136,6 +151,31 @@ const ApplyToHIA = (_: Props) => {
     queryKey: ["fetch-HIA-apps"],
     queryFn: () => fetchHIAApps(),
     enabled: tab === "pending-applications",
+  });
+
+  const cancelApplicationMutation = useMutation({
+    mutationKey: ["cancel-application-at-insurance"],
+    mutationFn: () => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/cancel`
+      );
+    },
+    onSuccess: () => {
+      toast.success("Application canceled successfully");
+      queryClient.invalidateQueries({
+        type: "all",
+      });
+      navigate("/dashboard/applications/hia-applications");
+    },
+    onError: () => {
+      toast.error("Error canceling application");
+    },
+  });
+
+  const isFetching = useIsFetching({
+    queryKey: ["fetch-single-HO-app-details"],
   });
 
   console.log(HIAPackages.data?.data.data);
@@ -290,8 +330,8 @@ const ApplyToHIA = (_: Props) => {
           <>
             {/* Select Packages sub contractors Sheet */}
             <FlyoutSidebar isOpen={showSheet} onOpenChange={setShowSheet}>
-              <div className="font-poppins relative h-full">
-                <div className="px-2 sm:px-6">
+              <div className="font-poppins relative">
+                <div className="px-2 sm:px-6 min-h-screen">
                   <div>
                     <p className="font-semibold text-2xl text-black-main">
                       Choose Subcontractors
@@ -377,6 +417,7 @@ const ApplyToHIA = (_: Props) => {
                         <>
                           <PackageCard
                             data={hiaPackage}
+                            hideOverlay={true}
                             key={i}
                             setShowSheet={setShowSheet}
                             setCurrentHIA={setCurrentHIA}
@@ -438,13 +479,14 @@ const ApplyToHIA = (_: Props) => {
               <p className="font-semibold font-poppins text-xl text-black-main">
                 Available HIA Packages (HIAs)
               </p>
-              <Input
+              {/* hide search input for now */}
+              {/* <Input
                 name="firstLineOfAddress"
                 inputClassName="bg-white font-poppins h-10"
                 wrapperClassName="max-w-[400px_!important] rounded-lg border border-black-main/70"
                 placeholder="Search here"
                 prependIcon={<BiSearch color="grey" size={18} />}
-              />
+              /> */}
             </div>
             <div className="flex justify-center text-black-main bg-white/80 min-h-screen px-6">
               <div className="w-full flex justify-center gap-x-6">
@@ -479,6 +521,11 @@ const ApplyToHIA = (_: Props) => {
                           />
                         </>
                       )
+                    )}
+                    {HIAPackages.data?.data.data.length <= 0 && (
+                      <p className="px-4 text-center mt-10 font-poppins">
+                        No packages found.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -537,18 +584,152 @@ const ApplyToHIA = (_: Props) => {
                 </p>
               </div>
 
+              <div className="flex items-center justify-between gap-4 flex-wrap mt-6">
+                <Button
+                  onClick={() => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["fetch-HIA-packages"],
+                    });
+                    navigate("/dashboard/applications/hia?state=packages");
+                  }}
+                  variant={"outline"}
+                  className="bg-gradient-to-r h-10 gap-x-2 from-[#139EEC] to-[#3465AF] border-0 rounded-xl"
+                >
+                  <span className="text-white font-poppins">Add new</span>
+                  <div className="bg-[#17A5E6] size-6 rounded-full flex justify-center items-center">
+                    <PlusIcon className="text-white size-5" />
+                  </div>
+                </Button>
+                <div className="flex gap-x-3 items-center justify-between">
+                  <Button
+                    // disabled={useIsFetching({queryKey: ["application-status"]})}
+                    variant="default"
+                    // disabled
+                    className="bg-white rounded-xl h-10 shadow px-8 flex gap-2 justify-center items-center font-poppins"
+                    onClick={() =>
+                      // navigate({
+                      //   pathname: "",
+                      //   search: createSearchParams({
+                      //     state: "application-approved",
+                      //   }).toString(),
+                      // })
+                      queryClient.invalidateQueries({
+                        queryKey: ["fetch-single-HO-app-details"],
+                      })
+                    }
+                  >
+                    <span className="text-white">Refresh</span>
+                    <LuRefreshCcw
+                      width={24}
+                      className={cn(
+                        "text-white",
+                        isFetching && "anim animate-spin"
+                      )}
+                      color="#FFFFFF"
+                    />
+                  </Button>
+                  {/* HIA declines all application */}
+                  {singleHOApp.data?.data.data.every(
+                    (app: any) => app.currentStatus === "DECLINED"
+                  ) && (
+                    <Button
+                      disabled={cancelApplicationMutation.isPending}
+                      variant={"outline"}
+                      className="border-red-500 rounded-xl"
+                      onClick={() => cancelApplicationMutation.mutate()}
+                    >
+                      {cancelApplicationMutation.isPending ? (
+                        <Oval
+                          visible={cancelApplicationMutation.isPending}
+                          height="20"
+                          width="20"
+                          color="#ffffff"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      ) : (
+                        <span className="text-red-500 font-poppins">
+                          Cancel Application
+                        </span>
+                      )}
+                    </Button>
+                  )}
+                  {/* User rejected all offers */}
+                  {singleHOApp.data?.data.data.every(
+                    (app: any) => app.offerStatus === "REJECTED"
+                  ) && (
+                    <Button
+                      disabled={cancelApplicationMutation.isPending}
+                      variant={"outline"}
+                      className="border-red-500 rounded-xl"
+                      onClick={() => cancelApplicationMutation.mutate()}
+                    >
+                      {cancelApplicationMutation.isPending ? (
+                        <Oval
+                          visible={cancelApplicationMutation.isPending}
+                          height="20"
+                          width="20"
+                          color="#ffffff"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      ) : (
+                        <span className="text-red-500 font-poppins">
+                          Cancel Application
+                        </span>
+                      )}
+                    </Button>
+                  )}
+                  {/* User has no application to proceed probably because all applications or offers have been declined or rejected respectively */}
+                  {/* {singleHOApp.data?.data.data.some(
+                    (app: any) => app.offerStatus !== "ISSUED"
+                  ) && (
+                    <Button
+                      disabled={cancelApplicationMutation.isPending}
+                      variant={"outline"}
+                      className="border-red-500 rounded-xl"
+                      onClick={() => cancelApplicationMutation.mutate()}
+                    >
+                      {cancelApplicationMutation.isPending ? (
+                        <Oval
+                          visible={cancelApplicationMutation.isPending}
+                          height="20"
+                          width="20"
+                          color="#ffffff"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      ) : (
+                        <span className="text-red-500 font-poppins">
+                          Cancel Application
+                        </span>
+                      )}
+                    </Button>
+                  )} */}
+                </div>
+              </div>
+
+              {/* {console.log("Error here: ", singleHOApp.data)} */}
               <div className="flex flex-col gap-y-6 mt-8">
-                {singleHOApp.data?.data.data.map(
-                  (data: HIAAppMeta, i: number) => (
-                    <HIAApplicationCard data={data} key={i} />
-                  )
-                )}
+                {singleHOApp.isSuccess &&
+                  singleHOApp?.data?.data?.data?.map(
+                    (data: HIAAppMeta, i: number) => (
+                      <HIAApplicationCard data={data} key={i} />
+                    )
+                  )}
               </div>
             </div>
           </div>
         );
       default:
-        return (
+        return singleHOApp.isLoading ? (
+          <div className="mt-20">
+            <Loading message="Fetching Application details" />
+          </div>
+        ) : (
           <div className="flex justify-center text-black-main bg-white/80 min-h-screen py-10 px-6">
             <div className="max-w-[706px] w-full">
               <div className="flex justify-between items-center gap-x-4">

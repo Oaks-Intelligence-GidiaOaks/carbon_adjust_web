@@ -21,7 +21,7 @@ const Address = ({ formState, setFormState }: Props) => {
     setStatesList(
       State.getStatesOfCountry(country?.value).map((state) => ({
         label: state.name,
-        value: state.isoCode,
+        value: state.name,
       }))
     );
     setFormState((prev) => ({

@@ -18,7 +18,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 // } from "../reusables/Loading";
 // import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { formatDate } from "../../lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import { BsThreeDotsVertical } from "react-icons/bs";
 // import axios from "axios";
 // import { FaDownload, FaList } from "react-icons/fa";
@@ -41,6 +41,9 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
+import { getSingleHOApp } from "@/services/homeOccupant";
+import { Button } from "../ui";
+import { useNavigate } from "react-router-dom";
 
 const HOFinanceGrid = ({
   data,
@@ -49,7 +52,7 @@ const HOFinanceGrid = ({
   data: any[];
   isUpdating: boolean;
 }) => {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   //   const [currentRowId, setCurrentRowId] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
@@ -75,40 +78,6 @@ const HOFinanceGrid = ({
       return "#FF595E";
     }
   };
-
-  // const handleModalAction = async (action: any) => {
-  //   try {
-  //     setShowModal(false);
-  //     if (action === "Approve") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "completed" });
-  //     } else if (action === "Reject") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "rejected" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating verification status:", error);
-  //   }
-  // };
-
-  //   const handleApprovalRejection = async (id: any, action: any) => {
-  //     try {
-  //       if (action === "Approve") {
-  //         await mutation.mutateAsync({ id, verified: "completed" });
-  //       } else if (action === "Decline") {
-  //         setDeclineRowId(id);
-  //         setShowDeclineModal(true);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating verification status:", error);
-  //     }
-  //   };
-
-  // const handleModalReject = async (id: any, reason: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "rejected", message: reason });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
 
   const toggleRowExpansion = (rowId: any) => {
     setExpandedRows((prevExpandedRows: any) => {
@@ -142,12 +111,12 @@ const HOFinanceGrid = ({
       ),
       header: () => <div className="w-36 text-left">Application No</div>,
     }),
-    columnHelper.accessor((row: any) => row?.createdAt, {
+    columnHelper.accessor((row: any) => row?.fin.createdAt, {
       id: "createdAt",
       cell: (info) => (
         <div className="w-24 mx-auto text-left">
           {" "}
-          {formatDate(info.getValue())}{" "}
+          {formatDate((info.row.original as any).fin.createdAt)}{" "}
         </div>
       ),
       header: () => <div className="w-36 text-left">Registration date</div>,
@@ -175,25 +144,28 @@ const HOFinanceGrid = ({
       header: () => <div className="w-44 px-1 text-left">Carbon Credit</div>,
     }),
 
-    columnHelper.accessor((row: any) => row?.verified, {
-      id: "status",
+    columnHelper.accessor((row: any) => row?.fin, {
+      id: "updatedStatus",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).status === "pending" ? (
+          {(info.row.original as any).fin.updatedStatus === "UNDER_REVIEW" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
             >
-              Pending
+              {(info.row.original as any).fin.updatedStatus
+                .toLowerCase()
+                .split("_")
+                .join(" ")}
             </span>
-          ) : (info.row.original as any).status === "completed" ? (
+          ) : (info.row.original as any).fin.updatedStatus === "APPROVED" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
             </span>
-          ) : (info.row.original as any).status === "suspended" ? (
+          ) : (info.row.original as any).fin.updatedStatus === "suspended" ? (
             <span
               style={{ color: "#c9c126", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
@@ -210,7 +182,44 @@ const HOFinanceGrid = ({
           )}
         </div>
       ),
-      header: () => <div className="w-32 whitespace-nowrap">Status</div>,
+      header: () => <div className="w-32 whitespace-nowrap">Status(Fin.)</div>,
+    }),
+    columnHelper.accessor((row: any) => row?.fin, {
+      id: "initialStatus",
+      cell: (info: any) => (
+        <div className="w-44 relative flex items-center text-sm">
+          {(info.row.original as any).fin.initialStatus === "APPLIED" ? (
+            <span
+              style={{ color: "#FFA832", background: "#FFA83230" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).fin.initialStatus.toLowerCase()}
+            </span>
+          ) : (info.row.original as any).fin.initialStatus === "completed" ? (
+            <span
+              style={{ color: "#8AC926", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Approved
+            </span>
+          ) : (info.row.original as any).fin.initialStatus === "suspended" ? (
+            <span
+              style={{ color: "#c9c126", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Suspended
+            </span>
+          ) : (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Rejected
+            </span>
+          )}
+        </div>
+      ),
+      header: () => <div className="w-32 whitespace-nowrap">Status(Owner)</div>,
     }),
     columnHelper.accessor((row: any) => row?.status, {
       id: "status",
@@ -328,35 +337,57 @@ const HOFinanceGrid = ({
 
   useOutsideCloser(actionButtonsRef, showModal, setShowModal);
 
-  const approvedMutation = useMutation({
-    mutationKey: ["approve-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "confirmed",
-      }),
+  const currentApplicationDetails = queryClient.getQueryData([
+    "application-status",
+  ]);
+
+  const singleHOApp = useQuery({
+    queryKey: ["fetch-single-HO-app-details-insurance"],
+    queryFn: () =>
+      getSingleHOApp((currentApplicationDetails as any)?.data?.data.appId),
+    refetchOnMount: "always",
+    refetchOnWindowFocus: "always",
+  });
+
+  const completeApplicationMutation = useMutation({
+    mutationKey: ["complete-application-at-insurance"],
+    mutationFn: () => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/fulfil`
+      );
+    },
     onSuccess: () => {
-      toast.success("User verified succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
+      toast.success("Application completed successfully");
+      queryClient.invalidateQueries({
+        type: "all",
+      });
+      navigate("/dashboard/applications/finance-applications");
     },
     onError: () => {
-      toast.error("Error verifying user");
+      toast.error("Error completing application");
     },
   });
 
-  const declineMutation = useMutation({
-    mutationKey: ["decline-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "declined",
-      }),
+  const cancelApplicationMutation = useMutation({
+    mutationKey: ["cancel-application-at-insurance"],
+    mutationFn: () => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/cancel`
+      );
+    },
     onSuccess: () => {
-      toast.success("User declined succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
+      toast.success("Application canceled successfully");
+      queryClient.invalidateQueries({
+        type: "all",
+      });
+      navigate("/dashboard/applications/finance-applications");
     },
     onError: () => {
-      toast.error("Error declining user");
+      toast.error("Error canceling application");
     },
   });
 
@@ -444,7 +475,7 @@ const HOFinanceGrid = ({
                         ) && (
                           <div className="p-4 bg-[#F8F9FA] border-y border-gray-200">
                             <div className="flex items-center justify-between">
-                              {(row as any).original.media.map(
+                              {(row as any).original.fin.media.map(
                                 (
                                   doc: { fileType: string; url: string },
                                   i: number,
@@ -499,30 +530,31 @@ const HOFinanceGrid = ({
                                   </div>
                                 )
                               )}
-                              {(row as any).original.status === "pending" && (
-                                <div className="flex flex-col gapy-4 gap-2 px-14">
-                                  <button
-                                    onClick={() =>
-                                      approvedMutation.mutate(
-                                        (row as any).original._id
-                                      )
-                                    }
-                                    className="border border-ca-green text-ca-green rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-green hover:text-white"
-                                  >
-                                    Approve
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      declineMutation.mutate(
-                                        (row as any).original._id
-                                      )
-                                    }
-                                    className="border border-ca-red text-ca-red rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-red hover:text-white"
-                                  >
-                                    Decline
-                                  </button>
-                                </div>
-                              )}
+                              {(singleHOApp as any)?.data?.data?.data
+                                ?.appStage === 3 &&
+                                (singleHOApp as any)?.data?.data?.data
+                                  ?.appId === (row as any).original._id && (
+                                  <div className="flex flex-col gapy-4 gap-2 px-14">
+                                    <Button
+                                      onClick={() =>
+                                        completeApplicationMutation.mutate()
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-blue text-ca-blue rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-blue hover:text-white"
+                                    >
+                                      Complete Application
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        cancelApplicationMutation.mutate()
+                                      }
+                                      variant={"outline"}
+                                      className="border border-ca-red text-ca-red rounded-md poppins-4 text-xs px-3 py-1 hover:bg-ca-red hover:text-white"
+                                    >
+                                      Cancel Application
+                                    </Button>
+                                  </div>
+                                )}
                             </div>
                           </div>
                         )}
@@ -535,7 +567,8 @@ const HOFinanceGrid = ({
           </div>
         </div>
       </div>
-      {(declineMutation.isPending || approvedMutation.isPending) && (
+      {(completeApplicationMutation.isPending ||
+        cancelApplicationMutation.isPending) && (
         <LoadingModal text={"Updating registration status"} />
       )}
       {/* {showDeclineModal && (

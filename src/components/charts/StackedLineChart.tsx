@@ -10,7 +10,7 @@ import {
   // Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+// import { faker } from "@faker-js/faker";
 // import { defaults } from 'react-chartjs-2';
 
 // defaults.font.family = 'font name...';
@@ -64,6 +64,7 @@ export const options = {
     y: {
       type: "linear" as const,
       display: true,
+      min: 0,
       position: "left" as const,
       ticks: {
         font: {
@@ -89,51 +90,49 @@ export const options = {
   },
 };
 
-const labels = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Received",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: "rgb(243, 245, 255, 0.7)",
-      backgroundColor: "rgba(243, 245, 255, 0.7)",
-      yAxisID: "y",
-      fill: true,
-    },
-    {
-      label: "Approved",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: "rgb(249, 151, 138, 0.8)",
-      backgroundColor: "rgba(249, 151, 138, 0.8)",
-      yAxisID: "y",
-      fill: true,
-    },
-    {
-      label: "Rejected",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: "rgb(205, 228, 254, 0.6)",
-      backgroundColor: "rgba(205, 228, 254, 0.6)",
-      yAxisID: "y",
-      fill: true,
-    },
-  ],
+export type StackedChartProps = {
+  received?: { month: string; year: number; count: number }[];
+  rejected?: { month: string; year: number; count: number }[];
+  approved?: { month: string; year: number; count: number }[];
 };
 
-export function StackedLineChart() {
+export function StackedLineChart({
+  received,
+  rejected,
+  approved,
+}: StackedChartProps) {
+  const labels: string[] = [];
+
+  received?.forEach((val) => labels.push(val.month));
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Received",
+        data: received?.map((app) => app.count),
+        borderColor: "rgb(243, 245, 255, 0.7)",
+        backgroundColor: "rgba(243, 245, 255, 0.7)",
+        yAxisID: "y",
+        fill: true,
+      },
+      {
+        label: "Approved",
+        data: approved?.map((app) => app.count),
+        borderColor: "rgb(249, 151, 138, 0.8)",
+        backgroundColor: "rgba(249, 151, 138, 0.8)",
+        yAxisID: "y",
+        fill: true,
+      },
+      {
+        label: "Rejected",
+        data: rejected?.map((app) => app.count),
+        borderColor: "rgb(205, 228, 254, 0.6)",
+        backgroundColor: "rgba(205, 228, 254, 0.6)",
+        yAxisID: "y",
+        fill: true,
+      },
+    ],
+  };
   return <Line options={options} data={data} />;
 }

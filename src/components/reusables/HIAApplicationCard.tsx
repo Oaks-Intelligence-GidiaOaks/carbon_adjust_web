@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import { Oval } from "react-loader-spinner";
 import toast from "react-hot-toast";
-import { downloadFile } from "@/utils";
+import { cn, downloadFile } from "@/utils";
 
 type Props = {
   data: HIAAppMeta;
@@ -39,9 +39,7 @@ const HIAApplicationCard = ({ data }: Props) => {
     },
     onSuccess: () => {
       toast.success("Offer rejected successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["fetch-single-HO-app-details"],
-      });
+      queryClient.invalidateQueries({});
     },
     onError: () => {
       toast.error("Error rejecting offer");
@@ -66,12 +64,29 @@ const HIAApplicationCard = ({ data }: Props) => {
     },
     onSuccess: () => {
       toast.success("Offer accepted successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["fetch-HIA-apps", "fetch-single-HO-app-details"],
-      });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Error accepting offer");
+    },
+  });
+
+  const finishApplicationMutation = useMutation({
+    mutationKey: ["complete-application-at-hia"],
+    mutationFn: () => {
+      return axiosInstance.patch(
+        `applications/${
+          (currentApplicationDetails as any)?.data?.data.appId
+        }/ho/fulfil`
+      );
+    },
+    onSuccess: () => {
+      toast.success("Application completed successfully");
+      queryClient.invalidateQueries();
+      navigate("/dashboard/applications/hia-applications");
+    },
+    onError: () => {
+      toast.error("Error completingApplication offer");
     },
   });
 
@@ -88,7 +103,13 @@ const HIAApplicationCard = ({ data }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl px-10 py-6">
+    <div
+      className={cn(
+        "bg-white rounded-2xl px-10 py-6",
+        data.currentStatus === "DISABLED" && "grayscale",
+        data.offerStatus === "REJECTED" && "grayscale opacity-50"
+      )}
+    >
       <p className="font-sans text-sm text-[#FF8D31]">
         Application ID: {data.appId}
       </p>
@@ -162,19 +183,32 @@ const HIAApplicationCard = ({ data }: Props) => {
                 Apply for finance
               </Button>
               <Button
+                onClick={() => navigate("/dashboard/applications/insurance")}
                 variant={"outline"}
                 className="w-[145px] border-2 text-blue-main border-blue-main text-xs"
               >
                 Apply for Insurance
               </Button>
               <Button
-                onClick={() =>
-                  navigate("/dashboard/applications/hia-applications")
-                }
+                onClick={() => finishApplicationMutation.mutate()}
                 className="flex items-center gap-x-2 text-white w-[145px] flex-1 text-xs"
               >
-                <span>Finish Application</span>
-                <BiChevronRight size={18} />
+                {finishApplicationMutation.isPending ? (
+                  <Oval
+                    visible={finishApplicationMutation.isPending}
+                    height="20"
+                    width="20"
+                    color="#ffffff"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                  />
+                ) : (
+                  <>
+                    <span>Finish Application</span>
+                    <BiChevronRight size={18} />
+                  </>
+                )}
               </Button>
             </div>
           )}
@@ -189,9 +223,22 @@ const HIAApplicationCard = ({ data }: Props) => {
           </Button> */}
           </div>
         )}
+
+        {Boolean(data?.offerStatus === "REJECTED") && (
+          <div className="w-full max-w-[314px] flex justify-between flex-wrap gap-y-4 font-poppins">
+            {/* <Button
+              variant={"outline"}
+              className="w-[145px] border-2 text-blue-main border-blue-main text-xs flex gap-x-2 items-center"
+            >
+              <span className="font-normal">Download offer</span>
+              <BiDownload size={16} />
+            </Button> */}
+            <p className="flex-1 text-end">You rejected this offer.</p>
+          </div>
+        )}
         {/* {console.log(data)} */}
         {Boolean(data.currentStatus === "APPROVED") &&
-          Boolean(data?.offerStatus !== "ACCEPTED") && (
+          Boolean(data?.offerStatus === "ISSUED") && (
             <div className="w-full max-w-[314px] flex justify-between flex-wrap gap-y-4 font-poppins">
               {/* <Button
               variant={"outline"}

@@ -41,6 +41,7 @@ export type CheckboxProps = {
   customSetIsChecked?: () => void;
   setIsChecked?: (boolean) => void;
   iconStyle?: string;
+  checkIcon?: ReactNode;
 };
 
 export type AccountActionHeaderProps = {
@@ -209,6 +210,7 @@ export type AuthUserProfile = {
   hasAcceptTerms: boolean;
   hasEmailVerified: boolean;
   name: string;
+  dp?: string;
   password: string;
   phoneNos: string;
   roles: string[];

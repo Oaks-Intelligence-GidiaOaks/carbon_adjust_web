@@ -1,8 +1,10 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { SideBarBtn } from "@/assets/icons";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 type Props = {
   mobileMenuIsOpen: boolean;
@@ -11,6 +13,29 @@ type Props = {
 
 const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
   const breadcrumbs = useBreadcrumbs();
+  const userData = useSelector((state: RootState) => state.user.user);
+  const navigate = useNavigate();
+
+  const goToProfile = () => {
+    if (userData?.roles[0] === "HOME_OCCUPANT") {
+      return navigate("/dashboard/profile");
+    }
+    if (userData?.roles[0] === "AGGREGATOR") {
+      return navigate("/aggregator/profile");
+    }
+    if (userData?.roles[0] === "HIA") {
+      return navigate("/hia/profile");
+    }
+    if (userData?.roles[0] === "FINANCE") {
+      return navigate("/finance/profile");
+    }
+    if (userData?.roles[0] === "INSURANCE") {
+      return navigate("/insurance/profile");
+    }
+    if (userData?.roles[0] === "SUBCONTRACTOR") {
+      return navigate("/subcontractor/profile");
+    }
+  };
 
   return (
     <div className="h-10 px-2 sm:px-4 py-6 w-full flex justify-center">
@@ -39,8 +64,16 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
         </div>
         <div>
           <div className="flex gap-1 items-center">
-            <div className="flex justify-center items-center">
-              <UserCircleIcon fontSize={20} width={32} />
+            <div
+              className="flex justify-center items-center cursor-pointer"
+              role="button"
+              onClick={() => goToProfile()}
+            >
+              {userData?.dp ? (
+                <img className="size-8 rounded-full shadow" src={userData.dp} />
+              ) : (
+                <UserCircleIcon fontSize={20} width={32} />
+              )}
             </div>
             {/* <span>Jeffery Cooper</span> */}
           </div>

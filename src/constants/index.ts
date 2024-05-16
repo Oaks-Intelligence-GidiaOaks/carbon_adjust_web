@@ -808,11 +808,11 @@ export const adminSideBarItems = [
     title: "Applications",
     href: "/admin/applications",
   },
-  // {
-  //   icon: ProjectIcon,
-  //   title: "Projects",
-  //   href: "/admin/projects",
-  // },
+  {
+    icon: ProfileIcon,
+    title: "Projects",
+    href: "/admin/projects",
+  },
   {
     icon: DevicesIcon,
     title: "Staff",

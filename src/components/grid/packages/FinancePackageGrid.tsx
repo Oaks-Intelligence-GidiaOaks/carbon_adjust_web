@@ -10,117 +10,93 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 // import Modal from "../../reuseable/RegistrationRejectionModal";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+// import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 // import {
 //   Loading,
 // //   PaginationButton,
 // //   TableActionButtonHia,
 // } from "../reusables/Loading";
 // import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { formatDate } from "../../lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { BsThreeDotsVertical } from "react-icons/bs";
 // import axios from "axios";
 // import { FaDownload, FaList } from "react-icons/fa";
-import TablePagination from "../reusables/TablePagination";
-// import TableFilter from "../reusables/TableFilter";
-// import { TbSortAscending, TbSortDescending } from "react-icons/tb";
-import LoadingModal from "../reusables/LoadingModal";
-// import { MdDownloadDone, MdOutlineDeleteOutline } from "react-icons/md";
 // import { CiWarning } from "react-icons/ci";
-// import { BiMessage } from "react-icons/bi";
 // import { useNavigate } from "react-router-dom";
 // import file_icon from "../../../assets/icons/file_icon.png";
-// import { PiWarningBold } from "react-icons/pi";
 // import DeleteAccount from "../../modals/DeleteAccount";
 // import ResponseAlert from "../../reuseable/ResponseAlert";
-import { useOutsideCloser } from "../../hooks/useOutsideCloser";
-// import { FaDownload } from "react-icons/fa";
-import { DocumentIcon } from "@heroicons/react/24/outline";
-import { IoDownloadOutline } from "react-icons/io5";
-import { cn } from "@/utils";
+// import { EnvelopeIcon } from "@heroicons/react/24/outline";
+// import { IoDownloadOutline } from "react-icons/io5";
+// import { cn } from "@/utils";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
+// import { BsPeople, BsThreeDotsVertical } from "react-icons/bs";
+// import {
+//   //   MdCancel,
+//   MdDone,
+//   //   MdDownloadDone,
+//   //   MdOutlineDeleteOutline,
+// } from "react-icons/md";
+// import { PiWarningBold } from "react-icons/pi";
+// import { BiMessage } from "react-icons/bi";
+// import { PDFIcon } from "@/assets/icons";
+// import { GrClose } from "react-icons/gr";
+import { formatDate } from "@/lib/utils";
+import { useOutsideCloser } from "@/hooks/useOutsideCloser";
+import LoadingModal from "@/components/reusables/LoadingModal";
+import TablePagination from "@/components/reusables/TablePagination";
+import { Button } from "@/components/ui";
+import { Oval } from "react-loader-spinner";
 
-const HOAggGrid = ({
-  data,
-}: //   isUpdating,
-{
-  data: any[];
-  isUpdating: boolean;
-}) => {
+const FinancePackageGrid = ({ data }: { data: any[]; isUpdating: boolean }) => {
   //   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   //   const [currentRowId, setCurrentRowId] = useState(null);
-  const [expandedRows, setExpandedRows] = useState([]);
+  //   const [currentRowData, setCurrentRowData] = useState({
+  //     packageId: "",
+  //     appId: "",
+  //   });
+
+  console.log(data);
+  //   const [expandedRows, setExpandedRows] = useState([]);
+
   const queryClient = useQueryClient();
-  // const [declineRowId, setDeclineRowId] = useState(null);
-  // const [showDeclineModal, setShowDeclineModal] = useState(false);
-  //   const [, setShowDeleteModal] = useState(false);
-  // const [showResponseAlert, setShowResponseAlert] = useState(false);
-  // const [responseStatus, setResponseStatus] = useState(false);
-  // const [responseMessage, setResponseMessage] = useState(null);
-  //   const [, setUserToDelete] = useState(null);
 
   const actionButtonsRef = useRef<HTMLDivElement>(null);
 
-  const getTextColor = (value: null | string) => {
-    if (value === null) {
-      return "#139EEC";
-    } else if (value === "completed") {
-      return "#8AC926";
-    } else if (value === "suspended") {
-      return "#C9C126";
-    } else {
-      return "#FF595E";
-    }
-  };
-
-  // const handleModalAction = async (action: any) => {
-  //   try {
-  //     setShowModal(false);
-  //     if (action === "Approve") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "completed" });
-  //     } else if (action === "Reject") {
-  //       await mutation.mutateAsync({ id: currentRowId, verified: "rejected" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating verification status:", error);
-  //   }
-  // };
-
-  //   const handleApprovalRejection = async (id: any, action: any) => {
-  //     try {
-  //       if (action === "Approve") {
-  //         await mutation.mutateAsync({ id, verified: "completed" });
-  //       } else if (action === "Decline") {
-  //         setDeclineRowId(id);
-  //         setShowDeclineModal(true);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating verification status:", error);
-  //     }
-  //   };
-
-  // const handleModalReject = async (id: any, reason: any) => {
-  //   try {
-  //     await mutation.mutateAsync({ id, verified: "rejected", message: reason });
-  //   } catch (error) {
-  //     console.error("Error rejecting:", error);
-  //   }
-  // };
-
-  const toggleRowExpansion = (rowId: any) => {
-    setExpandedRows((prevExpandedRows: any) => {
-      if (prevExpandedRows.includes(rowId)) {
-        return prevExpandedRows.filter((id: string) => id !== rowId);
-      } else {
-        return [...prevExpandedRows, rowId];
-      }
-    });
-  };
-
   const columnHelper = createColumnHelper();
+
+  const publishMutation = useMutation({
+    mutationKey: ["publish finance package"],
+    mutationFn: (id: string) =>
+      axiosInstance.patch(`packages/${id}/publish`, {
+        userId: id,
+        status: "declined",
+      }),
+    onSuccess: () => {
+      toast.success("Package published successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-finance-packages"] });
+    },
+    onError: () => {
+      toast.error("Error publishing package");
+    },
+  });
+
+  const unpublishMutation = useMutation({
+    mutationKey: ["unpublish finance package"],
+    mutationFn: (id: string) =>
+      axiosInstance.patch(`packages/${id}/unpublish`, {
+        userId: id,
+        status: "confirmed",
+      }),
+    onSuccess: () => {
+      toast.success("Package unpublished successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-finance-packages"] });
+    },
+    onError: () => {
+      toast.error("Error unpublishing package");
+    },
+  });
 
   console.log(data);
 
@@ -135,13 +111,6 @@ const HOAggGrid = ({
       ),
       header: () => <div className="w-14 px-1 text-center">S/N</div>,
     }),
-    columnHelper.accessor((row: any) => row?.appRef, {
-      id: "appRef",
-      cell: (info) => (
-        <div className="w-28 mx-auto text-left"> {info.getValue()} </div>
-      ),
-      header: () => <div className="w-36 text-left">Application No</div>,
-    }),
     columnHelper.accessor((row: any) => row?.createdAt, {
       id: "createdAt",
       cell: (info) => (
@@ -150,149 +119,246 @@ const HOAggGrid = ({
           {formatDate(info.getValue())}{" "}
         </div>
       ),
-      header: () => <div className="w-36 text-left">Date applied</div>,
+      header: () => <div className="w-36 text-left">Date</div>,
     }),
-    columnHelper.accessor((row: any) => row?.aggregator.name, {
-      id: "aggregator",
+    columnHelper.accessor((row: any) => row?.createdBy, {
+      id: "createdBy",
       cell: (info) => (
-        <div className="w-44 mx-auto text-left">{info.getValue()}</div>
-      ),
-      header: () => <div className="w-44 text-left">Aggregator</div>,
-    }),
-
-    columnHelper.accessor((row: any) => row?.projectCode, {
-      id: "project-code",
-      cell: () => (
-        <div className="flex justify-start w-full line-clamp-1 pr-4 text-ellipsis max-w-60">
-          <span className="">---------------</span>
+        <div className="w-80 mx-auto text-left">
+          {" "}
+          {(info.row.original as any).createdBy.name}
         </div>
       ),
-      header: () => <div className="w-44 text-left">Project Code</div>,
+      header: () => <div className="w-80 text-left">Package Name</div>,
     }),
-    columnHelper.accessor((row: any) => row?.carbonCredit, {
-      id: "email",
-      cell: () => <div className="w-fit px-4 text-left">-----------------</div>,
-      header: () => <div className="w-44 px-1 text-left">Carbon Credit</div>,
+    columnHelper.accessor((row: any) => row?.country, {
+      id: "country",
+      cell: (info) => (
+        <div className="w-80 mx-auto text-left"> {info.getValue()}</div>
+      ),
+      header: () => <div className="w-80 text-left">Location</div>,
     }),
-
-    columnHelper.accessor((row: any) => row?.currentState, {
-      id: "status",
-      cell: (info: any) => (
-        <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).currentState === "Initiated" ? (
-            <span
-              style={{ color: "#139EEC", background: "#139EEC30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
-            >
-              {(info.row.original as any).currentState}
-            </span>
-          ) : (info.row.original as any).currentState === "Approved" ? (
-            <span
-              style={{ color: "#8AC926", background: "#8AC92630" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
-            >
-              Approved
-            </span>
-          ) : (info.row.original as any).currentState === "Declined" ? (
-            <span
-              style={{ color: "#FF595E", background: "#FF595E30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
-            >
-              Declined
-            </span>
-          ) : (
-            <span
-              style={{ color: "#FF595E", background: "#FF595E30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
-            >
-              Rejected
-            </span>
-          )}
+    columnHelper.accessor((row: any) => row?.locationType, {
+      id: "locationType",
+      cell: (info) => (
+        <div className="w-80 mx-auto text-left"> {info.getValue()}</div>
+      ),
+      header: () => <div className="w-80 text-left">Package Availability</div>,
+    }),
+    columnHelper.accessor((row: any) => row?.maxAmount, {
+      id: "maxAmount",
+      cell: (info) => (
+        <div className="w-60 mx-auto text-left">
+          {" "}
+          {(info.row.original as any).currency}
+          {info.getValue()}
         </div>
       ),
-      header: () => <div className="w-32 whitespace-nowrap">Status</div>,
+      header: () => <div className="w-60 text-left">Maximum Amount</div>,
     }),
     columnHelper.accessor((row: any) => row?.status, {
       id: "status",
-      cell: (info: any) => (
-        <div className="w-16 relative flex items-center">
-          {/* Toggle icon */}
-          <div
-            className="absolute right-[16px] cursor-pointer"
-            onClick={() => toggleRowExpansion(info.row.original._id)}
-            style={{ color: getTextColor(info.getValue()) }}
-          >
-            {(expandedRows as any).includes(info.row.original._id) ? (
-              <IoIosArrowDown className="text-ca-blue" />
-            ) : (
-              <IoIosArrowUp className="text-ca-blue" />
-            )}
-          </div>
+      cell: (info) => (
+        <div className="col-span-1 flex items-end justify-center w-28">
+          {info.getValue() === "unpublish" ? (
+            <Button
+              onClick={() =>
+                publishMutation.mutate((info.row.original as any)._id)
+              }
+              disabled={publishMutation.isPending}
+              className="rounded-full w-full text-white"
+            >
+              {publishMutation.isPending ? (
+                <Oval
+                  visible={publishMutation.isPending}
+                  height="20"
+                  width="20"
+                  color="#ffffff"
+                  ariaLabel="oval-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              ) : (
+                <span>Publish</span>
+              )}
+            </Button>
+          ) : (
+            <Button
+              onClick={() =>
+                unpublishMutation.mutate((info.row.original as any)._id)
+              }
+              disabled={unpublishMutation.isPending}
+              className="rounded-full w-full text-white"
+            >
+              {unpublishMutation.isPending ? (
+                <Oval
+                  visible={unpublishMutation.isPending}
+                  height="20"
+                  width="20"
+                  color="#ffffff"
+                  ariaLabel="oval-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              ) : (
+                <span>Unpublish</span>
+              )}
+            </Button>
+          )}
         </div>
       ),
-      header: () => <div className="w-16 whitespace-nowrap">More</div>,
+      header: () => <div className="w-40 text-left">Status</div>,
     }),
-
-    // columnHelper.accessor((row: any) => row._id, {
-    //   id: "_id",
+    // columnHelper.accessor((row: any) => row?.currentState, {
+    //   id: "currentState",
     //   cell: (info: any) => (
-    //     <div className="relative px-4">
-    //       {/* Hamburger menu icon */}
-    //       <div
-    //         className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
-    //         onClick={() => handleActionClick(info.getValue())}
-    //       >
-    //         <BsThreeDotsVertical size={20} className="" />
-    //       </div>
-
-    //       {/* Modal */}
-
-    //       {showModal && currentRowId === info.getValue() && (
-    //         <div
-    //           ref={actionButtonsRef}
-    //           onClick={() => setShowModal(!showModal)}
-    //           className="absolute top-[-30px] flex flex-col gap-y-2  right-[40px] bg-white border border-gray-300  rounded p-2"
+    //     <div className="w-44 relative flex items-center text-sm">
+    //       {(info.row.original as any).currentState === "Initiated" ? (
+    //         <span
+    //           style={{ color: "#139EEC", background: "#139EEC30" }}
+    //           className="w-36 py-1 rounded-full inline-block mx-auto"
     //         >
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
-    //             onClick={() => {
-    //               setUserToDelete(info.row.original);
-    //               setShowDeleteModal(true);
-    //             }}
-    //           >
-    //             <MdOutlineDeleteOutline />
-    //             <span>Delete account</span>
-    //           </div>
-    //           {info.row.original.verified !== "suspended" ? (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleSuspension(info.row.original._id)}
-    //             >
-    //               <PiWarningBold />
-    //               <span>Suspend account</span>
-    //             </div>
-    //           ) : (
-    //             <div
-    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
-    //               onClick={() => handleUnsuspension(info.row.original._id)}
-    //             >
-    //               <MdDownloadDone />
-    //               <span>Unsuspend account</span>
-    //             </div>
-    //           )}
-    //           <div
-    //             className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
-    //             onClick={() =>
-    //               navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
-    //             }
-    //           >
-    //             <BiMessage />
-    //             <span> Send a message</span>
-    //           </div>
-    //         </div>
+    //           Pending
+    //         </span>
+    //       ) : (info.row.original as any).currentState === "Approved" ? (
+    //         <span
+    //           style={{ color: "#8AC926", background: "#8AC92630" }}
+    //           className="w-36 py-1 rounded-full inline-block mx-auto"
+    //         >
+    //           Approved
+    //         </span>
+    //       ) : (info.row.original as any).currentState === "Completed" ? (
+    //         <span
+    //           style={{ color: "#16e000", background: "#16e00030" }}
+    //           className="w-36 py-1 rounded-full inline-block mx-auto"
+    //         >
+    //           Completed
+    //         </span>
+    //       ) : (info.row.original as any).currentState === "Declined" ? (
+    //         <span
+    //           style={{ color: "#FF595E", background: "#FF595E30" }}
+    //           className="w-36 py-1 rounded-full inline-block mx-auto"
+    //         >
+    //           Declined
+    //         </span>
+    //       ) : (
+    //         <span
+    //           style={{ color: "#FF595E", background: "#FF595E30" }}
+    //           className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+    //         >
+    //           {(info.row.original as any).currentState.toLowerCase()}
+    //         </span>
     //       )}
     //     </div>
     //   ),
+    //   header: () => <div className="w-32 whitespace-nowrap">Status</div>,
+    // }),
+    // columnHelper.accessor((row: any) => row._id, {
+    //   id: "_id",
+    //   cell: (info: any) => {
+    //     return (
+    //       <div className="relative px-4 z-10">
+    //         {/* Hamburger menu icon */}
+    //         <div
+    //           key={info.getValue()}
+    //           className="rounded-full px-3 p-1 text-xs cursor-pointer mx-auto hover:bg-gray-300"
+    //           onClick={() =>
+    //             handleActionClick(info.getValue(), info.row.original)
+    //           }
+    //         >
+    //           <BsThreeDotsVertical size={20} className="" />
+    //         </div>
+    //         <input
+    //           ref={approvalInputRef}
+    //           type="file"
+    //           name="image"
+    //           id="approval-file"
+    //           className="hidden"
+    //           onChange={(e) => {
+    //             if (e.target.files) {
+    //               handleApprovalMutation(e);
+    //             }
+    //           }}
+    //         />
+    //         <input
+    //           ref={declineInputRef}
+    //           type="file"
+    //           name="image"
+    //           id="rejection-file"
+    //           className="hidden"
+    //           onChange={(e) => {
+    //             handleDeclineMutation(e);
+    //           }}
+    //         />
+    //         {/* Modal */}
+
+    //         {showModal && currentRowId === info.getValue() && (
+    //           <div
+    //             key={info.getValue()}
+    //             ref={actionButtonsRef}
+    //             onClick={() => setShowModal(true)}
+    //             className="absolute top-[-30px] flex flex-col gap-y-2 z-10 right-[40px] bg-white border border-gray-300  rounded p-2"
+    //           >
+    //             <div
+    //               className="cursor-pointer flex items-center gap-1 font-poppins whitespace-nowrap text-left text-xs hover:text-ca-red px-1"
+    //               // onClick={() => {
+    //               //   setUserToDelete(info.row.original);
+    //               //   setShowDeleteModal(true);
+    //               // }}
+    //             >
+    //               <div className="rounded-full bg-ca-blue p-1">
+    //                 <BsPeople className="text-white text-base size-3" />
+    //               </div>
+    //               <span>Assign</span>
+    //             </div>
+    //             {info.row.original.currentState === "Initiated" && (
+    //               <>
+    //                 <label
+    //                   // htmlFor="approval-file"
+    //                   className="cursor-pointer flex items-center gap-1 font-poppins hover:text-yellow-400  text-xs whitespace-nowrap px-1"
+    //                   onClick={() => {
+    //                     if (approvalInputRef.current) {
+    //                       approvalInputRef.current.click();
+    //                     }
+    //                   }}
+    //                 >
+    //                   <div className="rounded-full bg-green-500 p-1">
+    //                     <MdDone className="text-white text-base size-3" />
+    //                   </div>
+    //                   <span>Approve </span>
+    //                 </label>
+    //                 <label
+    //                   // htmlFor="rejection-file"
+    //                   className="cursor-pointer flex items-center gap-1 font-poppins hover:text-[#8AC926] text-xs whitespace-nowrap px-1"
+    //                   onClick={() => {
+    //                     if (declineInputRef.current) {
+    //                       declineInputRef.current.click();
+    //                     }
+    //                   }}
+    //                 >
+    //                   <div className="rounded-full bg-red-500 p-1">
+    //                     <GrClose className="text-white text-base size-3" />
+    //                   </div>
+    //                   <span>Decline </span>
+    //                 </label>
+    //               </>
+    //             )}
+    //             <div
+    //               className="cursor-pointer flex items-center gap-1 font-poppins hover:text-ca-blue text-xs whitespace-nowrap px-1"
+    //               onClick={() =>
+    //                 navigate(`/admin/inbox?uid=${info.row.original.user._id}`)
+    //               }
+    //             >
+    //               <div className="rounded-full bg-yellow-500 p-1">
+    //                 <EnvelopeIcon className="text-white text-base size-3" />
+    //               </div>
+    //               <span> Send a message</span>
+    //             </div>
+    //           </div>
+    //         )}
+    //       </div>
+    //     );
+    //   },
     //   header: () => <div className="">Action</div>,
     // }),
   ];
@@ -327,38 +393,6 @@ const HOAggGrid = ({
   //   };
 
   useOutsideCloser(actionButtonsRef, showModal, setShowModal);
-
-  const approvedMutation = useMutation({
-    mutationKey: ["approve-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "confirmed",
-      }),
-    onSuccess: () => {
-      toast.success("User verified succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error verifying user");
-    },
-  });
-
-  const declineMutation = useMutation({
-    mutationKey: ["decline-user"],
-    mutationFn: (id: string) =>
-      axiosInstance.patch(`/users/review/profile`, {
-        userId: id,
-        status: "declined",
-      }),
-    onSuccess: () => {
-      toast.success("User declined succesfully");
-      queryClient.invalidateQueries({ queryKey: ["users-registration"] });
-    },
-    onError: () => {
-      toast.error("Error declining user");
-    },
-  });
 
   return (
     <div className="">
@@ -437,18 +471,19 @@ const HOAggGrid = ({
                     </tr>
 
                     {/* Collapsible row */}
-                    <tr>
+                    {/* <tr>
                       <td colSpan={columns.length}>
                         {(expandedRows as any).includes(
                           (row as any).original._id
                         ) && (
                           <div className="p-4 bg-[#F8F9FA] border-y border-gray-200">
                             <div className="flex items-center justify-between">
-                              {(row as any).original.media.map(
+                              {console.log((row as any).original.doc)}
+                              {(row as any).original.doc.map(
                                 (
-                                  doc: { fileType: string; url: string },
+                                  doc: { idType: string; url: string },
                                   i: number,
-                                  arr: { fileType: string; url: string }[]
+                                  arr: { idType: string; url: string }[]
                                 ) => (
                                   <div
                                     key={i}
@@ -459,7 +494,7 @@ const HOAggGrid = ({
                                   >
                                     <div className="">
                                       <span className="poppins-4 text-main text-xs font-medium whitespace-nowrap">
-                                        {doc.fileType}
+                                        {doc.idType}
 
                                         <div className="flex items-start mt-4 gap-x-2">
                                           <img
@@ -527,7 +562,7 @@ const HOAggGrid = ({
                           </div>
                         )}
                       </td>
-                    </tr>
+                    </tr> */}
                   </React.Fragment>
                 ))}
               </tbody>
@@ -535,8 +570,11 @@ const HOAggGrid = ({
           </div>
         </div>
       </div>
-      {(declineMutation.isPending || approvedMutation.isPending) && (
-        <LoadingModal text={"Updating registration status"} />
+      {(publishMutation.isPending || unpublishMutation.isPending) && (
+        <LoadingModal
+          key={Math.random() * 354546576}
+          text={"Updating application status"}
+        />
       )}
       {/* {showDeclineModal && (
         <Modal
@@ -554,4 +592,4 @@ const HOAggGrid = ({
   );
 };
 
-export default HOAggGrid;
+export default FinancePackageGrid;

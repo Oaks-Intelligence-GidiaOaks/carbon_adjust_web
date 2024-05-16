@@ -248,7 +248,7 @@ const AddPackage = () => {
           label="Maximum repayment period *"
           name="maximumRepaymentPeriod"
           options={maximumRepaymentOptions}
-          wrapperClassName={inputClassName + `w-full text-sm`}
+          wrapperClassName={` min-w-full text-sm`}
           optionClassName={``}
           value={formData.maxRepaymentPeriod}
           onOptionChange={(value) =>

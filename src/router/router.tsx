@@ -54,7 +54,7 @@ import {
   AdminDocumentCentre,
   AdminInbox,
   AdminPackages,
-  AdminProfile,
+  // AdminProfile,
   AdminStaff,
   AdminUsersRegistration,
   AdminWallet,
@@ -158,7 +158,9 @@ const Router = createBrowserRouter([
             path: "",
             element: (
               <>
-                <Navigate to={"/dashboard/applications/aggregator"} />
+                <Navigate
+                  to={"/dashboard/applications/aggregator-applications"}
+                />
                 <ScrollRestoration />
               </>
             ),
@@ -598,10 +600,10 @@ const Router = createBrowserRouter([
         path: "contact",
         element: <AdminContact />,
       },
-      {
-        path: "profile",
-        element: <AdminProfile />,
-      },
+      // {
+      //   path: "profile",
+      //   element: <AdminProfile />,
+      // },
     ],
   },
 ]);

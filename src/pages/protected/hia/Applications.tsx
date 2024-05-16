@@ -2,10 +2,10 @@
 
 import TabToggler from "@/components/containers/TabToggler";
 // import { Grid } from "@/components/grid";
-import { Button } from "@/components/ui";
+// import { Button } from "@/components/ui";
 // import { IComponentMap } from "@/types/general";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 // import agg_app from "../../../dummy/agg_app.json";
 // import assigned_app from "../../../dummy/assigned_app.json";
 import { useQuery } from "@tanstack/react-query";
@@ -38,7 +38,7 @@ const Applications = () => {
       <div className="flex-center justify-between mb-9">
         <h2 className="page-header">Database</h2>
 
-        <Link to={`/hia/staff/add`}>
+        {/* <Link to={`/hia/staff/add`}>
           <Button className="flex-center gap-2">
             <span className="text-white">Add staff</span>
             <img
@@ -47,7 +47,7 @@ const Applications = () => {
               alt="carbon-adjust icon"
             />
           </Button>
-        </Link>
+        </Link> */}
       </div>
 
       {/* toggler */}

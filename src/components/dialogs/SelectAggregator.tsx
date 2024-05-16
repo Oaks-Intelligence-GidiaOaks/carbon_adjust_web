@@ -5,10 +5,11 @@ import { GrClose } from "react-icons/gr";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { aggregatorTypes } from "@/constants";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { applyToAgg, fetchAggregators } from "@/services/homeOccupant";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
+import { DropdownOption } from "@/types/general";
 
 type Props = {
   setShowSelectAggregatorDialog: (value: boolean) => void;
@@ -23,10 +24,7 @@ type Props = {
     };
     firstLineAddress: string;
     zipcode: string;
-    retrofittingActivity: {
-      label: string;
-      value: string;
-    };
+    retrofittingActivities: DropdownOption[];
   };
 };
 
@@ -34,6 +32,7 @@ const SelectAggregator = ({
   setShowSelectAggregatorDialog,
   formData,
 }: Props) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [aggFilterFormState, setAggFilterFormState] = useState({
@@ -75,7 +74,9 @@ const SelectAggregator = ({
     mutationKey: ["apply-to-aggregator"],
     mutationFn: () =>
       applyToAgg({
-        retrofittingType: formData.retrofittingActivity.value,
+        retrofittingType: formData.retrofittingActivities.map(
+          (act) => act.value
+        ),
         aggId: aggFilterFormState.aggId,
         address: {
           cityOrProvince: formData.cityOrProvince.label,
@@ -86,7 +87,7 @@ const SelectAggregator = ({
       }),
     onSuccess: () => {
       toast.success("Application to aggregator submitted successfully");
-
+      queryClient.invalidateQueries({ type: "all" });
       setShowSelectAggregatorDialog(false);
       navigate({
         pathname: "",

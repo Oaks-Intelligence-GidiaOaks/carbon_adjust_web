@@ -71,6 +71,8 @@ const HIAApplicationsGrid = ({
   // const [responseMessage, setResponseMessage] = useState(null);
   // const [, setUserToDelete] = useState(null);
 
+  console.log(data);
+
   const actionButtonsRef = useRef<HTMLDivElement>(null);
 
   const handleActionClick = (id: any, rowData: any) => {
@@ -116,10 +118,9 @@ const HIAApplicationsGrid = ({
       );
     },
     onSuccess: () => {
+      setCurrentRowId(null);
       toast.success("Application declined");
-      queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
-      });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Error approving contractor");
@@ -151,10 +152,9 @@ const HIAApplicationsGrid = ({
       );
     },
     onSuccess: () => {
+      setCurrentRowId(null);
       toast.success("Application approved");
-      queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
-      });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Error approving application");
@@ -276,6 +276,20 @@ const HIAApplicationsGrid = ({
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
+            </span>
+          ) : (info.row.original as any).currentStatus === "DECLINED" ? (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Declined
+            </span>
+          ) : (info.row.original as any).currentStatus === "DISABLED" ? (
+            <span
+              style={{ color: "#7c4804", background: "#7c480430" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Disabled
             </span>
           ) : (
             <span

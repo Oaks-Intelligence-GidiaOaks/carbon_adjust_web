@@ -44,7 +44,7 @@ const Applications = () => {
       //   return navigate("/dashboard/applications/aggregator");
       // }
       if (!getApplicationStatus.data?.data.data.hasApp) {
-        return navigate("/dashboard/applications/aggregator?state=");
+        return navigate("/dashboard/applications/aggregator-applications");
       }
       if (
         getApplicationStatus.data?.data.data.currentAppStage === 1 &&
@@ -98,10 +98,10 @@ const Applications = () => {
         getApplicationStatus.data?.data.data.currentAppStage === 3 &&
         getApplicationStatus.data?.data.data.hasApp
       ) {
-        return navigate("/dashboard/applications/finance");
+        return navigate("/dashboard/applications/finance-applications");
       }
       if (getApplicationStatus.data?.data.data.currentAppStage === 4) {
-        return navigate("/dashboard/applications/insurance");
+        return navigate("/dashboard/applications/insurance-applications");
       }
     }
   }, [getApplicationStatus.isSuccess]);
