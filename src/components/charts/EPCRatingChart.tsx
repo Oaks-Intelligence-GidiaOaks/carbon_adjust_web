@@ -27,46 +27,51 @@ const EpcRatingChart = (data: {
     { epc: string; percentage: string }
   ];
 }) => {
-  const epcData: { [key: string]: string } = {};
+  const epcData: {
+    [key: string | "A" | "B" | "C" | "D" | "E" | "F" | "G"]: number;
+  } = {};
 
   data.chart.forEach(
-    (v: { epc: string; percentage: string }) => (epcData[v.epc] = v.percentage)
+    (v: { epc: string; percentage: string }) =>
+      (epcData[v.epc] = Math.round(+v.percentage.slice(0, -1)))
   );
+
+  console.log(epcData);
 
   const EpcRatings = useMemo(() => {
     return [
-      { symbol: "A", range: "92+", color: "#306f1d", value: 15 },
+      { symbol: "A", range: "92+", color: "#306f1d", value: epcData.A },
       {
         symbol: "B",
         range: "81-91",
         color: "#53b645",
-        value: 10,
+        value: epcData.B,
       },
       {
         symbol: "C",
         range: "69-80",
         color: "#85d842",
-        value: 20,
+        value: epcData.C,
       },
       {
         symbol: "D",
         range: "55-68",
         color: "#f7f752",
-        value: 20,
+        value: epcData.D,
       },
       {
         symbol: "E",
         range: "39-54",
         color: "#ecaf3d",
-        value: 20,
+        value: epcData.E,
       },
       {
         symbol: "F",
         range: "21-38",
         color: "#e7792e",
-        value: 10,
+        value: epcData.F,
       },
-      { symbol: "G", range: "1-20", color: "#e23122", value: 15 },
+      { symbol: "G", range: "1-20", color: "#e23122", value: epcData.G },
     ];
   }, []);
 
@@ -196,7 +201,12 @@ const EpcRatingChart = (data: {
                     >
                       {activeArc
                         ? `${Math.round(
-                            ((activeArc as any).value / 110) * 100
+                            ((activeArc as any).value /
+                              Object.values(epcData).reduce(
+                                (prev, curr) => prev + curr,
+                                0
+                              )) *
+                              100
                           )}%`
                         : userData?.epcRating}
                     </Text>
@@ -243,7 +253,12 @@ const EpcRatingChart = (data: {
                     >
                       {activeArc
                         ? `${Math.round(
-                            ((activeArc as any).value / 110) * 100
+                            ((activeArc as any).value /
+                              Object.values(epcData).reduce(
+                                (prev, curr) => prev + curr,
+                                0
+                              )) *
+                              100
                           )}%`
                         : userData?.epcRating}
                     </Text>
