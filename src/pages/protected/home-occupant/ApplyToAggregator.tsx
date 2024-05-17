@@ -127,6 +127,11 @@ const ApplyToAggregator = (_: Props) => {
                     placeholder="Select country"
                     value={addressFormState.country}
                     countryChange={(value) => {
+                      if (value.label !== addressFormState.country.label)
+                        setAddressFormState((prev) => ({
+                          ...prev,
+                          cityOrProvince: { label: "", value: "" },
+                        }));
                       setAddressFormState((prev) => ({
                         ...prev,
                         country: value,
@@ -138,7 +143,9 @@ const ApplyToAggregator = (_: Props) => {
                   <CountryRegionDropdown
                     name="city/state/province"
                     labelClassName="mb-4 text-black-main font-poppins"
-                    options={State.getStatesOfCountry("NG").map((state) => ({
+                    options={State.getStatesOfCountry(
+                      addressFormState.country.value
+                    ).map((state) => ({
                       label: state.name,
                       value: state.isoCode,
                     }))}

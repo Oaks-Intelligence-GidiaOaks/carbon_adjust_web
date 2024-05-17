@@ -30,7 +30,7 @@ const VerifyEmail = ({ email }: Props) => {
   });
 
   return (
-    <div className="px-2 fixed top-0 left-0 bg-gray-950/10  w-screen h-screen backdrop-blur-sm z-[1000000]">
+    <div className="px-2 fixed top-0 left-0 bg-gray-950/10  w-screen h-screen backdrop-blur-sm z-[1000]">
       <div className="w-full h-full flex justify-center items-center overflow-y-scroll">
         <div className="w-full max-w-[684px] py-6 px-10 sm:py-11 sm:px-20 bg-white rounded-xl shadow-lg">
           <p className="text-2xl font-semibold text-center">

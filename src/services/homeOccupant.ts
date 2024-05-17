@@ -42,6 +42,10 @@ export const getRetrofittingActivities = async () => {
   return axiosInstance.get(`/applications/metadata`);
 };
 
+export const getAccountTypes = async () => {
+  return axiosInstance.get(`/auth/account-type`);
+};
+
 export const fetchHIAApps = async () => {
   return axiosInstance.get(`applications/ho?limit=20&page=1&type=HIA`);
 };

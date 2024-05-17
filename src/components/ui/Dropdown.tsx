@@ -281,7 +281,7 @@ DropdownProps) => {
                     value={option}
                     disabled={disabled}
                     className={cn(
-                      "flex justify-between gap-2 py-2 cursor-pointer hover:bg-hover-color px-3",
+                      "flex font-poppins justify-between gap-2 py-2 cursor-pointer hover:bg-hover-color px-3",
                       optionClassName
                     )}
                     onClick={() => {
@@ -294,7 +294,7 @@ DropdownProps) => {
                   </ListboxOption>
                 ))
             ) : (
-              <div className="flex gap-x-3 items-center">
+              <div className="gap-x-3 items-center p-2 flex justify-center font-poppins">
                 <LoadingSpinner />
                 <p>{loadingText}</p>
               </div>

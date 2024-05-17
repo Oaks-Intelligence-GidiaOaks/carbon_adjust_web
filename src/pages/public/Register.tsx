@@ -9,13 +9,13 @@ import { FormSchemas } from "@/schemas/forms";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import CheckBox from "@/components/ui/CheckBox";
 import { useNavigate } from "react-router-dom";
-import { accountTypes, aggregatorTypes } from "@/constants";
 import AccountActionHeader from "@/components/reusables/account-setup/AccountActionHeader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { VerifyEmail } from "@/components/dialogs";
+import { getAccountTypes } from "@/services/homeOccupant";
 
 type RegisterObject = {
   email: string;
@@ -66,6 +66,11 @@ const Register = () => {
       });
       setVerifyEmail(true);
     },
+  });
+
+  const accountTypes = useQuery({
+    queryKey: ["account-types"],
+    queryFn: () => getAccountTypes(),
   });
 
   const onSubmit: SubmitHandler<RegisterFormContext> = async (value) => {
@@ -205,7 +210,18 @@ const Register = () => {
                     wrapperClassName="w-full mt-4"
                     name="accountType"
                     register={register}
-                    options={accountTypes}
+                    isLoading={accountTypes.isLoading}
+                    loadingText="Fetching account types"
+                    options={
+                      accountTypes.isSuccess && accountTypes.data
+                        ? Object.entries(
+                            accountTypes.data?.data.data.accountTypes
+                          ).map((accType) => ({
+                            label: accType[0],
+                            value: String(accType[1]),
+                          }))
+                        : []
+                    }
                     control={control}
                   />
                   {errors.accountType && (
@@ -221,7 +237,18 @@ const Register = () => {
                       wrapperClassName="w-full mt-4"
                       name="aggregatorType"
                       register={register}
-                      options={aggregatorTypes}
+                      isLoading={accountTypes.isLoading}
+                      loadingText="Fetching Aggregator types"
+                      options={
+                        accountTypes.isSuccess && accountTypes.data
+                          ? Object.entries(
+                              accountTypes.data?.data.data.aggregatorTypes
+                            ).map((accType) => ({
+                              label: accType[0],
+                              value: String(accType[1]),
+                            }))
+                          : []
+                      }
                       control={control}
                     />
                     {errors.accountType && (

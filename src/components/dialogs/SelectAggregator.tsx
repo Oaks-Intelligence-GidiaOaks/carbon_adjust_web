@@ -56,7 +56,12 @@ const SelectAggregator = ({
   });
 
   const aggregators = useQuery({
-    queryKey: ["fetch-aggregators"],
+    queryKey: [
+      "fetch-aggregators",
+      aggFilterFormState.aggregatorType.value,
+      aggFilterFormState.cityOrProvince.value,
+      aggFilterFormState.country.value,
+    ],
     queryFn: () =>
       fetchAggregators(
         aggFilterFormState.country.value,
@@ -145,6 +150,11 @@ const SelectAggregator = ({
                 placeholder="Select country"
                 value={aggFilterFormState.country}
                 countryChange={(value) => {
+                  if (value.label !== aggFilterFormState.country.label)
+                    setAggFilterFormState((prev) => ({
+                      ...prev,
+                      cityOrProvince: { label: "", value: "" },
+                    }));
                   setAggFilterFormState((prev) => ({
                     ...prev,
                     country: value,
@@ -156,7 +166,9 @@ const SelectAggregator = ({
               <CountryRegionDropdown
                 name="city/state/province"
                 labelClassName="mb-4 text-black-main font-poppins"
-                options={State.getStatesOfCountry("NG").map((state) => ({
+                options={State.getStatesOfCountry(
+                  aggFilterFormState.country.value
+                ).map((state) => ({
                   label: state.name,
                   value: state.isoCode,
                 }))}
@@ -206,7 +218,7 @@ const SelectAggregator = ({
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select aggregator name"
                 isLoading={aggregators.isLoading}
-                loadingText="Searching for aggregators"
+                loadingText="Searching for Aggregators"
                 value={aggFilterFormState!.aggregatorName}
                 onOptionChange={(value) =>
                   setAggFilterFormState!((prev) => ({

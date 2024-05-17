@@ -22,6 +22,7 @@ const BioData = ({ formState, setFormState }: Props) => {
           inputClassName="bg-gray-100"
           placeholder="Enter entity name"
           value={formState.entityName}
+          disabled
           onChange={(e) =>
             setFormState((prev) => ({
               ...prev,

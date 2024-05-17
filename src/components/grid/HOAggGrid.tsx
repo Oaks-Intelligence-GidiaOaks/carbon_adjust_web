@@ -465,7 +465,7 @@ const HOAggGrid = ({
                                           <img
                                             className="w-fit h-10 bg-cover"
                                             src={
-                                              "/public/assets/graphics/view-document.svg"
+                                              "/assets/graphics/view-document.svg"
                                             }
                                             alt=""
                                           />
