@@ -22,7 +22,7 @@ const Applications = () => {
   const [activeTab, setActiveTab] = useState<string>(databaseTabs[0]);
 
   const insApplications = useQuery({
-    queryKey: ["get-fin-applications"],
+    queryKey: ["get-ins-applications"],
     queryFn: () => axiosInstance.get(`/applications/ins`),
   });
   console.log(insApplications.data?.data.data.applications);

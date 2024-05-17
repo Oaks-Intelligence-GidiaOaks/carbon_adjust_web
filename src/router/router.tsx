@@ -74,6 +74,7 @@ import {
 } from "@/pages/protected/finance";
 import {
   InsuranceAddPackage,
+  InsuranceAddStaff,
   InsuranceApplications,
   InsuranceContact,
   InsuranceDashboard,
@@ -81,6 +82,7 @@ import {
   InsuranceInbox,
   InsurancePackages,
   InsuranceProfile,
+  InsuranceStaff,
   InsuranceWallet,
 } from "@/pages/protected/insurance";
 import PendingVerification from "@/pages/protected/shared/PendingVerification";
@@ -515,6 +517,19 @@ const Router = createBrowserRouter([
           {
             path: "add",
             element: <InsuranceAddPackage />,
+          },
+        ],
+      },
+      {
+        path: "staff",
+        children: [
+          {
+            path: "",
+            element: <InsuranceStaff />,
+          },
+          {
+            path: "add",
+            element: <InsuranceAddStaff />,
           },
         ],
       },

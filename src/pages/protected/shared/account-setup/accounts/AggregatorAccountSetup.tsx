@@ -248,6 +248,8 @@ const AggregatorAccountSetup = (_: Props) => {
     useSelector((state: RootState) => state.user?.user?.doc ?? null)
   );
 
+  console.log(doc);
+
   const goToNext = async () => {
     console.log(currentStep);
 
@@ -356,7 +358,14 @@ const AggregatorAccountSetup = (_: Props) => {
             disabled={
               (() => {
                 if (currentStep && currentStep >= 3) {
-                  if (
+                  if (userData?.roles[0] === "SUBCONTRACTOR") {
+                    if (
+                      uniqueObjectsByIdType(userData?.doc as object[])
+                        .length === 3
+                    ) {
+                      return false;
+                    } else return true;
+                  } else if (
                     userData?.roles[0] !== "AGGREGATOR" &&
                     userData?.roles[0] !== "HIA"
                   ) {

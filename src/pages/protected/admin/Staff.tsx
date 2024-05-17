@@ -1,8 +1,8 @@
-import { Grid } from "@/components/grid";
+// import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import staff from "../../../dummy/staff.json";
+// import staff from "../../../dummy/staff.json";
 
 const Staff: FC = () => {
   return (
@@ -23,7 +23,7 @@ const Staff: FC = () => {
       </div>
 
       <div className="mt-4">
-        <Grid data={staff} pageSize={40} tableStyles={` `} />
+        {/* <Grid data={staff} pageSize={40} tableStyles={` `} /> */}
       </div>
     </div>
   );

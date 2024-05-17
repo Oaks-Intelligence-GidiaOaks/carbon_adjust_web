@@ -100,7 +100,7 @@ const Specializations = () => {
           </div>
         )}
         {specializations.isSuccess &&
-          specializations.data?.data.data.length && (
+          Boolean(specializations.data?.data.data.length > 0) && (
             <div className="flex flex-wrap gap-6 mt-10">
               {specializations.data?.data.data.map(
                 (specialization: { name: string }, i: number) => (
@@ -110,7 +110,7 @@ const Specializations = () => {
             </div>
           )}
         {specializations.isSuccess &&
-          !specializations.data?.data.data.length && (
+          Boolean(specializations.data?.data.data.length < 1) && (
             <div className="flex justify-center bg-white/80 min-h-screen">
               <div className="max-w-[500px] px-2 flex flex-col items-center pt-10">
                 <img src="/assets/graphics/empty-box.svg" />

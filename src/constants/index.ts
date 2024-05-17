@@ -70,11 +70,17 @@ export const aggregatorTypes = [
 ];
 
 export const retrofittingServices = [
-  { label: "Heating/Cooling", value: "Heating/Cooling" },
-  { label: "Insulation", value: "Insulation" },
-  { label: "Lighting", value: "Lighting" },
+  {
+    label: "Insulation (Loft, cavity, etc.)",
+    value: "Insulation (Loft, cavity, etc.)",
+  },
+  {
+    label: "Energy efficiency (lighting, devices, etc.)",
+    value: "Energy efficiency (lighting, devices, etc.)",
+  },
+  { label: "Solar Home Systems (SHSs)", value: "Solar Home Systems (SHSs)" },
   { label: "Flexible Dispatch", value: "Flexible Dispatch" },
-  { label: "Others", value: "Others" },
+  { label: "Undecided", value: "Undecided" },
 ];
 
 export const homeOwnerSideBarItems = [
@@ -763,6 +769,11 @@ export const insuranceSideBarItems = [
     icon: CarbonCreditIcon,
     title: "Carbon Credit Account",
     href: "/insurance/carbon-credit",
+  },
+  {
+    icon: DevicesIcon,
+    title: "Staff",
+    href: "/insurance/staff",
   },
   {
     icon: InboxIcon,
