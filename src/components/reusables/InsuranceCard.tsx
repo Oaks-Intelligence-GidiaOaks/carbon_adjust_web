@@ -63,13 +63,13 @@ const InsuranceCard = ({
       <div className="size-12 rounded-full overflow-hidden">
         <img
           src={(data as any).coverImg}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
         />
       </div>
       <div className="flex-1">
         <div className="flex flex-1 justify-between  items-center gap-x-2">
           <div className="flex justify-between flex-1 items-center">
-            <p className="font-poppins text-black text-lg brightness-0">
+            <p className="font-poppins text-black text-main text-lg">
               {(data as any).name}
             </p>
             {!hideCheckBox && (

@@ -65,14 +65,11 @@ const PackageCard = ({
           </div>
         )}
         <div className="flex items-center gap-x-2">
-          <div className="size-8">
-            <img
-              src={data?.coverImg}
-              className="w-full h-full object-contain"
-            />
+          <div className="size-8 ">
+            <img src={data?.coverImg} className="w-full h-full object-cover" />
           </div>
           <p className="font-poppins text-black text-lg brightness-0">
-            {/* {data?.createdBy?.name} */}
+            {data?.createdBy?.name ?? data?.name}
           </p>
         </div>
         <div className="flex items-center gap-x-3 mt-2">
@@ -112,7 +109,7 @@ const PackageCard = ({
         <div className="mt-1">
           <p className="text-green-500 text-xs font-poppins">
             {data.homes_retrofitted ?? 0} Homes Retrofitted |{" "}
-            {formatDate(data?.created_at)}
+            {formatDate(data?.created_at ?? data?.createdAt)}
           </p>
         </div>
         <div className="mt-4 flex justify-between gap-6 flex-wrap items-center">
