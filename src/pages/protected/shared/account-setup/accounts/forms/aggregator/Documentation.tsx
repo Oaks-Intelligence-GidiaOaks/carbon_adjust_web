@@ -313,11 +313,68 @@ const Documentation = ({ formState, setFormState }: Props) => {
           </div>
 
           {/* Letter of auth */}
+          <div>
+            <p className="text-black">
+              Letter of authorization to open account *
+            </p>
+            {!Boolean(
+              (doc as any[]).filter(
+                (doc) => doc.idType === "Certificate of Authorization"
+              ).length
+            ) && (
+              <DropBox
+                value={formState.certOfAuth}
+                setFiles={setFormState}
+                docName="certOfAuth"
+              />
+            )}
+            <div className="mt-2 flex justify-start">
+              {Boolean(
+                (doc as any[]).filter(
+                  (doc) => doc.idType === "Certificate of Authorization"
+                ).length
+              ) ? (
+                <Button
+                  disabled={setCertOfAuth.isPending}
+                  variant={"outline"}
+                  className="text-white bg-green-500"
+                >
+                  <span>Submitted</span>
+                </Button>
+              ) : (
+                <>
+                  {Boolean(formState.certOfAuth !== null) && (
+                    <Button
+                      disabled={setCertOfAuth.isPending}
+                      className="text-white"
+                      onClick={handleCertOfAuthSubmission}
+                    >
+                      {setCertOfAuth.isPending ? (
+                        <Oval
+                          visible={setCertOfAuth.isPending}
+                          height="20"
+                          width="20"
+                          color="#ffffff"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      ) : (
+                        <span>Upload</span>
+                      )}
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Letter of auth */}
           {(userData?.roles[0] === "INSURANCE" ||
             userData?.roles[0] === "FINANCIAL_INSTITUTION") && (
             <div>
               <p className="text-black">
-                Letter of authorization to open account *
+                Certificate of registration with regulator *
               </p>
               {!Boolean(
                 (doc as any[]).filter(
@@ -371,63 +428,6 @@ const Documentation = ({ formState, setFormState }: Props) => {
               </div>
             </div>
           )}
-
-          {/* Cert of auth */}
-          <div>
-            <p className="text-black">
-              Certificate of authorization to open account *
-            </p>
-            {!Boolean(
-              (doc as any[]).filter(
-                (doc) => doc.idType === "Certificate of Authorization"
-              ).length
-            ) && (
-              <DropBox
-                value={formState.certOfAuth}
-                setFiles={setFormState}
-                docName="certOfAuth"
-              />
-            )}
-            <div className="mt-2 flex justify-start">
-              {Boolean(
-                (doc as any[]).filter(
-                  (doc) => doc.idType === "Certificate of Authorization"
-                ).length
-              ) ? (
-                <Button
-                  disabled={setCertOfAuth.isPending}
-                  variant={"outline"}
-                  className="text-white bg-green-500"
-                >
-                  <span>Submitted</span>
-                </Button>
-              ) : (
-                <>
-                  {Boolean(formState.certOfAuth !== null) && (
-                    <Button
-                      disabled={setCertOfAuth.isPending}
-                      className="text-white"
-                      onClick={handleCertOfAuthSubmission}
-                    >
-                      {setCertOfAuth.isPending ? (
-                        <Oval
-                          visible={setCertOfAuth.isPending}
-                          height="20"
-                          width="20"
-                          color="#ffffff"
-                          ariaLabel="oval-loading"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                        />
-                      ) : (
-                        <span>Upload</span>
-                      )}
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>

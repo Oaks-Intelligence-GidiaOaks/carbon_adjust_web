@@ -142,7 +142,7 @@ const PendingVerification = (_: Props) => {
         </div>
       </div>
       <img
-        src="/public/assets/graphics/pending-verification.svg"
+        src="/assets/graphics/pending-verification.svg"
         className="fixed -bottom-[15%] left-0 w-full h-full pointer-events-none"
       />
     </div>

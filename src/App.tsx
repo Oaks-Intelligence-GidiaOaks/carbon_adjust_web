@@ -10,7 +10,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={Router} />
       <Toaster
-        toastOptions={{ duration: 7000, className: "z-[10000000000]" }}
+        toastOptions={{
+          style: {
+            zIndex: 999999, // For toasts
+          },
+          duration: 7000,
+        }}
       />
     </QueryClientProvider>
   );

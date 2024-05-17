@@ -66,7 +66,7 @@ export const aggregatorTypes = [
   { id: 1, label: "Local Authority", value: "LOCAL_AUTHORITY" },
   { id: 2, label: "Housing Association", value: "HOUSING_ASSOCIATION" },
   { id: 3, label: "Property Developer", value: "PROPERTY_DEVELOPER" },
-  { id: 4, label: "Others", value: "OTHERS" },
+  { id: 4, label: "Other", value: "OTHER" },
 ];
 
 export const retrofittingServices = [
