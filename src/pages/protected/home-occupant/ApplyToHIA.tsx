@@ -8,17 +8,17 @@ import { Country, State } from "country-state-city";
 import { useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import Map from "@/components/reusables/Map";
-import {
-  image1,
-  image2,
-  image3,
-  image4,
-  // pendingApplications,
-  // placeholderHIAPackages,
-  // subContractors,
-} from "@/constants";
+// import {
+//   image1,
+//   image2,
+//   image3,
+//   image4,
+//   // pendingApplications,
+//   // placeholderHIAPackages,
+//   // subContractors,
+// } from "@/constants";
 import PackageCard from "@/components/reusables/PackageCard";
-import TopHiaCard from "@/components/ui/TopHiaCard";
+// import TopHiaCard from "@/components/ui/TopHiaCard";
 import FlyoutSidebar from "@/components/reusables/FlyoutSidebar";
 import SubContractorCard from "@/components/reusables/SubContractorCard";
 // import SelectedPackagesSummaryCard from "@/components/reusables/SelectedPackagesSummaryCard";
@@ -534,7 +534,7 @@ const ApplyToHIA = (_: Props) => {
                     <Map />
                   </div>
 
-                  <div className="flex flex-col pt-2 mt-6">
+                  {/* <div className="flex flex-col pt-2 mt-6">
                     <div className="flex items-center justify-between">
                       <span className="text-[16px] leading-[20px] font-medium font-poppins text-sub-header">
                         Top Home Improvement Agencies
@@ -568,7 +568,7 @@ const ApplyToHIA = (_: Props) => {
                         className="rounded-b"
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

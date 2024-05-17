@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
+import { defaultPackageImage } from "@/constants";
 
 const HiaPackageCard = ({
   data,
@@ -83,7 +84,11 @@ const HiaPackageCard = ({
         className={`p-4 flex gap-2 rounded-lg shadow-md relative border ${bg_gradient} bg-cover`}
       >
         <div className="w-12 h-12 rounded-full bg-white overflow-hidden">
-          <img src={data?.logo} alt="package logo" className="object-cover" />
+          <img
+            src={data?.logo ?? defaultPackageImage}
+            alt="package logo"
+            className="object-cover"
+          />
         </div>
 
         <div className="flex-1">

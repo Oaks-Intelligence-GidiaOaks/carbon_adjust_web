@@ -57,6 +57,7 @@ const AddSpecializationDialog = ({ setShowAddSpecializationDialog }: Props) => {
                 wrapperClassName="bg-gray-100 w-full font-poppins"
                 placeholder="Select aggregator type"
                 value={specialization}
+                optionClassName="font-poppins"
                 onOptionChange={(value) => setSpecialization!(value)}
               />
             </div>

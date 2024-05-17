@@ -156,7 +156,7 @@ const Registration = () => {
           </div>
           <div className="w-full flex flex-wrap gap-x-4 mt-0">
             {hiaSubcontractors.isSuccess &&
-              hiaSubcontractors.data?.data.data.contractors.length > 1 && (
+              hiaSubcontractors.data?.data.data.contractors.length >= 1 && (
                 <SubcontractorRegistrationGrid
                   isUpdating={
                     hiaSubcontractors.isLoading || hiaSubcontractors.isFetching
@@ -182,7 +182,7 @@ const Registration = () => {
             </div>
           )}
           {hiaSubcontractors.isSuccess &&
-            hiaSubcontractors.data?.data.data.contractors.length && (
+            Boolean(hiaSubcontractors.data?.data.data.contractors.length) && (
               <div className="flex flex-wrap gap-6 mt-10">
                 {/* {specializations.data?.data.data.map(
                   (specialization: { name: string }, i: number) => (
@@ -299,7 +299,7 @@ const Registration = () => {
                   </div>
                 )}
                 {specializations.isSuccess &&
-                  specializations.data?.data.data.length && (
+                  Boolean(specializations.data?.data.data.length > 0) && (
                     <div className="flex flex-wrap gap-6">
                       {specializations.data?.data.data.map(
                         (
@@ -325,8 +325,15 @@ const Registration = () => {
                       )}
                     </div>
                   )}
+                {/* {specializations.isSuccess &&
+                  Boolean(specializations.data?.data.data.length <= 0) && (
+                    <p>
+                      There's no specialization to choose from. Please create
+                      specialization
+                    </p>
+                  )} */}
                 {specializations.isSuccess &&
-                  !specializations.data?.data.data.length && (
+                  !Boolean(specializations.data?.data.data.length) && (
                     <div className="flex justify-center bg-white/80 min-h-screen">
                       <div className="max-w-[500px] px-2 flex flex-col items-center pt-10">
                         <img src="/assets/graphics/empty-box.svg" />

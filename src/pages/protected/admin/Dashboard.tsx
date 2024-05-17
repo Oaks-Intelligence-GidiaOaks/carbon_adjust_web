@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import OrgDashboardDetailsCard from "@/components/reusables/OrgDashboardDetailsCard";
-import { formatLargeNumber, getLastFiveYears } from "@/utils";
+import { formatLargeNumber } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { StackedLineChart } from "@/components/charts/StackedLineChart";
 import AdminAggregatorRegistrationGrid from "@/components/grid/CollapsibleGrid";
 import { fetchAllUsers } from "@/services/adminService";
-import { Dropdown } from "@/components/ui";
+// import { Dropdown } from "@/components/ui";
 import axiosInstance from "@/api/axiosInstance";
 import Loading from "@/components/reusables/Loading";
 
@@ -15,17 +15,15 @@ const Dashboard: FC = () => {
     queryFn: () => fetchAllUsers(),
   });
 
-  const [yearSelector, setYearSelector] = useState({
-    label: new Date().getFullYear(),
-    value: new Date().getFullYear(),
-  });
+  // const [yearSelector, setYearSelector] = useState({
+  //   label: new Date().getFullYear(),
+  //   value: new Date().getFullYear(),
+  // });
 
   const adminDashboardData = useQuery({
     queryKey: ["get-admin-dashboard-data"],
     queryFn: () => axiosInstance.get(`/users/adm/home`),
   });
-
-  console.log(adminDashboardData.data);
 
   return (
     <>
@@ -94,13 +92,13 @@ const Dashboard: FC = () => {
                 <p className="font-poppins font-bold pb-8 text-main text-xl">
                   Applications
                 </p>
-                <Dropdown
+                {/* <Dropdown
                   name="yearSelector"
                   wrapperClassName={"w-20 border border-gray-500 shadow-lg"}
                   value={yearSelector}
                   onOptionChange={(value) => setYearSelector(value)}
                   options={getLastFiveYears()}
-                />
+                /> */}
               </div>
               <StackedLineChart
                 approved={
