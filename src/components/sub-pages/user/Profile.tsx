@@ -99,8 +99,8 @@ const UserProfile = (_: Props) => {
     }
 
     // Check if the file size exceeds 2MB
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Please select an image file smaller than 5MB.");
+    if (file.size > 1 * 1024 * 1024) {
+      toast.error("Please select an image file smaller than 1MB.");
       e.target.files = null; // Reset file input
       return;
     }

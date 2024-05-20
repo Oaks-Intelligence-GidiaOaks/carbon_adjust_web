@@ -21,7 +21,7 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       display: false,
@@ -50,22 +50,15 @@ export const options = {
   },
 };
 
-const labels = [
-  "Heating/Cooling",
-  "SHS",
-  "Insulation",
-  "Flexible",
-  "Energy Efficiency",
-  "Undecided",
-];
+const labels = ["Insulation", "Flexible", "Energy Efficiency", "Others"];
 
 export type RetrofittingAnalyticsProps = {
-  heating: number;
+  // heating: number;
   insulation: number;
   energy_efficieny: number;
-  solar: number;
+  // solar: number;
   flexible: number;
-  undecided: number;
+  others: number;
 };
 
 export function VerticalBarChart(chartData: RetrofittingAnalyticsProps) {
@@ -77,12 +70,12 @@ export function VerticalBarChart(chartData: RetrofittingAnalyticsProps) {
       {
         label: "",
         data: [
-          rawData.heating,
-          rawData.solar,
+          // rawData.heating,
+          // rawData.solar,
           rawData.insulation,
           rawData.flexible,
           rawData.energy_efficieny,
-          rawData.undecided,
+          rawData.others,
         ],
         backgroundColor: "rgba(206, 231, 253, 1)",
         hoverBackgroundColor: "rgba(14, 136, 246, 1)",
@@ -93,5 +86,5 @@ export function VerticalBarChart(chartData: RetrofittingAnalyticsProps) {
     ],
   };
 
-  return <Bar options={options} data={data} />;
+  return <Bar width={"100%"} options={options} data={data} />;
 }

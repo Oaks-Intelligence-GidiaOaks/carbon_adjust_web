@@ -259,18 +259,18 @@ const FinanceApplicationGrid = ({
       ),
       header: () => <div className="w-44 text-left">Summary report</div>,
     }),
-    columnHelper.accessor((row: any) => row?.currentState, {
-      id: "currentState",
+    columnHelper.accessor((row: any) => row?.updatedStatus, {
+      id: "updatedStatus",
       cell: (info: any) => (
         <div className="w-44 relative flex items-center text-sm">
-          {(info.row.original as any).fin.status === "APPLIED" ? (
+          {(info.row.original as any).fin.updatedStatus === "UNDER_REVIEW" ? (
             <span
               style={{ color: "#139EEC", background: "#139EEC30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Applied
+              Pending
             </span>
-          ) : (info.row.original as any).fin.status === "APPROVED" ? (
+          ) : (info.row.original as any).fin.updatedStatus === "APPROVED" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
@@ -280,9 +280,9 @@ const FinanceApplicationGrid = ({
           ) : (
             <span
               style={{ color: "#FF595E", background: "#FF595E30" }}
-              className="w-36 py-1 rounded-full inline-block mx-auto"
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
             >
-              Rejected
+              {(info.row.original as any).fin.updatedStatus.toLowerCase()}
             </span>
           )}
         </div>
@@ -356,7 +356,8 @@ const FinanceApplicationGrid = ({
                   </div>
                   <span>Assign</span>
                 </div>
-                {info.row.original.currentStatus !== "APPLIED" && (
+                {/* {console.log(info.row.original)} */}
+                {info.row.original.fin.updatedStatus === "UNDER_REVIEW" && (
                   <>
                     <label
                       // htmlFor="approval-file"

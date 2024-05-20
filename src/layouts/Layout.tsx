@@ -1,11 +1,14 @@
 import userService from "@/api/services/user";
+import { persistor } from "@/app/store";
 // import { RootState } from "@/app/store";
 import Sidebar from "@/components/containers/Sidebar";
 import TopBar from "@/components/containers/TopBar";
+import InactivityWrapper from "@/components/hoc/InactivityWrapper";
 import { setUser } from "@/features/userSlice";
 import { cn, uniqueObjectsByIdType } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+// import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -67,44 +70,54 @@ const Layout = (props: Props) => {
     }
   }, [userData.isSuccess]);
 
+  const handleLogout = () => {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+    window.location.assign("/login?ie=true");
+  };
+
   return (
-    <div className="flex max-h-screen max-w-screen overflow-hidden overflow-y-scroll">
-      <Sidebar
-        accountType={props.sidebarType}
-        mobileMenuIsOpen={mobileMenuIsOpen}
-        setMobileMenuIsOpen={setMobileMenuIsOpen}
-      />
-      <div className="flex-1 items-center">
-        <TopBar
+    <InactivityWrapper onLogout={() => handleLogout()}>
+      <div className="flex max-h-screen max-w-screen overflow-hidden overflow-y-scroll">
+        <Sidebar
+          accountType={props.sidebarType}
           mobileMenuIsOpen={mobileMenuIsOpen}
           setMobileMenuIsOpen={setMobileMenuIsOpen}
         />
-        <div
-          className={cn(
-            "w-full max-w-[1440px] pb-16 px-4 mx-auto h-full overflow-y-scroll",
-            pathname.includes("dashboard/applications") && "px-0",
-            pathname === "/dashboard/devices" && "px-0",
-            pathname === "/dashboard/profile" && "px-0"
-          )}
-        >
-          {userData.isLoading ? (
-            <div className="w-full h-full flex justify-center pt-20">
-              <Oval
-                visible={userData.isLoading}
-                height="40"
-                width="40"
-                color="#ffffff"
-                ariaLabel="oval-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-              />
-            </div>
-          ) : (
-            <Outlet />
-          )}
+        <div className="flex-1 items-center">
+          <TopBar
+            mobileMenuIsOpen={mobileMenuIsOpen}
+            setMobileMenuIsOpen={setMobileMenuIsOpen}
+          />
+          <div
+            className={cn(
+              "w-full max-w-[1440px] pb-16 px-4 mx-auto h-full overflow-y-scroll",
+              pathname.includes("dashboard/applications") && "px-0",
+              pathname === "/dashboard/devices" && "px-0",
+              pathname === "/dashboard/profile" && "px-0"
+            )}
+          >
+            {userData.isLoading ? (
+              <div className="w-full h-full flex justify-center pt-20">
+                <Oval
+                  visible={userData.isLoading}
+                  height="40"
+                  width="40"
+                  color="#ffffff"
+                  ariaLabel="oval-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              </div>
+            ) : (
+              <Outlet />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </InactivityWrapper>
   );
 };
 

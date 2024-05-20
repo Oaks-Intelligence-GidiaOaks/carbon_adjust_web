@@ -42,7 +42,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const options: any = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       display: false,
@@ -150,5 +150,13 @@ export function DashboardDoughnutChart(chartData: TopActivityProps) {
       },
     ],
   };
-  return <Doughnut data={data} options={options} plugins={plugins} />;
+  return (
+    <Doughnut
+      width={"200px"}
+      height={"200px"}
+      data={data}
+      options={options}
+      plugins={plugins}
+    />
+  );
 }

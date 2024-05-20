@@ -62,7 +62,7 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
             </div>
           ))}
         </div>
-        <div>
+        <div className="pr-4">
           <div className="flex gap-1 items-center">
             <div
               className="flex justify-center items-center cursor-pointer"
@@ -70,7 +70,10 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
               onClick={() => goToProfile()}
             >
               {userData?.dp ? (
-                <img className="size-8 rounded-full shadow" src={userData.dp} />
+                <img
+                  className="size-8 rounded-full shadow object-cover"
+                  src={userData.dp}
+                />
               ) : (
                 <UserCircleIcon fontSize={20} width={32} />
               )}

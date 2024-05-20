@@ -70,6 +70,15 @@ const ApplyToFinance = (_: Props) => {
     noOfDependents: "",
   });
 
+  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+    // Blur the input field
+    (event.target as HTMLInputElement).blur();
+
+    if (document.activeElement === event.target) {
+      event.preventDefault();
+    }
+  };
+
   const currentApplicationDetails = queryClient.getQueryData([
     "application-status",
   ]);
@@ -464,6 +473,7 @@ const ApplyToFinance = (_: Props) => {
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Your annual household income"
                     value={details.houseHoldIncome}
+                    onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
@@ -482,6 +492,7 @@ const ApplyToFinance = (_: Props) => {
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other income"
                     value={details.otherIncome}
+                    onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
@@ -500,6 +511,7 @@ const ApplyToFinance = (_: Props) => {
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other income"
                     value={details.houseHoldMonthlyExpenses}
+                    onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
@@ -518,6 +530,7 @@ const ApplyToFinance = (_: Props) => {
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other monthly expenses"
                     value={details.otherMonthlyExpense}
+                    onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
@@ -536,6 +549,7 @@ const ApplyToFinance = (_: Props) => {
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Number of dependents"
                     value={details.noOfDependents}
+                    onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
