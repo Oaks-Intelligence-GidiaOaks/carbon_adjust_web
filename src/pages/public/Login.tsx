@@ -1,13 +1,13 @@
 import { LogoAndBrandVertical, RegisterGraphic } from "@/assets/icons";
 import { Input } from "../../components/ui";
 import { Button } from "@/components/ui/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginFormContext } from "@/types/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormSchemas } from "@/schemas/forms";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AccountActionHeader from "@/components/reusables/account-setup/AccountActionHeader";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
@@ -17,9 +17,12 @@ import { useDispatch } from "react-redux";
 import { setToken } from "@/features/userSlice";
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const tab = searchParams.get("ie");
+  const [inactivityState] = useState(tab);
 
   const togglePasswordVisibility = () =>
     setShowPassword((prevState) => !prevState);
@@ -70,6 +73,20 @@ const Login = () => {
   const goToRegistration = () => {
     navigate("/register");
   };
+
+  useEffect(() => {
+    console.log(tab);
+    if (inactivityState === "true") {
+      setTimeout(() => {
+        toast.error(
+          "You were logged out because you were inactive for too long.",
+          { id: "inactivity" }
+        );
+        navigate("/login");
+      }, 0);
+      // navigate("/login");
+    }
+  }, [tab]);
 
   return (
     <div>

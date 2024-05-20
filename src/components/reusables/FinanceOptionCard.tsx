@@ -102,20 +102,24 @@ FinanceOptionCardProps) => {
         </p>
         <div className="h-4 w-[1px] bg-[rgba(0,0,0,0.3)]" />
         <p className="text-xs text-grey-swatch-800">
-          Interest rate: {data.interestRate}%
+          Interest rate: {data?.annualPercentRate ?? 0}%
         </p>
       </div>
       <div className="mt-4">
         <p className="text-blue-main font-poppins">
-          Repayment Instalment options
+          {/* Repayment Instalment options */}
+          Interest Rate Type
         </p>
         <div className="mt-4 line-clamp-2 text-ellipsis font-poppins font-normal flex flex-wrap items-center gap-x-2">
-          <p className="text-xs text-grey-swatch-800">Weekly: {0}%</p>
+          {/* <p className="text-xs text-grey-swatch-800">Weekly: {0}%</p>
           <div className="h-4 w-[1px] bg-[rgba(0,0,0,0.3)]" />
           <p className="text-xs text-grey-swatch-800">Monthly: {0}%</p>
           <div className="h-4 w-[1px] bg-[rgba(0,0,0,0.3)]" />
           <p className="text-xs text-grey-swatch-800">
             Yearly: {data?.annualPercentRate ?? 0}%
+          </p> */}
+          <p className="text-xs text-grey-swatch-800 capitalize">
+            {data?.interestRateType}
           </p>
         </div>
       </div>

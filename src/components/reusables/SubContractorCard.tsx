@@ -79,8 +79,11 @@ const SubContractorCard = ({
     isLiveData ? (
       <div className="w-full group hover:shadow-lg transition-all min-w-[340px] h-[192px] max-w-[560px] overflow-hidden bg-white border border-black-main/50 relative rounded-2xl pt-4 pb-4 px-6 bg-no-repeat bg-right-top">
         <div className="flex items-center gap-x-2">
-          <div className="size-8 bg-gray-200">
-            <img src={data.logo} className="w-full h-full object-contain" />
+          <div className="size-8 bg-white rounded">
+            <img
+              src={data.dp ?? "/assets/graphics/institution.svg"}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div className="flex justify-between flex-1 items-center">
             <p className="font-poppins text-black text-lg brightness-0">

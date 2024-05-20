@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Country, State } from "country-state-city";
 import { useState } from "react";
-import { BiEdit } from "react-icons/bi";
+// import { BiEdit } from "react-icons/bi";
 import Map from "@/components/reusables/Map";
 // import {
 //   image1,
@@ -203,13 +203,13 @@ const ApplyToHIA = (_: Props) => {
               </div>
               <div className="flex justify-between items-center gap-x-4">
                 <p className="font-semibold font-poppins text-xl">Details</p>
-                <Button
+                {/* <Button
                   variant={"link"}
                   className="flex items-center gap-x-1 font-poppins font-normal text-black-main px-0"
                 >
                   <span>Edit details</span>
                   <BiEdit />
-                </Button>
+                </Button> */}
               </div>
 
               <form className="mt-10">
@@ -734,13 +734,13 @@ const ApplyToHIA = (_: Props) => {
             <div className="max-w-[706px] w-full">
               <div className="flex justify-between items-center gap-x-4">
                 <p className="font-semibold font-poppins text-xl">Details</p>
-                <Button
+                {/* <Button
                   variant={"link"}
                   className="flex items-center gap-x-1 font-poppins font-normal text-black-main px-0"
                 >
                   <span>Edit details</span>
                   <BiEdit />
-                </Button>
+                </Button> */}
               </div>
 
               <form className="mt-10">

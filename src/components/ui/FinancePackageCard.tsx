@@ -84,7 +84,7 @@ const FinancePackageCard = ({
       >
         <div className="min-w-[50px] min-h-[50px] w-[50px] h-[50px] bg-white rounded-full overflow-hidden">
           <img
-            src={data?.logo ?? defaultPackageImage}
+            src={data?.coverImg ?? defaultPackageImage}
             alt="package logo"
             className="w-full rounded-full"
           />

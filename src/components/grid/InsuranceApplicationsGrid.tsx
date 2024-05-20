@@ -315,26 +315,33 @@ const InsuranceApplicationsGrid = ({
             >
               {(info.row.original as any).ins.initialStatus.toLowerCase()}
             </span>
-          ) : (info.row.original as any).ins.initialStatus === "completed" ? (
+          ) : (info.row.original as any).ins.initialStatus === "APPROVED" ? (
             <span
               style={{ color: "#8AC926", background: "#8AC92630" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
               Approved
             </span>
-          ) : (info.row.original as any).ins.initialStatus === "suspended" ? (
+          ) : (info.row.original as any).ins.initialStatus === "DECLINED" ? (
             <span
-              style={{ color: "#c9c126", background: "#8AC92630" }}
+              style={{ color: "#ff3e00", background: "#ff3e0030" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Suspended
+              Declined
+            </span>
+          ) : (info.row.original as any).ins.initialStatus === "DISABLED" ? (
+            <span
+              style={{ color: "#dd712b", background: "#dd712b30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).ins.initialStatus.toLowerCase()}
             </span>
           ) : (
             <span
               style={{ color: "#FF595E", background: "#FF595E30" }}
               className="w-36 py-1 rounded-full inline-block mx-auto"
             >
-              Rejected
+              {(info.row.original as any).ins.initialStatus.toLowerCase()}
             </span>
           )}
         </div>
