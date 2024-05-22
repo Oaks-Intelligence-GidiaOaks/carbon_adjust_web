@@ -37,6 +37,7 @@ import {
 import FinanceOptionCard from "@/components/reusables/FinanceOptionCard";
 import toast from "react-hot-toast";
 import MainFinanceApplicationSuccess from "@/components/dialogs/MainFinanceApplicationSuccessDialog";
+import Loading from "@/components/reusables/Loading";
 
 type Props = {};
 
@@ -391,6 +392,11 @@ const ApplyToFinance = (_: Props) => {
               <div className="w-full flex justify-center gap-x-6">
                 <div className="flex-[0.5] h-full">
                   <div className="mt-6 flex flex-col gap-y-5">
+                    {financePackages.isLoading && (
+                      <div className="flex justify-center mt-10">
+                        <Loading message="Fetching finance packages" />
+                      </div>
+                    )}
                     {financePackages.data?.data.data.map(
                       (financePackage: any, i: number) => (
                         <FinanceOptionCard

@@ -105,17 +105,30 @@ const Dashboard: FC = () => {
                 options={getLastFiveYears()}
               /> */}
             </div>
-            <StackedLineChart
-              approved={
-                financeDashboardData.data.data.data.applications_chart.approved
-              }
-              rejected={
-                financeDashboardData.data.data.data.applications_chart.rejected
-              }
-              received={
-                financeDashboardData.data.data.data.applications_chart.received
-              }
-            />
+            <div
+              style={{
+                height: "35vh",
+                position: "relative",
+                marginBottom: "1%",
+                padding: "1%",
+              }}
+              className="relative w-full"
+            >
+              <StackedLineChart
+                approved={
+                  financeDashboardData.data.data.data.applications_chart
+                    .approved
+                }
+                rejected={
+                  financeDashboardData.data.data.data.applications_chart
+                    .rejected
+                }
+                received={
+                  financeDashboardData.data.data.data.applications_chart
+                    .received
+                }
+              />
+            </div>
             <div className="mt-6 flex justify-center gap-x-3 items-center"></div>
           </div>
 

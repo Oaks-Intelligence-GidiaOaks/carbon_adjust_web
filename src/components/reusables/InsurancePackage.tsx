@@ -17,6 +17,8 @@ type Props = {
       name: string;
     };
     logo: string;
+    coverImg: string;
+    currency: string;
     maxInsuranceAmount: number;
     insurancePercent: number;
     createdAt: string;
@@ -54,7 +56,7 @@ const InsurancePackage = ({ data }: Props) => {
     <div className="w-full group flex gap-x-4 hover:shadow-lg transition-all min-w-[270px] sm:min-w-[380px] overflow-hidden bg-white border border-gray-300 relative rounded-xl pt-4 pb-4 px-2 sm:px-6 bg-no-repeat bg-right-top">
       <div className="size-8 sm:size-12 rounded-full overflow-hidden border border-gray-300">
         <img
-          src={data.logo ?? defaultPackageImage}
+          src={data.coverImg ?? defaultPackageImage}
           className="w-full h-full object-contain"
         />
       </div>
@@ -73,10 +75,11 @@ const InsurancePackage = ({ data }: Props) => {
 
         <div className="mt-2 flex flex-col justify-between items-start">
           <p className="text-ca-blue text-xs font-poppins">
-            Annual percentage rate: {data.insurancePercent}%
+            Insurance percentage: {data.insurancePercent}%
           </p>
           <p className="font-sans mt-3 font-semibold text-black-main text-lg">
-            £{data.maxInsuranceAmount}
+            {data.currency}
+            {data.maxInsuranceAmount}
           </p>
           {/* <Button
             variant={"link"}

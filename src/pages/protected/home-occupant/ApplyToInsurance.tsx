@@ -560,7 +560,7 @@ const ApplyToInsurance = (_: Props) => {
                   Insurance Institutions
                 </p>
                 <p className="text-gray-500 mt-1">
-                  Select an insurance institution
+                  Select an insurance package
                 </p>
               </div>
               <div className="mt-6 flex flex-col gap-y-4">

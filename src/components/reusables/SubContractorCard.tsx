@@ -133,8 +133,9 @@ const SubContractorCard = ({
         </div>
         <div className="mt-1 flex justify-between items-center">
           <p className="text-green-500 text-xs font-poppins">
+            {/* {console.log(data)} */}
             {data?.homes_retrofitted ?? 0} Homes Retrofitted |{" "}
-            {formatDate(data.created_at)}
+            {data.createdAt && formatDate(data.createdAt)}
           </p>
           <Button
             variant={"link"}

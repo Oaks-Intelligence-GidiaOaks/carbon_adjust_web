@@ -360,7 +360,7 @@ const Router = createBrowserRouter([
   // SUBCONTRACTOR ROUTES
   {
     path: "/subcontractor",
-    element: <Layout sidebarType="hia" />,
+    element: <Layout sidebarType="subcontractor" />,
     children: [
       {
         path: "",

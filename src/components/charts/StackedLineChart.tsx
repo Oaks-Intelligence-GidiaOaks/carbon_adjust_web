@@ -28,6 +28,7 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+  maintainAspectRatio: false,
   interaction: {
     mode: "index" as const,
     intersect: false,
@@ -134,5 +135,5 @@ export function StackedLineChart({
       },
     ],
   };
-  return <Line options={options} data={data} />;
+  return <Line width={"100%"} height={"100%"} options={options} data={data} />;
 }

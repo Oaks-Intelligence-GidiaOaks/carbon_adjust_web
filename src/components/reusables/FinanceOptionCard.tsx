@@ -77,7 +77,7 @@ FinanceOptionCardProps) => {
       <div className="flex items-center gap-x-2">
         <div className="size-8">
           <img
-            src={data?.image ?? defaultPackageImage}
+            src={data?.coverImg ?? defaultPackageImage}
             className="w-full h-full object-contain"
           />
         </div>
@@ -94,7 +94,8 @@ FinanceOptionCardProps) => {
       </div>
       <div className="pt-4 line-clamp-2 text-ellipsis font-poppins font-normal flex flex-wrap items-center gap-x-2">
         <p className="text-xs text-grey-swatch-800">
-          Loan amount: £{data.maxAmount}
+          Loan amount: {data.currency}
+          {data.maxAmount}
         </p>
         <div className="h-4 w-[1px] bg-[rgba(0,0,0,0.3)]" />
         <p className="text-xs text-grey-swatch-800">
@@ -132,8 +133,7 @@ FinanceOptionCardProps) => {
             variant={"ghost"}
             className="flex hover:shadow-md transition-all font-poppins bg-blue-main items-center gap-x-2 text-white w-[145px] text-xs min-w-[145px]"
           >
-            {/* {console.log(mutation?.variables)} */}
-            {mutation?.isPending ? (
+            {mutation?.isPending && data._id === mutation?.variables ? (
               <Oval
                 visible={mutation?.isPending}
                 height="20"

@@ -9,7 +9,8 @@ import {
   Input,
 } from "@/components/ui";
 import RadioGroupComponent from "@/components/ui/RadioGroup";
-import { maximumRepaymentOptions } from "@/constants";
+import { currencies, maximumRepaymentOptions } from "@/constants";
+// import { DropdownOption } from "@/types/general";
 import { cn, convertImageToDataURL } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
 import { Country, ICountry, State } from "country-state-city";
@@ -19,6 +20,21 @@ import { Oval } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Select, { MultiValue } from "react-select";
+
+// interface FinancePackageObject {
+//   institutionName: string | undefined;
+//   packageName: string;
+//   maximumAmount: string;
+//   annualPercentageRate: string;
+//   interestRateType: string;
+//   maxRepaymentPeriod: DropdownOption;
+//   country: DropdownOption;
+//   currency: DropdownOption;
+//   packageVisibility: string;
+//   regions?: any[];
+//   file: File | null;
+//   imageDataUrl: string;
+// }
 
 const AddPackage = () => {
   const navigate = useNavigate();
@@ -49,6 +65,24 @@ const AddPackage = () => {
     },
   });
 
+  function isValidDataObject(data: any): boolean {
+    const entries = Object.entries(data);
+
+    for (const [key, value] of entries) {
+      if (key === "regions") continue;
+      if (value === null || value === undefined) return false;
+
+      if (typeof value === "object") {
+        if ("label" in value && value.label === "") return false;
+        if ("value" in value && value.value === "") return false;
+      } else if (value === "") {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   const [formData, setFormData] = useState({
     institutionName: user?.name,
     packageName: "",
@@ -60,6 +94,10 @@ const AddPackage = () => {
       value: "",
     },
     country: {
+      label: "",
+      value: "",
+    },
+    currency: {
       label: "",
       value: "",
     },
@@ -115,6 +153,7 @@ const AddPackage = () => {
       "maxRepaymentPeriod",
       formData.maxRepaymentPeriod.value
     );
+    formDataPayload.append("currency", formData.currency.value);
     formDataPayload.append(
       "interestRateType",
       formData.interestRateType.toLowerCase()
@@ -210,9 +249,29 @@ const AddPackage = () => {
           }
         />
 
+        <CountryRegionDropdown
+          name="currency"
+          labelClassName={labelStyle}
+          options={currencies.map((currency) => ({
+            label: currency.label + ` (${currency.value})`,
+            value: currency.value,
+          }))}
+          searchable={true}
+          label="Currency"
+          wrapperClassName="bg-gray-100 w-full font-poppins"
+          placeholder="Select currency"
+          value={formData.currency}
+          countryChange={(value) => {
+            setFormData((prev) => ({
+              ...prev,
+              currency: value,
+            }));
+          }}
+        />
+
         <Input
           name="maximum-amount"
-          label="Maximum amount (£) *"
+          label="Maximum amount *"
           type="number"
           inputClassName={inputClassName}
           labelClassName={labelStyle}
@@ -328,7 +387,7 @@ const AddPackage = () => {
         )}
 
         <Button
-          disabled={addPackage.isPending}
+          disabled={!isValidDataObject(formData) || addPackage.isPending}
           className="rounded-lg text-white mt-4 w-full h-11"
         >
           {addPackage.isPending ? (

@@ -13,8 +13,10 @@ import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "@/features/userSlice";
+import { RootState } from "@/app/store";
+import { uniqueObjectsByIdType } from "@/utils";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
@@ -52,6 +54,8 @@ const Login = () => {
     },
   });
 
+  const userData = useSelector((state: RootState) => state.user.user);
+
   const handleRedirect = (role: string) => {
     if (role === "HOME_OCCUPANT") return navigate("/dashboard");
     if (role === "AGGREGATOR") return navigate("/aggregator");
@@ -76,6 +80,16 @@ const Login = () => {
 
   useEffect(() => {
     console.log(tab);
+    if (inactivityState === "unauthorized") {
+      setTimeout(() => {
+        toast.error(
+          "You were logged out because you are unauthorized. Please logging to continue",
+          { id: "unauthorized" }
+        );
+        navigate("/login");
+      }, 0);
+      // navigate("/login");
+    }
     if (inactivityState === "true") {
       setTimeout(() => {
         toast.error(
@@ -87,6 +101,51 @@ const Login = () => {
       // navigate("/login");
     }
   }, [tab]);
+
+  // Redirect user when they visit the login page if user is still logged in
+
+  useEffect(() => {
+    const userRole = userData?.roles[0];
+    const userStatus = userData?.status;
+    const userStep = userData?.step;
+    const userDocs = userData?.doc;
+
+    if (userRole) {
+      console.log(userRole);
+
+      if (userRole === "ADMIN") {
+        return navigate("/admin");
+      }
+      if (
+        userRole !== "HOME_OCCUPANT" &&
+        uniqueObjectsByIdType(userDocs).length < 3
+      ) {
+        return navigate("/account-setup");
+      }
+      if (userStatus === "pending" && ((userStep || 0) < 4 || !userStep)) {
+        return navigate("/account-setup");
+      }
+      if (userStatus === "pending") {
+        return navigate("/pending-verification");
+      }
+      if (userRole === "AGGREGATOR") {
+        return navigate("/aggregator");
+      }
+      if (userRole === "HIA") {
+        return navigate("/hia");
+      }
+      if (userRole === "FINANCIAL_INSTITUTION") {
+        return navigate("/finance");
+      }
+      if (userRole === "INSURANCE") {
+        return navigate("/insurance");
+      }
+      if (userRole === "SUBCONTRACTOR") {
+        return navigate("/subcontractor");
+      }
+      return navigate("/dashboard");
+    }
+  }, [userData?.roles[0]]);
 
   return (
     <div>

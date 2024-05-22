@@ -4,10 +4,12 @@ import axiosInstance from "@/api/axiosInstance";
 import { RootState } from "@/app/store";
 import {
   Button,
+  CountryRegionDropdown,
   // CountryRegionDropdown,
   // Dropdown,
   Input,
 } from "@/components/ui";
+import { currencies } from "@/constants";
 // import RadioGroupComponent from "@/components/ui/RadioGroup";
 // import { maximumRepaymentOptions } from "@/constants";
 import { cn, convertImageToDataURL } from "@/utils";
@@ -18,7 +20,7 @@ import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { MultiValue } from "react-select";
+// import { MultiValue } from "react-select";
 
 const AddPackage = () => {
   const navigate = useNavigate();
@@ -54,18 +56,22 @@ const AddPackage = () => {
     packageName: "",
     maximumAmount: "",
     percentageOfInsurance: "",
-    annualPercentageRate: "",
-    interestRateType: "",
-    maxRepaymentPeriod: {
+    // annualPercentageRate: "",
+    // interestRateType: "",
+    // maxRepaymentPeriod: {
+    //   label: "",
+    //   value: "",
+    // },
+    // country: {
+    //   label: "",
+    //   value: "",
+    // },
+    currency: {
       label: "",
       value: "",
     },
-    country: {
-      label: "",
-      value: "",
-    },
-    packageVisibility: "",
-    regions: [] as MultiValue<any>,
+    // packageVisibility: "",
+    // regions: [] as MultiValue<any>,
     file: null as File | null,
     imageDataUrl: "",
   });
@@ -110,6 +116,7 @@ const AddPackage = () => {
     console.log(formData);
     const formDataPayload = new FormData();
     formDataPayload.append("name", formData.packageName);
+    formDataPayload.append("currency", formData.currency.value);
     formDataPayload.append("maxInsuranceAmount", formData.maximumAmount);
     formDataPayload.append("insurancePercent", formData.percentageOfInsurance);
     // formDataPayload.append(
@@ -133,6 +140,24 @@ const AddPackage = () => {
 
     addPackage.mutate(formDataPayload);
   };
+
+  function isValidDataObject(data: any): boolean {
+    const entries = Object.entries(data);
+
+    for (const [key, value] of entries) {
+      if (key === "regions") continue;
+      if (value === null || value === undefined) return false;
+
+      if (typeof value === "object") {
+        if ("label" in value && value.label === "") return false;
+        if ("value" in value && value.value === "") return false;
+      } else if (value === "") {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   return (
     <div className="font-poppins pb-96">
@@ -211,13 +236,33 @@ const AddPackage = () => {
           }
         />
 
+        <CountryRegionDropdown
+          name="currency"
+          labelClassName={labelStyle}
+          options={currencies.map((currency) => ({
+            label: currency.label + ` (${currency.value})`,
+            value: currency.value,
+          }))}
+          searchable={true}
+          label="Currency"
+          wrapperClassName="bg-gray-100 w-full font-poppins"
+          placeholder="Select currency"
+          value={formData.currency}
+          countryChange={(value) => {
+            setFormData((prev) => ({
+              ...prev,
+              currency: value,
+            }));
+          }}
+        />
+
         <Input
           name="maximum-amount"
           label="Maximum Insurance amount *"
           inputClassName={inputClassName}
           labelClassName={labelStyle}
           placeholder="Enter maximum amount"
-          prependIcon={<p className="text-base text-gray-800">£</p>}
+          // prependIcon={<p className="text-base text-gray-800">£</p>}
           value={formData.maximumAmount}
           onChange={(e) =>
             setFormData((prev) => {
@@ -342,7 +387,7 @@ const AddPackage = () => {
         )} */}
 
         <Button
-          disabled={addPackage.isPending}
+          disabled={!isValidDataObject(formData) || addPackage.isPending}
           className="rounded-lg text-white w-full h-11 mt-10"
         >
           {addPackage.isPending ? (
