@@ -13,6 +13,9 @@ import { AiOutlineClose } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
+import { RootState } from "@/app/store";
+import { useSelector } from "react-redux";
+import { BiUser } from "react-icons/bi";
 
 // let easeing = [0.6,-0.05,0.01,0.99];
 
@@ -135,6 +138,8 @@ import { motion } from "framer-motion";
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const user = useSelector((state: RootState) => state.user.user);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -195,18 +200,40 @@ const LandingPage = () => {
           </ul> */}
 
             <div className="hidden sm:flex gap-6">
-              <NavLink to="/register" className="btn">
-                Sign up
-              </NavLink>
-              <NavLink to="/login" className="btn">
-                Login
-              </NavLink>
               <NavLink
                 to="https://kommunita-web.netlify.app/login"
                 className="btn"
               >
                 Kommunita
               </NavLink>
+              <NavLink to="/register" className="btn">
+                Sign up
+              </NavLink>
+              {user ? (
+                <NavLink to="/login" className="">
+                  {user.dp ? (
+                    <div className="size-8 rounded-full shadow-lg">
+                      <img
+                        className="w-full h-full rounded-full object-cover"
+                        alt="avatar"
+                        src={user.dp}
+                      />
+                    </div>
+                  ) : (
+                    <div className="size-8 shadow-lg flex items-center justify-center rounded border border-ca-blue">
+                      <BiUser
+                        fontSize={20}
+                        width={40}
+                        className="text-ca-blue text-3xl"
+                      />
+                    </div>
+                  )}
+                </NavLink>
+              ) : (
+                <NavLink to="/login" className="btn">
+                  Login
+                </NavLink>
+              )}
             </div>
 
             <div className="flex cursor-pointer sm:hidden text-2xl flex-1 justify-end">
@@ -268,6 +295,12 @@ const LandingPage = () => {
 
             <div className="flex flex-col w-full absolute top-40 px-10">
               <NavLink
+                to="https://kommunita-web.netlify.app/login"
+                className="font-poppins text-lg font-medium w-full text-center bg-ca-blue text-white rounded-md py-2 mt-4"
+              >
+                Kommunita
+              </NavLink>
+              <NavLink
                 to="/register"
                 className="font-poppins text-lg font-medium w-full text-center py-2 bg-ca-blue  text-white rounded-md mt-4"
               >
@@ -278,12 +311,6 @@ const LandingPage = () => {
                 className="font-poppins text-lg font-medium w-full text-center bg-ca-blue text-white rounded-md py-2 mt-4"
               >
                 Login
-              </NavLink>
-              <NavLink
-                to="https://kommunita-web.netlify.app/login"
-                className="font-poppins text-lg font-medium w-full text-center bg-ca-blue text-white rounded-md py-2 mt-4"
-              >
-                Kommunita
               </NavLink>
             </div>
           </nav>

@@ -226,9 +226,12 @@ const OrganizationProfile = (_: Props) => {
               </p>
             </div>
             <div>
-              <p className="text-ca-blue font-poppins">Date of Formation</p>
+              <p className="text-ca-blue font-poppins">
+                {userData?.dateFormed ? "Date of Formation" : "Account Created"}
+              </p>
+
               <p className="text-main font-poppins mt-1">
-                {formatDate(userData?.dateFormed ?? "")}
+                {formatDate(userData?.dateFormed ?? userData?.createdAt ?? "")}
               </p>
             </div>
             <div>

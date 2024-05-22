@@ -74,7 +74,7 @@ const Packages = () => {
             <div className="mt-5">
               <Button
                 className="flex gap-x-2 items-center font-poppins"
-                onClick={() => navigate("/finance/packages/add")}
+                onClick={() => navigate("/insurance/packages/add")}
               >
                 <span>Create package</span>
                 <div className="size-6 rounded-full bg-white/10">
