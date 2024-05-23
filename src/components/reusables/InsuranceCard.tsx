@@ -2,7 +2,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { Button } from "../ui";
 import { Dispatch, SetStateAction, useState } from "react";
 import CheckBox from "../ui/CheckBox";
-import { formatLargeNumber } from "@/utils";
+import { formatNumberWithCommas } from "@/utils";
 
 export type InsuranceCardProps = {
   data: {
@@ -59,8 +59,8 @@ const InsuranceCard = ({
   console.log(data);
 
   return isLive ? (
-    <div className="w-full group flex gap-x-4 hover:shadow-lg transition-all min-w-[338px] h-[180px] max-w-[560px] overflow-hidden bg-[#DEDEDE]/30 border border-black-main/50 relative rounded-2xl pt-4 pb-4 px-6 bg-no-repeat bg-right-top">
-      <div className="size-12 rounded-full overflow-hidden">
+    <div className="w-full group flex gap-x-4 hover:shadow-lg transition-all min-w-[240px] h-[180px] max-w-[560px] overflow-hidden bg-[#DEDEDE]/30 border border-black-main/50 relative rounded-2xl pt-4 pb-4 px-2 sm:px-6 bg-no-repeat bg-right-top">
+      <div className="size-8 sm:size-12 rounded-full overflow-hidden">
         <img
           src={(data as any).coverImg}
           className="w-full h-full object-cover"
@@ -69,7 +69,7 @@ const InsuranceCard = ({
       <div className="flex-1">
         <div className="flex flex-1 justify-between  items-center gap-x-2">
           <div className="flex justify-between flex-1 items-center">
-            <p className="font-poppins text-black text-main text-lg">
+            <p className="font-poppins text-black text-main text-base sm:text-lg text-ellipsis overflow-hidden line-clamp-1">
               {(data as any).name}
             </p>
             {!hideCheckBox && (
@@ -99,14 +99,14 @@ const InsuranceCard = ({
             </div>
           </div>
         </div>
-        <div className="mt-1 text-grey-swatch-800 font-poppins">
+        <div className="mt-1 text-sm sm:text-base text-ellipsis overflow-hidden line-clamp-1 text-grey-swatch-800 font-poppins">
           <p>{data.createdBy.name}</p>
           <p className="mt-1 text-lg font-medium">{data.loan_amount}</p>
         </div>
         <div className="my-4">
           <p className="font-semibold text-main text-2xl">
             {data.currency}
-            {formatLargeNumber(data.maxInsuranceAmount)}
+            {formatNumberWithCommas(data.maxInsuranceAmount)}
           </p>
         </div>
 

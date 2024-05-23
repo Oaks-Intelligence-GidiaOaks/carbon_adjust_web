@@ -18,7 +18,12 @@ import {
   //   fetchFinancePackages,
   fetchInsurancePackages,
 } from "@/services/homeOccupant";
-import { cn } from "@/utils";
+import {
+  cn,
+  convertFormattedStringToNumber,
+  formatNumberWithCommas,
+  generateUserCurrency,
+} from "@/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -32,12 +37,15 @@ import {
 } from "react-router-dom";
 import { maximumRepaymentOptions } from "@/constants";
 import Loading from "@/components/reusables/Loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 type Props = {};
 
 const ApplyToInsurance = (_: Props) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const userData = useSelector((state: RootState) => state.user.user);
   //   const [searchParams] = useSearchParams();
 
   const [, setShowSheet] = useState(true);
@@ -73,17 +81,23 @@ const ApplyToInsurance = (_: Props) => {
       applyToInsuranceFromHIA(
         {
           packageId: selectedPackage,
-          carbonCredit: parseInt(details.carbonCredit),
-          loanAmt: parseInt(details.loanAmount),
+          carbonCredit: convertFormattedStringToNumber(details.carbonCredit),
+          loanAmt: convertFormattedStringToNumber(details.loanAmount),
           durationOfCC: parseInt(details.durationOfCC.value),
           percentOfIns: parseInt(details.percentageOfInsurance[0].toString()),
           appStage: (currentApplicationDetails as any)?.data?.data
             .currentAppStage,
-          annHouseholdIncome: parseInt(details.houseHoldIncome),
-          otherIncome: parseInt(details.otherIncome),
-          moHouseholdExp: parseInt(details.houseHoldMonthlyExpenses),
-          othMonthlyExp: parseInt(details.otherMonthlyExpense),
-          dependants: parseInt(details.noOfDependents),
+          annHouseholdIncome: convertFormattedStringToNumber(
+            details.houseHoldIncome
+          ),
+          otherIncome: convertFormattedStringToNumber(details.otherIncome),
+          moHouseholdExp: convertFormattedStringToNumber(
+            details.houseHoldMonthlyExpenses
+          ),
+          othMonthlyExp: convertFormattedStringToNumber(
+            details.otherMonthlyExpense
+          ),
+          dependants: convertFormattedStringToNumber(details.noOfDependents),
         },
         (currentApplicationDetails as any)?.data?.data.appId
       ),
@@ -103,8 +117,8 @@ const ApplyToInsurance = (_: Props) => {
       applyToInsurance(
         {
           packageId: selectedPackage,
-          carbonCredit: parseInt(details.carbonCredit),
-          loanAmt: parseInt(details.loanAmount),
+          carbonCredit: convertFormattedStringToNumber(details.carbonCredit),
+          loanAmt: convertFormattedStringToNumber(details.loanAmount),
           durationOfCC: parseInt(details.durationOfCC.value),
           percentOfIns: parseInt(details.percentageOfInsurance[0].toString()),
           appStage: (currentApplicationDetails as any)?.data?.data
@@ -290,10 +304,10 @@ const ApplyToInsurance = (_: Props) => {
                     value={details!.carbonCredit}
                     onChange={(e) =>
                       setDetails!((prev) => {
-                        const newValue = e.target.value.replace(/[^0-9]/g, "");
+                        // const newValue = e.target.value.replace(/[^0-9]/g, "");
                         return {
                           ...prev,
-                          carbonCredit: newValue,
+                          carbonCredit: formatNumberWithCommas(e.target.value),
                         };
                       })
                     }
@@ -306,14 +320,17 @@ const ApplyToInsurance = (_: Props) => {
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="How much loan are you requesting for ?"
-                    prependIcon={<p className="font-medium pr-2">£</p>}
+                    prependIcon={
+                      <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                        {generateUserCurrency(userData?.address.country!)}
+                      </p>
+                    }
                     value={details!.loanAmount}
                     onChange={(e) =>
                       setDetails!((prev) => {
-                        const newValue = e.target.value.replace(/[^0-9]/g, "");
                         return {
                           ...prev,
-                          loanAmount: newValue,
+                          loanAmount: formatNumberWithCommas(e.target.value),
                         };
                       })
                     }
@@ -408,16 +425,18 @@ const ApplyToInsurance = (_: Props) => {
                         inputClassName="bg-gray-100 font-poppins"
                         placeholder="Your annual household income"
                         value={details.houseHoldIncome}
-                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        prependIcon={
+                          <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                            {generateUserCurrency(userData?.address.country!)}
+                          </p>
+                        }
                         onChange={(e) =>
                           setDetails!((prev) => {
-                            const newValue = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
                             return {
                               ...prev,
-                              houseHoldIncome: newValue,
+                              houseHoldIncome: formatNumberWithCommas(
+                                e.target.value
+                              ),
                             };
                           })
                         }
@@ -432,16 +451,18 @@ const ApplyToInsurance = (_: Props) => {
                         inputClassName="bg-gray-100 font-poppins"
                         placeholder="Other income"
                         value={details.otherIncome}
-                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        prependIcon={
+                          <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                            {generateUserCurrency(userData?.address.country!)}
+                          </p>
+                        }
                         onChange={(e) =>
                           setDetails!((prev) => {
-                            const newValue = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
                             return {
                               ...prev,
-                              otherIncome: newValue,
+                              otherIncome: formatNumberWithCommas(
+                                e.target.value
+                              ),
                             };
                           })
                         }
@@ -456,16 +477,18 @@ const ApplyToInsurance = (_: Props) => {
                         inputClassName="bg-gray-100 font-poppins"
                         placeholder=""
                         value={details.houseHoldMonthlyExpenses}
-                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        prependIcon={
+                          <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                            {generateUserCurrency(userData?.address.country!)}
+                          </p>
+                        }
                         onChange={(e) =>
                           setDetails!((prev) => {
-                            const newValue = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
                             return {
                               ...prev,
-                              houseHoldMonthlyExpenses: newValue,
+                              houseHoldMonthlyExpenses: formatNumberWithCommas(
+                                e.target.value
+                              ),
                             };
                           })
                         }
@@ -479,17 +502,19 @@ const ApplyToInsurance = (_: Props) => {
                         labelClassName="mb-4 font-poppins text-black-main"
                         inputClassName="bg-gray-100 font-poppins"
                         placeholder="Other monthly expenses"
-                        prependIcon={<p className="font-medium pr-2">£</p>}
+                        prependIcon={
+                          <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                            {generateUserCurrency(userData?.address.country!)}
+                          </p>
+                        }
                         value={details.otherMonthlyExpense}
                         onChange={(e) =>
                           setDetails!((prev) => {
-                            const newValue = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
                             return {
                               ...prev,
-                              otherMonthlyExpense: newValue,
+                              otherMonthlyExpense: formatNumberWithCommas(
+                                e.target.value
+                              ),
                             };
                           })
                         }
@@ -506,13 +531,11 @@ const ApplyToInsurance = (_: Props) => {
                         value={details.noOfDependents}
                         onChange={(e) =>
                           setDetails!((prev) => {
-                            const newValue = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
                             return {
                               ...prev,
-                              noOfDependents: newValue,
+                              noOfDependents: formatNumberWithCommas(
+                                e.target.value
+                              ),
                             };
                           })
                         }

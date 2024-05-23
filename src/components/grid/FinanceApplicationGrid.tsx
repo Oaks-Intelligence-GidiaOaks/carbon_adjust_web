@@ -118,8 +118,9 @@ const FinanceApplicationGrid = ({
     onSuccess: () => {
       toast.success("Application declined");
       queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
+        queryKey: ["get-fin-applications"],
       });
+      setCurrentRowId(null);
     },
     onError: () => {
       toast.error("Error approving contractor");
@@ -153,8 +154,9 @@ const FinanceApplicationGrid = ({
     onSuccess: () => {
       toast.success("Application approved");
       queryClient.invalidateQueries({
-        queryKey: ["get-hia-applications"],
+        queryKey: ["get-fin-applications"],
       });
+      setCurrentRowId(null);
     },
     onError: () => {
       toast.error("Error approving application");
@@ -287,7 +289,53 @@ const FinanceApplicationGrid = ({
           )}
         </div>
       ),
-      header: () => <div className="w-32 whitespace-nowrap">Status</div>,
+      header: () => <div className="w-32 whitespace-nowrap">Status(Fin.)</div>,
+    }),
+    columnHelper.accessor((row: any) => row?.fin, {
+      id: "initialStatus",
+      cell: (info: any) => (
+        <div className="w-44 relative flex items-center text-sm">
+          {(info.row.original as any).fin.initialStatus === "APPLIED" ? (
+            <span
+              style={{ color: "#FFA832", background: "#FFA83230" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).fin.initialStatus.toLowerCase()}
+            </span>
+          ) : (info.row.original as any).fin.initialStatus === "APPROVED" ? (
+            <span
+              style={{ color: "#8AC926", background: "#8AC92630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Approved
+            </span>
+          ) : (info.row.original as any).fin.initialStatus === "DECLINED" ? (
+            <span
+              style={{ color: "#ff3e00", background: "#ff3e0030" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Declined
+            </span>
+          ) : (info.row.original as any).fin.initialStatus === "DISABLED" ? (
+            <span
+              style={{ color: "#dd712b", background: "#dd712b30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto capitalize"
+            >
+              {(info.row.original as any).fin.initialStatus.toLowerCase()}
+            </span>
+          ) : (
+            <span
+              style={{ color: "#FF595E", background: "#FF595E30" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              {(info.row.original as any).fin.initialStatus.toLowerCase()}
+            </span>
+          )}
+        </div>
+      ),
+      header: () => (
+        <div className="w-32 whitespace-nowrap">Status(Home Owner)</div>
+      ),
     }),
     columnHelper.accessor((row: any) => row._id, {
       id: "_id",

@@ -117,7 +117,10 @@ const InsuranceApplicationsGrid = ({
     },
     onSuccess: () => {
       toast.success("Application declined");
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({
+        queryKey: ["get-ins-applications"],
+      });
+      setCurrentRowId(null);
     },
     onError: () => {
       toast.error("Error approving contractor");
@@ -150,7 +153,10 @@ const InsuranceApplicationsGrid = ({
     },
     onSuccess: () => {
       toast.success("Application approved");
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({
+        queryKey: ["get-ins-applications"],
+      });
+      setCurrentRowId(null);
     },
     onError: () => {
       toast.error("Error approving application");
@@ -242,7 +248,7 @@ const InsuranceApplicationsGrid = ({
             <a
               href={
                 (info.row.original as any).ins.media.filter(
-                  (m: any) => m.fileType === "HO_APP_TO_FIN_PDF"
+                  (m: any) => m.fileType === "HO_APP_TO_INS_PDF"
                 )[0]?.url
               }
               className="poppins-4 text-main text-xs hover:underline flex gap-x-2 items-center"

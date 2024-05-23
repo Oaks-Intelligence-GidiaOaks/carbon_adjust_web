@@ -38,6 +38,13 @@ import FinanceOptionCard from "@/components/reusables/FinanceOptionCard";
 import toast from "react-hot-toast";
 import MainFinanceApplicationSuccess from "@/components/dialogs/MainFinanceApplicationSuccessDialog";
 import Loading from "@/components/reusables/Loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import {
+  convertFormattedStringToNumber,
+  formatNumberWithCommas,
+  generateUserCurrency,
+} from "@/utils";
 
 type Props = {};
 
@@ -45,6 +52,8 @@ const ApplyToFinance = (_: Props) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  const userData = useSelector((state: RootState) => state.user.user);
 
   const tab = searchParams.get("state");
 
@@ -99,11 +108,17 @@ const ApplyToFinance = (_: Props) => {
       applyToFinance(
         {
           packageId: packageId,
-          annHouseholdIncome: parseInt(details.houseHoldIncome),
-          otherIncome: parseInt(details.otherIncome),
-          moHouseholdExp: parseInt(details.houseHoldMonthlyExpenses),
-          othMonthlyExp: parseInt(details.otherMonthlyExpense),
-          dependants: parseInt(details.noOfDependents),
+          annHouseholdIncome: convertFormattedStringToNumber(
+            details.houseHoldIncome
+          ),
+          otherIncome: convertFormattedStringToNumber(details.otherIncome),
+          moHouseholdExp: convertFormattedStringToNumber(
+            details.houseHoldMonthlyExpenses
+          ),
+          othMonthlyExp: convertFormattedStringToNumber(
+            details.otherMonthlyExpense
+          ),
+          dependants: convertFormattedStringToNumber(details.noOfDependents),
         },
         (currentApplicationDetails as any)?.data?.data.appId
       ),
@@ -473,17 +488,22 @@ const ApplyToFinance = (_: Props) => {
                 <div className="mt-6">
                   <Input
                     name="annualIncome"
-                    type="number"
+                    // type="number"
                     label="What is your annual household income?"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
+                    prependIcon={
+                      <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                        {generateUserCurrency(userData?.address.country!)}
+                      </p>
+                    }
                     placeholder="Your annual household income"
                     value={details.houseHoldIncome}
                     onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
-                        houseHoldIncome: e.target.value,
+                        houseHoldIncome: formatNumberWithCommas(e.target.value),
                       }))
                     }
                   />
@@ -493,16 +513,21 @@ const ApplyToFinance = (_: Props) => {
                     name="otherIncome"
                     label="Other income (Spouse, additional employment, etc.) *"
                     required
-                    type="number"
+                    // type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
+                    prependIcon={
+                      <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                        {generateUserCurrency(userData?.address.country!)}
+                      </p>
+                    }
                     placeholder="Other income"
                     value={details.otherIncome}
                     onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
-                        otherIncome: e.target.value,
+                        otherIncome: formatNumberWithCommas(e.target.value),
                       }))
                     }
                   />
@@ -512,16 +537,23 @@ const ApplyToFinance = (_: Props) => {
                     name="monthlyExpenses"
                     label="Household monthly expenses (excluding loans, credit card, etc)"
                     required
-                    type="number"
+                    // type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
+                    prependIcon={
+                      <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                        {generateUserCurrency(userData?.address.country!)}
+                      </p>
+                    }
                     placeholder="Other income"
                     value={details.houseHoldMonthlyExpenses}
                     onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
-                        houseHoldMonthlyExpenses: e.target.value,
+                        houseHoldMonthlyExpenses: formatNumberWithCommas(
+                          e.target.value
+                        ),
                       }))
                     }
                   />
@@ -531,16 +563,23 @@ const ApplyToFinance = (_: Props) => {
                     name="otherMonthlyExpenses"
                     label="Other monthly expenses"
                     required
-                    type="number"
+                    // type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Other monthly expenses"
                     value={details.otherMonthlyExpense}
+                    prependIcon={
+                      <p className="bg-gray-200 p-2 py-1 rounded-sm">
+                        {generateUserCurrency(userData?.address.country!)}
+                      </p>
+                    }
                     onWheel={handleWheel}
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
-                        otherMonthlyExpense: e.target.value,
+                        otherMonthlyExpense: formatNumberWithCommas(
+                          e.target.value
+                        ),
                       }))
                     }
                   />
@@ -550,7 +589,7 @@ const ApplyToFinance = (_: Props) => {
                     name="noOfDependents"
                     label="Number of dependents"
                     required
-                    type="number"
+                    // type="number"
                     labelClassName="mb-4 font-poppins text-black-main"
                     inputClassName="bg-gray-100 font-poppins"
                     placeholder="Number of dependents"
@@ -559,7 +598,7 @@ const ApplyToFinance = (_: Props) => {
                     onChange={(e) =>
                       setDetails((prev) => ({
                         ...prev,
-                        noOfDependents: e.target.value,
+                        noOfDependents: formatNumberWithCommas(e.target.value),
                       }))
                     }
                   />

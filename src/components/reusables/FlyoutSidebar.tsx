@@ -27,7 +27,7 @@ const FlyoutSidebar = ({ isOpen, onOpenChange, children }: Props) => {
         <Button
           onClick={() => onOpenChange(false)}
           variant={"outline"}
-          className="size-8 p-0 rounded-full absolute top-4 right-2 text-blue-main border border-blue-main"
+          className="size-8 p-0 rounded-full absolute top-4 right-4 text-blue-main border border-blue-main"
         >
           <IoMdClose size={18} />
         </Button>
