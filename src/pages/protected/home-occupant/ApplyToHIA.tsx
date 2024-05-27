@@ -714,6 +714,14 @@ const ApplyToHIA = (_: Props) => {
 
               {/* {console.log("Error here: ", singleHOApp.data)} */}
               <div className="flex flex-col gap-y-6 mt-8">
+                {/* HIA applications status loading */}
+                {singleHOApp.isLoading &&
+                  ((app: any) => app.currentStatus === "DECLINED") && (
+                    <div className="pt-10 flex justify-center items-center">
+                      <Loading message="Fetching HIA applications status" />
+                    </div>
+                  )}
+                {/* HIA applications status successfully loaded */}
                 {singleHOApp.isSuccess &&
                   singleHOApp?.data?.data?.data?.map(
                     (data: HIAAppMeta, i: number) => (

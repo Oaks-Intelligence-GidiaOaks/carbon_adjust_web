@@ -69,6 +69,8 @@ const UsersRegistration = () => {
     queryFn: () => fetchUsersRegistration(currentTab),
   });
 
+  console.log(userRegistrations.data?.data.data.users);
+
   console.log(userRegistrations.data?.data);
 
   //   const registrationData = useQuery({

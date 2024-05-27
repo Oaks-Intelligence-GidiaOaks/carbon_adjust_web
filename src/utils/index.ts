@@ -1,5 +1,7 @@
 import { DataRow } from "@/types/generics";
 import { clsx, ClassValue } from "clsx";
+import { Country } from "country-state-city";
+import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -204,3 +206,77 @@ export function getCurrentMonthAbbreviation(): string {
   const currentMonthIndex = new Date().getMonth();
   return monthNames[currentMonthIndex];
 }
+
+export const generateUserCurrency = (countryName: string) => {
+  let countryData = Country.getAllCountries();
+
+  const currency = countryData.filter(
+    (country) => country.name.toLowerCase() === countryName.toLowerCase()
+  )[0].currency;
+  return currency;
+};
+
+export const stripNumbersFromAlphanumeric = (inputString: string): string => {
+  // Use a regular expression to match all numbers in the string
+  const numbersOnly = inputString.replace(/[^0-9]/g, "");
+
+  return numbersOnly;
+};
+
+/**
+ * Formats a numeric string by adding commas for readability.
+ * @param value - The numeric string to format.
+ * @returns The formatted string with commas.
+ */
+export const formatNumberWithCommas = (value: string | number): string => {
+  // Convert the value to a string
+  const numericString = value.toString();
+
+  // Remove any existing commas
+  const numericStringWithoutCommas = numericString.replace(/,/g, "");
+
+  // Validate that the input is a valid number (including decimals)
+  const regex = /^[0-9]*\.?[0-9]*$/;
+  if (!regex.test(numericStringWithoutCommas)) {
+    throw new Error(
+      "Invalid input: Only numeric values including decimals are allowed."
+    );
+  }
+
+  // Split the input into integer and decimal parts
+  const [integerPart, decimalPart] = numericStringWithoutCommas.split(".");
+
+  // Format the integer part with commas
+  const formattedIntegerPart = integerPart.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    ","
+  );
+
+  // Return the formatted number, combining integer and decimal parts if present
+  return decimalPart !== undefined
+    ? `${formattedIntegerPart}.${decimalPart}`
+    : formattedIntegerPart;
+};
+
+/**
+ * Converts a formatted readable string (with commas) to a number.
+ * @param formattedString - The formatted string with commas.
+ * @returns The number representation of the string.
+ */
+export const convertFormattedStringToNumber = (
+  formattedString: string
+): number => {
+  // Remove commas from the string
+  const numericString = formattedString.replace(/,/g, "");
+
+  // Convert the string to a number
+  const numberValue = parseFloat(numericString);
+
+  if (isNaN(numberValue)) {
+    toast.error("Invalid input: The string cannot be converted to a number.", {
+      id: "Input error",
+    });
+  }
+
+  return numberValue;
+};

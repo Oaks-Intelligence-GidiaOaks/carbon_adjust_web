@@ -235,6 +235,13 @@ const AdminAggregatorRegistrationGrid = ({
             >
               Approved
             </span>
+          ) : (info.row.original as any).status === "unverified" ? (
+            <span
+              style={{ color: "#ff7646", background: "#ff764630" }}
+              className="w-36 py-1 rounded-full inline-block mx-auto"
+            >
+              Unverified
+            </span>
           ) : (info.row.original as any).status === "suspended" ? (
             <span
               style={{ color: "#c9c126", background: "#8AC92630" }}
