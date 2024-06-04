@@ -5,6 +5,7 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { SideBarBtn } from "@/assets/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { Dropdown } from "../ui";
 
 type Props = {
   mobileMenuIsOpen: boolean;
@@ -38,16 +39,35 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
   };
 
   return (
-    <div className="h-10 px-2 sm:px-4 py-6 w-full flex justify-center">
+    <div className="h-10 px-2 sm:px-4 py-6 w-full flex justify-center font-poppins">
       <div className="flex justify-between items-center w-full max-w-[1440px]">
-        <div className="flex items-center">
+        <div className="flex items-center border">
           <div className="pr-2">
             <SideBarBtn
               className="cursor-pointer sm:hidden"
               onClick={() => setMobileMenuIsOpen(!mobileMenuIsOpen)}
             />
           </div>
-          {breadcrumbs.map(({ match, breadcrumb, key }, i, arr) => (
+
+          <img
+            src="/assets/icons/logo-main.svg"
+            alt=""
+            className="hidden md:inline-flex h-auto w-[30px]"
+          />
+
+          <h2 className="font-[400] text-sm ml-[18px]">Marketplace</h2>
+
+          <div className="bg-[#CECECE] flex w-[299px] h-[38px] rounded-[12px] px-4">
+            <select className="flex-1 bg-transparent" name="" id="">
+              {Array.from({ length: 7 }, (_, i) => (
+                <option value="" key={i}>
+                  Home Energy Plans
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* {breadcrumbs.map(({ match, breadcrumb, key }, i, arr) => (
             <div key={key}>
               <Link
                 key={match.pathname}
@@ -60,9 +80,10 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
               </Link>
               {i < arr.length - 1 ? <span>/</span> : null}
             </div>
-          ))}
+          ))} */}
         </div>
-        <div className="pr-4">
+
+        <div className="pr-4 border">
           <div className="flex gap-1 items-center">
             <div
               className="flex justify-center items-center cursor-pointer"
@@ -78,7 +99,6 @@ const TopBar = ({ mobileMenuIsOpen, setMobileMenuIsOpen }: Props) => {
                 <UserCircleIcon fontSize={20} width={32} />
               )}
             </div>
-            {/* <span>Jeffery Cooper</span> */}
           </div>
         </div>
       </div>

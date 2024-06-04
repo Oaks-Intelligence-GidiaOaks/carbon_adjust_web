@@ -2,17 +2,12 @@ import { persistor } from "@/app/store";
 import { Logo } from "@/assets/icons";
 import {
   adminSideBarItems,
-  aggregatorSideBarItems,
-  financeSideBarItems,
-  hiaSideBarItems,
   homeOwnerSideBarItems,
-  insuranceSideBarItems,
-  subcontractorSideBarItems,
+  merchantSideBarItems,
 } from "@/constants";
 import { SideBarItem, SideBarProps } from "@/types/general";
 import { cn } from "@/utils";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-// import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({
@@ -26,16 +21,8 @@ const Sidebar = ({
     switch (accountType) {
       case "home-occupant":
         return homeOwnerSideBarItems;
-      case "aggregator":
-        return aggregatorSideBarItems;
-      case "hia":
-        return hiaSideBarItems;
-      case "subcontractor":
-        return subcontractorSideBarItems;
-      case "finance":
-        return financeSideBarItems;
-      case "insurance":
-        return insuranceSideBarItems;
+      case "merchant":
+        return merchantSideBarItems;
       case "admin":
         return adminSideBarItems;
       default:

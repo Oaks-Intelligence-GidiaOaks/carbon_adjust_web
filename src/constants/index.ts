@@ -3,6 +3,7 @@ import {
   CarbonCreditIcon,
   ContactIcon,
   DashboardIcon,
+  HomeIcon,
   DevicesIcon,
   DocumentCentreIcon,
   InboxIcon,
@@ -85,40 +86,40 @@ export const retrofittingServices = [
 
 export const homeOwnerSideBarItems = [
   {
+    icon: HomeIcon,
+    title: "",
+    href: "/home",
+  },
+  {
     icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/dashboard",
+    title: "",
+    href: "/dashboard/market-place",
   },
   {
     icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/dashboard/applications",
+    title: "",
+    href: "/dashboard/appointment",
   },
   {
-    icon: DevicesIcon,
-    title: "Devices",
-    href: "/dashboard/devices",
+    icon: ApplicationsIcon,
+    title: "Orders",
+    href: "/dashboard/orders",
   },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/dashboard/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/dashboard/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/dashboard/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/dashboard/contact",
-  },
+  // {
+  //   icon: CarbonCreditIcon,
+  //   title: "",
+  //   href: "/dashboard/wallet",
+  // },
+  // {
+  //   icon: InboxIcon,
+  //   title: "",
+  //   href: "/dashboard/inbox",
+  // },
+  // {
+  //   icon: ContactIcon,
+  //   title: "Contact Us",
+  //   href: "/dashboard/contact",
+  // },
   {
     icon: ProfileIcon,
     title: "Profile",
@@ -131,56 +132,42 @@ export const homeOwnerSideBarItems = [
   },
 ];
 
-export const aggregatorSideBarItems = [
+export const merchantSideBarItems = [
   {
     icon: DashboardIcon,
     title: "Dashboard",
-    href: "/aggregator",
+    href: "/dashboard",
   },
   {
     icon: ApplicationsIcon,
-    title: "Database",
-    href: "/aggregator/database",
+    title: "Packages",
+    href: "/dashboard/applications",
   },
   {
     icon: DevicesIcon,
-    title: "Projects",
-    href: "/aggregator/projects",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Devices",
-    href: "/aggregator/devices",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/aggregator/staff",
+    title: "Applications",
+    href: "/dashboard/devices",
   },
   {
     icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/aggregator/carbon-credit",
+    title: "Customers",
+    href: "/dashboard/carbon-credit",
   },
   {
     icon: InboxIcon,
     title: "Inbox",
-    href: "/aggregator/inbox",
+    href: "/dashboard/inbox",
   },
   {
     icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/aggregator/document-centre",
+    title: "Wallet",
+    href: "/dashboard/document-centre",
   },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/aggregator/contact",
-  },
+
   {
     icon: ProfileIcon,
     title: "Profile",
-    href: "/aggregator/profile",
+    href: "/dashboard/profile",
   },
   {
     icon: LogoutIcon,
@@ -574,226 +561,6 @@ export const insuranceOptions = [
     repayment_date: "12 years",
     loan_amount: "£32K",
     logo: image1,
-  },
-];
-
-// HIA SIDE ITEMS
-export const hiaSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/hia",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/hia/applications",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Subcontractors",
-    href: "/hia/subcontractors",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/hia/packages",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/hia/staff",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/hia/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/hia/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/hia/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/hia/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/hia/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-// SUBCONTRACTOR SIDE ITEMS
-export const subcontractorSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/subcontractor",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/subcontractor/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/subcontractor/packages",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/subcontractor/staff",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/subcontractor/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/subcontractor/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/subcontractor/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/subcontractor/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/subcontractor/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-
-//FINANCE SIDE ITEMS
-export const financeSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/finance",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/finance/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/finance/packages",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/finance/staff",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/finance/carbon-credit",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/finance/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/finance/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/finance/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/finance/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
-  },
-];
-
-// INSURANCE SIDE ITEMS
-export const insuranceSideBarItems = [
-  {
-    icon: DashboardIcon,
-    title: "Dashboard",
-    href: "/insurance",
-  },
-  {
-    icon: ApplicationsIcon,
-    title: "Applications",
-    href: "/insurance/applications",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Packages",
-    href: "/insurance/packages",
-  },
-  {
-    icon: CarbonCreditIcon,
-    title: "Carbon Credit Account",
-    href: "/insurance/carbon-credit",
-  },
-  {
-    icon: DevicesIcon,
-    title: "Staff",
-    href: "/insurance/staff",
-  },
-  {
-    icon: InboxIcon,
-    title: "Inbox",
-    href: "/insurance/inbox",
-  },
-  {
-    icon: DocumentCentreIcon,
-    title: "Document Centre",
-    href: "/insurance/document-centre",
-  },
-  {
-    icon: ContactIcon,
-    title: "Contact Us",
-    href: "/insurance/contact",
-  },
-  {
-    icon: ProfileIcon,
-    title: "Profile",
-    href: "/insurance/profile",
-  },
-  {
-    icon: LogoutIcon,
-    title: "Logout",
-    href: "/..",
   },
 ];
 

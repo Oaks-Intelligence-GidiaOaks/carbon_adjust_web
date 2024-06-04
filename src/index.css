@@ -205,6 +205,10 @@ react-calendar__tile react-calendar__month-view__days__day {
   .invert-icon {
     filter: invert(1) brightness(2000%);
   }
+
+  .blue-gradient {
+    @apply bg-gradient-to-b from-[#2E599A] to-[#0B8DFF];
+  }
 }
 
 input::-webkit-outer-spin-button,
